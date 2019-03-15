@@ -1,0 +1,19 @@
+Package: genio
+Title: Statistical GENetics Input/Output Functions
+Version: 1.0.0.9000
+Authors@R: 
+    person(given = "Alejandro",
+	   family = "Ochoa",
+	   role = c("aut", "cre"),
+	   email = "alejandro.ochoa@duke.edu")
+Description: The 'genio' (GenIO = Genetics I/O) package implements simple parsers and writers for tables associated with statistical genetics data.  The key functions are wrappers for readr functions that are more constrained, user-friendly, and efficient for these particular applications.  Currently handles plink and eigenstrat tables (.fam, .bim, .ind files).
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 6.1.1.9000
+Suggests: 
+    testthat
+Imports:
+    readr,
+    tibble

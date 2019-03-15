@@ -1,6 +1,6 @@
 # genio
 
-The `genio` package provides easy and efficient table parsers for formats from statistical genetics research.
+The `genio` (GENetics I/O) package provides easy and efficient table parsers for formats from statistical genetics research.
 Currently targets plink and eigenstrat formats (more to come).
 Consists of wrappers for `readr` functions that, depending on the target format, add missing extensions and add column names (often absent in these files).
 

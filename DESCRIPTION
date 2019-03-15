@@ -17,3 +17,5 @@ Suggests:
 Imports:
     readr,
     tibble
+URL: https://github.com/OchoaLab/genio
+BugReports: https://github.com/OchoaLab/genio/issues

@@ -2,46 +2,48 @@
 # This function simply returns the input path when its guesses don't result in files that exist, doesn't die unless arguments are missing.
 #
 # Internal function    
-real_path <- function(fi, ext) {
+real_path <- function(file, ext) {
     # both inputs are mandatory
-    if (missing(fi)) stop('Fatal: input file (fi) is required!')
-    if (missing(ext)) stop('Fatal: expected file extension (ext) is required!')
+    if (missing(file))
+        stop('Fatal: input file is required!')
+    if (missing(ext))
+        stop('Fatal: expected file extension (ext) is required!')
     
-    # if "fi" was not a character object, then the following manipulations won't work, so just return that and hope for the best
-    if (!is.character(fi)) return(fi)
+    # if "file" was not a character object, then the following manipulations won't work, so just return that and hope for the best
+    if (!is.character(file)) return(file)
     # ditto if file already exists, we're set!
-    if (file.exists(fi)) return(fi)
+    if (file.exists(file)) return(file)
     # now assume file as specified is not found
 
     # if the file already ends in .gz, don't do anything!
     # this is because .gz must be the final extension, we won't try to fix this path
-    if ( grepl('\\.gz$', fi) ) return(fi)
+    if ( grepl('\\.gz$', file) ) return(file)
     # now assume .gz is missing
     
     # test presence of expected extension
     # in the absence of .gz, the expected extension must be the last one ("$" in regex below)
-    if ( grepl( paste0('\\.', ext, '$'), fi) ) {
+    if ( grepl( paste0('\\.', ext, '$'), file) ) {
         # here we already have the .fam extension but not .gz, so try adding it
         # try adding extension if input file wasn't found
-        fiGz <- paste0(fi, '.gz')
+        fileGz <- paste0(file, '.gz')
         # if the second version exists, use that!
-        if (file.exists(fiGz)) fi <- fiGz
-        # return fi, whatever that is here
-        return(fi)
+        if (file.exists(fileGz)) file <- fileGz
+        # return file, whatever that is here
+        return(file)
     }
     
     # now assume both extensions are missing
     # add .fam first
-    fiExt <- paste0(fi, '.', ext)
-    if (file.exists(fiExt)) {
+    fileExt <- paste0(file, '.', ext)
+    if (file.exists(fileExt)) {
         # if the second version exists, use that!
-        # (otherwise stay with fi, whatever that is)
-        fi <- fiExt
+        # (otherwise stay with file, whatever that is)
+        file <- fileExt
     } else {
         # try add gzip extension too
-        fiExtGz <- paste0(fiExt, '.gz')
-        if (file.exists(fiExtGz)) fi <- fiExtGz
+        fileExtGz <- paste0(fileExt, '.gz')
+        if (file.exists(fileExtGz)) file <- fileExtGz
     }
-    # return whatever fi is now (in case of failure it's just input)
-    return(fi)
+    # return whatever file is now (in case of failure it's just input)
+    return(file)
 }

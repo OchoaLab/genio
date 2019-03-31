@@ -1,6 +1,6 @@
 Package: genio
 Title: Statistical GENetics Input/Output Functions
-Version: 1.0.0.9000
+Version: 1.0.1.9000
 Authors@R: 
     person(given = "Alejandro",
 	   family = "Ochoa",
@@ -16,6 +16,9 @@ Suggests:
     testthat
 Imports:
     readr,
-    tibble
+    tibble,
+    Rcpp
+LinkingTo:
+    Rcpp
 URL: https://github.com/OchoaLab/genio
 BugReports: https://github.com/OchoaLab/genio/issues

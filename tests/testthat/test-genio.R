@@ -3,6 +3,17 @@ context("test-genio")
 # all examples have 10 rows by construction, hardcode for tests here
 n_rows <- 10
 
+test_that("add_ext works", {
+    # create a scenario where we know if the desired extension is already there or not
+    ext <- 'bim'
+    foExtN <- 'file-that-does-not-exist'
+    foExtY <- paste0(foExtN, '.', ext)
+    # test that missing extension got added correctly
+    expect_equal(foExtY, add_ext(foExtN, ext))
+    # test that present extension doesn't get added again
+    expect_equal(foExtY, add_ext(foExtY, ext))
+})
+
 test_that("real_path works", {
     # function returns input when file does not exist
     fi <- 'file-that-does-not-exist'

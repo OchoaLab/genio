@@ -3,10 +3,8 @@ using namespace Rcpp;
 
 // [[Rcpp::export]]
 void write_bed_cpp(const char* fo, IntegerMatrix X) {
-  // NOTES:
-  // - code partly based on libplinkio and Wei's R version
-  // - input assumed to be padded and reencoded already
-
+  // - fo assumed to be full path (no missing extensions)
+  
   int nrow = X.nrow();
   int ncol = X.ncol();
   // number of columns (bytes) in output (for buffer), after byte compression
@@ -45,7 +43,14 @@ void write_bed_cpp(const char* fo, IntegerMatrix X) {
       } else if (X(i,j) == 0) {
 	buffer[k] |= (3 << rem); // 0 -> 3
       } else if (X(i,j) != 2) { // 2 -> 0, so do nothing there, but die if we had any other values!
-	stop("Error: encountered a value outside of 0:2 and NA");
+	// wrap up everything properly
+	free( buffer ); // free buffer memory
+	fclose( fho ); // close file
+	remove( fo ); // delete partial output (will be useless binary data anyway)
+	// now send error message to R
+	char msg[100];
+	sprintf(msg, "Error: invalid genotype '%d' at row %d, col %d.\n", X(i,j), i+1, j+1); // convert to 1-based coordinates
+	stop(msg);
       }
 
       // update these variables for next round

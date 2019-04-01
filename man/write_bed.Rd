@@ -17,4 +17,29 @@ Nothing
 \description{
 This function accepts a standard R matrix containing genotypes (values in \code{c(0,1,2,NA)}) and writes it into a plink-formatted BED (binary) file.
 Each genotype per locus (m loci) and individual (n total) counts the number of alternative alleles or \code{NA} for missing data.
+No *.fam or *.bim files are created by this basic function.
+}
+\details{
+Genotypes with values outside of \eqn{[0,2]} cause a fatal error, in which case the partial output is deleted.
+However, beware that decimals get rounded internally into integers, so values that round into 0, 1, or 2 will not raise errors.
+The BED format does not accept fractional dosages, so such data will not be written as expected.
+}
+\examples{
+file_out <- 'delete-me-example.bed' # will also work without extension
+# create 10 random genotypes
+X <- rbinom(10, 2, 0.5)
+# add 3 missing values
+X[sample(10, 3)] <- NA
+# turn into 5x2 matrix
+X <- matrix(X, nrow=5, ncol=2)
+# write this data to file in BED format
+# (only *.bed gets created, no *.fam or *.bim in this call)
+write_bed(file_out, X)
+# delete output when done
+file.remove(file_out)
+
+}
+\seealso{
+BED format reference:
+\url{https://www.cog-genomics.org/plink/1.9/formats#bed}
 }

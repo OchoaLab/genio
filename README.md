@@ -2,7 +2,8 @@
 
 The `genio` (GENetics I/O) package provides easy and efficient table parsers for formats from statistical genetics research.
 Currently targets plink and eigenstrat formats (more to come).
-Consists of wrappers for `readr` functions that, depending on the target format, add missing extensions and add column names (often absent in these files).
+Lightning fast `write_bed` (written in Rcpp) writes genotypes (in native R matrices) into plink BED format.
+Otherwise, the package consists of wrappers for `readr` functions that add missing extensions and column names (often absent in these files).
 
 ## Installation
 
@@ -23,12 +24,27 @@ devtools::install_github("OchoaLab/genio", build_opts=c())
 
 ## Example
 
-Reading these tables is simple:
+Reading and writing these tables is simple:
 
 ``` r
 library(genio)
 
-# read data into "tibbles"
+# write your genotype matrix stored in an R native matrix
+
+# (here we create a small example with random data)
+# create 10 random genotypes
+X <- rbinom(10, 2, 0.5)
+# add 3 missing values
+X[sample(10, 3)] <- NA
+# turn into 5x2 matrix
+X <- matrix(X, nrow=5, ncol=2)
+# write this data to file in BED format
+# (only *.bed gets created, no *.fam or *.bim in this call)
+write_bed('random.bed', X)
+# extension can be omitted and it still works!
+write_bed('random, X)
+
+# read individual and locus data into "tibbles"
 
 # plink formats
 fam <- read_fam('sample.fam')
@@ -43,5 +59,8 @@ fam <- read_fam('sample')
 bim <- read_bim('sample')
 ind <- read_ind('sample')
 snp <- read_snp('sample')
+
 ```
 
+NOTE:
+To read BED files I recommend `BEDMatrix`, which offers low-memory functionality I do not aim to reproduce in this package.

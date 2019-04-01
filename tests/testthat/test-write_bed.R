@@ -11,6 +11,44 @@ test_that("write_bed works", {
     expect_error(write_bed(X=matrix(NA, 1, 1))) # file is missing
     # die if X is not a matrix!
     expect_error(write_bed('file', 'not-matrix'))
+    
+    # create a simple matrix with random valid data
+    n <- 10
+    m <- 10
+    miss <- 0.1 # add missingness for good measure
+    fo <- 'delete-me-random-test.bed' # output name
+    # create ancestral allele frequencies
+    p_anc <- runif(m)
+    # create genotypes
+    X <- rbinom(n*m, 2, p_anc)
+    # add missing values
+    X[sample(n*m, n*m*miss)] <- NA
+    # turn into matrix
+    X <- matrix(X, nrow=m, ncol=n)
+    # this should work
+    write_bed(fo, X)
+    # delete output when done
+    invisible(file.remove(fo))
+
+    # now add invalid values to X, make sure it dies!
+    X2 <- X
+    # add a negative value in a random location
+    X2[sample(n*m, 1)] <- -1
+    # actually die!
+    expect_error( write_bed(fo, X2) )
+    # make sure output doesn't exist anymore (code should automatically clean it up)
+    expect_false( file.exists(fo) )
+
+    # another test
+    X2 <- X
+    # add a 3 in a random location
+    X2[sample(n*m, 1)] <- 3
+    # actually die!
+    expect_error( write_bed(fo, X2) )
+    # make sure output doesn't exist anymore (code should automatically clean it up)
+    expect_false( file.exists(fo) )
+
+    # NOTE: if X contains values that truncate to the correct range (say, 1.5, which becomes 1 upon truncation), then that's what Rcpp does internally and no errors are raised!
 })
 
 
@@ -64,6 +102,9 @@ if (suppressMessages(suppressWarnings(require(BEDMatrix)))) {
         # repeat on several files
         testOneInput('dummy-33-101-0.1')
         testOneInput('dummy-4-10-0.1')
+        testOneInput('dummy-5-10-0.1')
+        testOneInput('dummy-6-10-0.1')
+        testOneInput('dummy-7-10-0.1')
     })
-
+    
 }

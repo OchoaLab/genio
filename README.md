@@ -42,7 +42,7 @@ X <- matrix(X, nrow=5, ncol=2)
 # (only *.bed gets created, no *.fam or *.bim in this call)
 write_bed('random.bed', X)
 # extension can be omitted and it still works!
-write_bed('random, X)
+write_bed('random', X)
 
 # read individual and locus data into "tibbles"
 

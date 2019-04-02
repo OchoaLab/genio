@@ -44,3 +44,7 @@ write_bim(file_out, tib)
 file.remove(file_out)
 
 }
+\seealso{
+Plink BIM format reference:
+\url{https://www.cog-genomics.org/plink/1.9/formats#bim}
+}

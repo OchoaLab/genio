@@ -33,3 +33,7 @@ ind <- read_ind(file) # load it anyway!
 ind
 
 }
+\seealso{
+Eigenstrat IND format reference:
+\url{https://github.com/DReichLab/EIG/tree/master/CONVERTF}
+}

@@ -41,3 +41,7 @@ write_ind(file_out, tib)
 file.remove(file_out)
 
 }
+\seealso{
+Eigenstrat IND format reference:
+\url{https://github.com/DReichLab/EIG/tree/master/CONVERTF}
+}

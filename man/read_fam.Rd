@@ -33,3 +33,7 @@ fam <- read_fam(file) # load it anyway!
 fam
 
 }
+\seealso{
+Plink FAM format reference:
+\url{https://www.cog-genomics.org/plink/1.9/formats#fam}
+}

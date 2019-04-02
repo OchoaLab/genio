@@ -44,3 +44,7 @@ write_snp(file_out, tib)
 file.remove(file_out)
 
 }
+\seealso{
+Eigenstrat SNP format reference:
+\url{https://github.com/DReichLab/EIG/tree/master/CONVERTF}
+}

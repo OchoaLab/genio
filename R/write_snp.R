@@ -32,6 +32,10 @@
 #' # delete output when done
 #' file.remove(file_out)
 #' 
+#' @seealso
+#' Eigenstrat SNP format reference:
+#' \url{https://github.com/DReichLab/EIG/tree/master/CONVERTF}
+#'
 #' @export
 write_snp <- function(file, tib, verbose = TRUE) {
     # this generic writer does all the magic

@@ -25,6 +25,10 @@ bim_names <- c('chr', 'id', 'posg', 'pos', 'ref', 'alt')
 #' bim <- read_bim(file) # load it anyway!
 #' bim
 #' 
+#' @seealso
+#' Plink BIM format reference:
+#' \url{https://www.cog-genomics.org/plink/1.9/formats#bim}
+#'
 #' @export
 read_bim <- function(file, verbose = TRUE) {
     # this generic reader does all the magic

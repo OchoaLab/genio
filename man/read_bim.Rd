@@ -33,3 +33,7 @@ bim <- read_bim(file) # load it anyway!
 bim
 
 }
+\seealso{
+Plink BIM format reference:
+\url{https://www.cog-genomics.org/plink/1.9/formats#bim}
+}

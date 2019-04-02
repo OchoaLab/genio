@@ -29,6 +29,10 @@
 #' # delete output when done
 #' file.remove(file_out)
 #' 
+#' @seealso
+#' Eigenstrat IND format reference:
+#' \url{https://github.com/DReichLab/EIG/tree/master/CONVERTF}
+#'
 #' @export
 write_ind <- function(file, tib, verbose = TRUE) {
     # this generic writer does all the magic

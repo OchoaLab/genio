@@ -32,6 +32,10 @@
 #' # delete output when done
 #' file.remove(file_out)
 #' 
+#' @seealso
+#' Plink FAM format reference:
+#' \url{https://www.cog-genomics.org/plink/1.9/formats#fam}
+#'
 #' @export
 write_fam <- function(file, tib, verbose = TRUE) {
     # this generic writer does all the magic

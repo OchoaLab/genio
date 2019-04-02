@@ -25,6 +25,10 @@ fam_names <- c('fam', 'id', 'pat', 'mat', 'sex', 'pheno')
 #' fam <- read_fam(file) # load it anyway!
 #' fam
 #' 
+#' @seealso
+#' Plink FAM format reference:
+#' \url{https://www.cog-genomics.org/plink/1.9/formats#fam}
+#'
 #' @export
 read_fam <- function(file, verbose = TRUE) {
     # this generic reader does all the magic

@@ -25,6 +25,10 @@ snp_names <- c('id', 'chr', 'posg', 'pos', 'ref', 'alt')
 #' snp <- read_snp(file) # load it anyway!
 #' snp
 #' 
+#' @seealso
+#' Eigenstrat SNP format reference:
+#' \url{https://github.com/DReichLab/EIG/tree/master/CONVERTF}
+#'
 #' @export
 read_snp <- function(file, verbose = TRUE) {
     # this generic reader does all the magic

@@ -21,7 +21,7 @@ NULL
 #' file_out <- 'delete-me-example.bed' # will also work without extension
 #' # create 10 random genotypes
 #' X <- rbinom(10, 2, 0.5)
-#' # add 3 missing values
+#' # replace 3 random genotypes with missing values
 #' X[sample(10, 3)] <- NA
 #' # turn into 5x2 matrix
 #' X <- matrix(X, nrow=5, ncol=2)
@@ -32,7 +32,7 @@ NULL
 #' file.remove(file_out)
 #'
 #' @seealso
-#' BED format reference:
+#' Plink BED format reference:
 #' \url{https://www.cog-genomics.org/plink/1.9/formats#bed}
 #'
 #' @export

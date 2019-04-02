@@ -34,7 +34,7 @@ library(genio)
 # (here we create a small example with random data)
 # create 10 random genotypes
 X <- rbinom(10, 2, 0.5)
-# add 3 missing values
+# replace 3 random genotypes with missing values
 X[sample(10, 3)] <- NA
 # turn into 5x2 matrix
 X <- matrix(X, nrow=5, ncol=2)
@@ -70,4 +70,4 @@ write_snp('new', snp)
 ```
 
 NOTE:
-To read BED files I recommend `BEDMatrix`, which offers low-memory functionality I do not aim to reproduce in this package.
+To read BED files I recommend the `BEDMatrix` package, which offers low-memory functionality I do not aim to reproduce in this package.

@@ -32,6 +32,10 @@
 #' # delete output when done
 #' file.remove(file_out)
 #' 
+#' @seealso
+#' Plink BIM format reference:
+#' \url{https://www.cog-genomics.org/plink/1.9/formats#bim}
+#'
 #' @export
 write_bim <- function(file, tib, verbose = TRUE) {
     # this generic writer does all the magic

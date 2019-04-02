@@ -33,3 +33,7 @@ snp <- read_snp(file) # load it anyway!
 snp
 
 }
+\seealso{
+Eigenstrat SNP format reference:
+\url{https://github.com/DReichLab/EIG/tree/master/CONVERTF}
+}

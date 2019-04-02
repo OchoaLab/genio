@@ -25,6 +25,10 @@ ind_names <- c('id', 'sex', 'label')
 #' ind <- read_ind(file) # load it anyway!
 #' ind
 #' 
+#' @seealso
+#' Eigenstrat IND format reference:
+#' \url{https://github.com/DReichLab/EIG/tree/master/CONVERTF}
+#'
 #' @export
 read_ind <- function(file, verbose = TRUE) {
     # this generic reader does all the magic

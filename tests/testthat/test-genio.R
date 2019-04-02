@@ -4,6 +4,11 @@ context("test-genio")
 n_rows <- 10
 
 test_that("add_ext works", {
+    # test that there are errors when crucial data is missing
+    expect_error(add_ext()) # all is missing
+    expect_error(add_ext('file')) # ext is missing
+    expect_error(add_ext(ext='txt')) # file is missing
+    
     # create a scenario where we know if the desired extension is already there or not
     ext <- 'bim'
     foExtN <- 'file-that-does-not-exist'
@@ -15,6 +20,11 @@ test_that("add_ext works", {
 })
 
 test_that("real_path works", {
+    # test that there are errors when crucial data is missing
+    expect_error(real_path()) # all is missing
+    expect_error(real_path('file')) # ext is missing
+    expect_error(real_path(ext='txt')) # file is missing
+    
     # function returns input when file does not exist
     fi <- 'file-that-does-not-exist'
     expect_equal(fi, real_path(fi, 'fam'))
@@ -43,6 +53,10 @@ test_that("real_path works", {
 })
 
 test_that("read_fam works", {
+    # test that there are errors when crucial data is missing
+    expect_error(read_fam()) # file is missing
+    expect_error(read_fam('bogus-file')) # file is non-existent (read_table2 will complain)
+    
     # load sample file
     fi <- system.file("extdata", 'sample.fam', package = "genio", mustWork = TRUE)
     # this should just work (no "expect" test)
@@ -101,6 +115,10 @@ test_that("read_fam works", {
 })
 
 test_that("read_bim works", {
+    # test that there are errors when crucial data is missing
+    expect_error(read_bim()) # file is missing
+    expect_error(read_bim('bogus-file')) # file is non-existent (read_table2 will complain)
+    
     # load sample file
     fi <- system.file("extdata", 'sample.bim', package = "genio", mustWork = TRUE)
     # this should just work (no "expect" test)
@@ -159,6 +177,10 @@ test_that("read_bim works", {
 })
 
 test_that("read_ind works", {
+    # test that there are errors when crucial data is missing
+    expect_error(read_ind()) # file is missing
+    expect_error(read_ind('bogus-file')) # file is non-existent (read_table2 will complain)
+    
     # load sample file
     fi <- system.file("extdata", 'sample.ind', package = "genio", mustWork = TRUE)
     # this should just work (no "expect" test)
@@ -217,6 +239,10 @@ test_that("read_ind works", {
 })
 
 test_that("read_snp works", {
+    # test that there are errors when crucial data is missing
+    expect_error(read_snp()) # file is missing
+    expect_error(read_snp('bogus-file')) # file is non-existent (read_table2 will complain)
+    
     # load sample file
     fi <- system.file("extdata", 'sample.snp', package = "genio", mustWork = TRUE)
     # this should just work (no "expect" test)
@@ -274,3 +300,202 @@ test_that("read_snp works", {
 
 })
 
+test_that("write_fam works", {
+    # test that there are errors when crucial data is missing
+    expect_error(write_fam()) # all is missing
+    expect_error(write_fam('file')) # tibble is missing
+    expect_error(write_fam(tib=data.frame(id=1))) # file is missing (tib is incomplete too, but that gets tested downstream)
+    
+    # load sample file
+    fi <- system.file("extdata", 'sample.fam', package = "genio", mustWork = TRUE)
+    # create a dummy output we'll delete later
+    fo <- 'delete-me_test-write.fam'
+    # this should just work (tested earlier)
+    fam1 <- read_fam(fi)
+    # try writing it back elsewhere
+    write_fam(fo, fam1)
+    # and read it back again to comare
+    fam2 <- read_fam(fo)
+    # compare
+    expect_equal(fam1, fam2)
+    # delete output when done
+    invisible(file.remove(fo))
+
+    # repeat by randomly reordering data, should automatically reorder too
+    fam1_r <- fam1[, sample.int(ncol(fam1))]
+    # try writing it back elsewhere
+    write_fam(fo, fam1_r)
+    # and read it back again to comare
+    fam2 <- read_fam(fo)
+    # compare
+    expect_equal(fam1, fam2)
+    # delete output when done
+    invisible(file.remove(fo))
+
+    # repeat by adding junk columns, should be automatically ignored
+    fam1_r <- fam1 # copy first
+    fam1_r$junk <- 1 # add a junk column
+    # try writing it back elsewhere
+    write_fam(fo, fam1_r)
+    # and read it back again to comare
+    fam2 <- read_fam(fo)
+    # compare
+    expect_equal(fam1, fam2)
+    # delete output when done
+    invisible(file.remove(fo))
+
+    # delete a column, test that an error is thrown
+    fam1_r <- fam1 # copy first
+    fam1_r$id <- NULL # delete this column
+    expect_error(write_fam(fo, fam1_r))
+})
+
+test_that("write_bim works", {
+    # test that there are errors when crucial data is missing
+    expect_error(write_bim()) # all is missing
+    expect_error(write_bim('file')) # tibble is missing
+    expect_error(write_bim(tib=data.frame(id=1))) # file is missing (tib is incomplete too, but that gets tested downstream)
+    
+    # load sample file
+    fi <- system.file("extdata", 'sample.bim', package = "genio", mustWork = TRUE)
+    # create a dummy output we'll delete later
+    fo <- 'delete-me_test-write.bim'
+    # this should just work (tested earlier)
+    bim1 <- read_bim(fi)
+    # try writing it back elsewhere
+    write_bim(fo, bim1)
+    # and read it back again to comare
+    bim2 <- read_bim(fo)
+    # compare
+    expect_equal(bim1, bim2)
+    # delete output when done
+    invisible(file.remove(fo))
+
+    # repeat by randomly reordering data, should automatically reorder too
+    bim1_r <- bim1[, sample.int(ncol(bim1))]
+    # try writing it back elsewhere
+    write_bim(fo, bim1_r)
+    # and read it back again to comare
+    bim2 <- read_bim(fo)
+    # compare
+    expect_equal(bim1, bim2)
+    # delete output when done
+    invisible(file.remove(fo))
+
+    # repeat by adding junk columns, should be automatically ignored
+    bim1_r <- bim1 # copy first
+    bim1_r$junk <- 1 # add a junk column
+    # try writing it back elsewhere
+    write_bim(fo, bim1_r)
+    # and read it back again to comare
+    bim2 <- read_bim(fo)
+    # compare
+    expect_equal(bim1, bim2)
+    # delete output when done
+    invisible(file.remove(fo))
+
+    # delete a column, test that an error is thrown
+    bim1_r <- bim1 # copy first
+    bim1_r$id <- NULL # delete this column
+    expect_error(write_bim(fo, bim1_r))
+})
+
+test_that("write_ind works", {
+    # test that there are errors when crucial data is missing
+    expect_error(write_ind()) # all is missing
+    expect_error(write_ind('file')) # tibble is missing
+    expect_error(write_ind(tib=data.frame(id=1))) # file is missing (tib is incomplete too, but that gets tested downstream)
+    
+    # load sample file
+    fi <- system.file("extdata", 'sample.ind', package = "genio", mustWork = TRUE)
+    # create a dummy output we'll delete later
+    fo <- 'delete-me_test-write.ind'
+    # this should just work (tested earlier)
+    ind1 <- read_ind(fi)
+    # try writing it back elsewhere
+    write_ind(fo, ind1)
+    # and read it back again to comare
+    ind2 <- read_ind(fo)
+    # compare
+    expect_equal(ind1, ind2)
+    # delete output when done
+    invisible(file.remove(fo))
+
+    # repeat by randomly reordering data, should automatically reorder too
+    ind1_r <- ind1[, sample.int(ncol(ind1))]
+    # try writing it back elsewhere
+    write_ind(fo, ind1_r)
+    # and read it back again to comare
+    ind2 <- read_ind(fo)
+    # compare
+    expect_equal(ind1, ind2)
+    # delete output when done
+    invisible(file.remove(fo))
+
+    # repeat by adding junk columns, should be automatically ignored
+    ind1_r <- ind1 # copy first
+    ind1_r$junk <- 1 # add a junk column
+    # try writing it back elsewhere
+    write_ind(fo, ind1_r)
+    # and read it back again to comare
+    ind2 <- read_ind(fo)
+    # compare
+    expect_equal(ind1, ind2)
+    # delete output when done
+    invisible(file.remove(fo))
+
+    # delete a column, test that an error is thrown
+    ind1_r <- ind1 # copy first
+    ind1_r$id <- NULL # delete this column
+    expect_error(write_ind(fo, ind1_r))
+})
+
+test_that("write_snp works", {
+    # test that there are errors when crucial data is missing
+    expect_error(write_snp()) # all is missing
+    expect_error(write_snp('file')) # tibble is missing
+    expect_error(write_snp(tib=data.frame(id=1))) # file is missing (tib is incomplete too, but that gets tested downstream)
+    
+    # load sample file
+    fi <- system.file("extdata", 'sample.snp', package = "genio", mustWork = TRUE)
+    # create a dummy output we'll delete later
+    fo <- 'delete-me_test-write.snp'
+    # this should just work (tested earlier)
+    snp1 <- read_snp(fi)
+    # try writing it back elsewhere
+    write_snp(fo, snp1)
+    # and read it back again to comare
+    snp2 <- read_snp(fo)
+    # compare
+    expect_equal(snp1, snp2)
+    # delete output when done
+    invisible(file.remove(fo))
+
+    # repeat by randomly reordering data, should automatically reorder too
+    snp1_r <- snp1[, sample.int(ncol(snp1))]
+    # try writing it back elsewhere
+    write_snp(fo, snp1_r)
+    # and read it back again to comare
+    snp2 <- read_snp(fo)
+    # compare
+    expect_equal(snp1, snp2)
+    # delete output when done
+    invisible(file.remove(fo))
+
+    # repeat by adding junk columns, should be automatically ignored
+    snp1_r <- snp1 # copy first
+    snp1_r$junk <- 1 # add a junk column
+    # try writing it back elsewhere
+    write_snp(fo, snp1_r)
+    # and read it back again to comare
+    snp2 <- read_snp(fo)
+    # compare
+    expect_equal(snp1, snp2)
+    # delete output when done
+    invisible(file.remove(fo))
+
+    # delete a column, test that an error is thrown
+    snp1_r <- snp1 # copy first
+    snp1_r$id <- NULL # delete this column
+    expect_error(write_snp(fo, snp1_r))
+})

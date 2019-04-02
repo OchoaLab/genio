@@ -10,3 +10,8 @@
 
 * Improved `write_bed` error message for invalid data, documentation.
 * Extended `write_bed` tests.
+
+# 2019-04-01 - genio 1.0.3.9000
+
+* Added `write_fam`, `write_bim`, `write_ind`, `write_snp` functions.
+* Refactored `read_*` code, updated docs and tests.

@@ -60,6 +60,13 @@ bim <- read_bim('sample')
 ind <- read_ind('sample')
 snp <- read_snp('sample')
 
+# write these data to other files
+# here extensions are also added automatically
+write_fam('new', fam)
+write_bim('new', bim)
+write_ind('new', ind)
+write_snp('new', snp)
+
 ```
 
 NOTE:

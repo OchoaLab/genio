@@ -15,3 +15,7 @@
 
 * Added `write_fam`, `write_bim`, `write_ind`, `write_snp` functions.
 * Refactored `read_*` code, updated docs and tests.
+
+# 2019-04-02 - genio 1.0.4.9000
+
+* Added `make_fam`, `make_bim`, and `write_plink` functions.

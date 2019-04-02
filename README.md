@@ -1,8 +1,9 @@
 # genio
 
-The `genio` (GENetics I/O) package provides easy and efficient table parsers for formats from statistical genetics research.
+The `genio` (GENetics I/O) package provides easy-to-use and efficient writers and parsers for formats from statistical genetics research.
 Currently targets plink and eigenstrat formats (more to come).
 Lightning fast `write_bed` (written in Rcpp) writes genotypes (in native R matrices) into plink BED format.
+`make_*` functions create default FAM and BIM files to go with simulated genotype data.
 Otherwise, the package consists of wrappers for `readr` functions that add missing extensions and column names (often absent in these files).
 
 ## Installation
@@ -24,11 +25,15 @@ devtools::install_github("OchoaLab/genio", build_opts=c())
 
 ## Example
 
-Reading and writing these tables is simple:
+Load library:
 
 ``` r
 library(genio)
+```
 
+### Make a BED/BIM/FAM file set for simulated data
+
+``` r
 # write your genotype matrix stored in an R native matrix
 
 # (here we create a small example with random data)
@@ -38,12 +43,21 @@ X <- rbinom(10, 2, 0.5)
 X[sample(10, 3)] <- NA
 # turn into 5x2 matrix
 X <- matrix(X, nrow=5, ncol=2)
-# write this data to file in BED format
-# (only *.bed gets created, no *.fam or *.bim in this call)
-write_bed('random.bed', X)
+
+# create default tables to go with simulated genotype data
+fam <- make_fam(n = 2)
+bim <- make_bim(n = 5)
+
+# write simulated data to BED/BIM/FAM (one command each)
 # extension can be omitted and it still works!
 write_bed('random', X)
+write_fam('random', fam)
+write_bim('random', bim)
+```
 
+### Reading and writing existing data
+
+``` r
 # read individual and locus data into "tibbles"
 
 # plink formats

@@ -499,3 +499,91 @@ test_that("write_snp works", {
     snp1_r$id <- NULL # delete this column
     expect_error(write_snp(fo, snp1_r))
 })
+
+test_that("make_fam works", {
+    # test that there are errors when crucial data is missing
+    expect_error(make_fam()) # all is missing
+
+    # this should work
+    fam <- make_fam(n = n_rows)
+    # check the tibble
+    expect_equal(nrow(fam), n_rows)
+    expect_equal(names(fam), fam_names)
+
+    # ultimate test, make sure we can write it and also parse it without issues
+    # create a dummy output we'll delete later
+    fo <- 'delete-me_test-make.fam'
+    # to make comparison exact, change some column modes from numeric to character
+    fam$fam <- as.character(fam$fam)
+    fam$id <- as.character(fam$id)
+    fam$pat <- as.character(fam$pat)
+    fam$mat <- as.character(fam$mat)
+    # write it
+    write_fam(fo, fam)
+    # read it
+    fam2 <- read_fam(fo)
+    # compare
+    # NOTE: there's a weird issue with class() here that makes this not work unless it's "fam2[]" specifically
+    # https://www.tidyverse.org/articles/2018/12/readr-1-3-1/#tibble-subclass
+    expect_equal(fam, fam2[])
+    # delete output when done
+    invisible(file.remove(fo))
+
+    # need to load it explicitly for this test
+    library(tibble)
+    # try a case where we are missing standard columns, add extra columns
+    fam <- tibble(pheno =  0:2, subpop = 2:0, age = 30:32)
+    # autocomplete and reorder
+    fam <- make_fam(fam)
+    # test that columns are as expected
+    # first all standard columns, then additions in previous order
+    expect_equal(names(fam), c(fam_names, 'subpop', 'age'))
+    # test rows for good measure
+    expect_equal(nrow(fam), 3)
+    # make sure pheno was as we specified above and not overwritten with 0's
+    expect_equal(fam$pheno, 0:2)
+})
+
+test_that("make_bim works", {
+    # test that there are errors when crucial data is missing
+    expect_error(make_bim()) # all is missing
+
+    # this should work
+    bim <- make_bim(n = n_rows)
+    # check the tibble
+    expect_equal(nrow(bim), n_rows)
+    expect_equal(names(bim), bim_names)
+
+    # ultimate test, make sure we can write it and also parse it without issues
+    # create a dummy output we'll delete later
+    fo <- 'delete-me_test-make.bim'
+    # to make comparison exact, change some column modes from numeric to character
+    bim$chr <- as.character(bim$chr)
+    bim$id <- as.character(bim$id)
+    bim$ref <- as.character(bim$ref)
+    bim$alt <- as.character(bim$alt)
+    # write it
+    write_bim(fo, bim)
+    # read it
+    bim2 <- read_bim(fo)
+    # compare
+    # NOTE: there's a weird issue with class() here that makes this not work unless it's "bim2[]" specifically
+    # https://www.tidyverse.org/articles/2018/12/readr-1-3-1/#tibble-subclass
+    expect_equal(bim, bim2[])
+    # delete output when done
+    invisible(file.remove(fo))
+
+    # need to load it explicitly for this test
+    library(tibble)
+    # try a case where we are missing standard columns, add extra columns
+    bim <- tibble(chr = 1:10, fst = (1:10)/100, maf = fst)
+    # autocomplete and reorder
+    bim <- make_bim(bim)
+    # test that columns are as expected
+    # first all standard columns, then additions in previous order
+    expect_equal(names(bim), c(bim_names, 'fst', 'maf'))
+    # test rows for good measure
+    expect_equal(nrow(bim), 10)
+    # make sure chr was as we specified above and not overwritten with 1's
+    expect_equal(bim$chr, 1:10)
+})

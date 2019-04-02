@@ -14,6 +14,7 @@ NULL
 #' 
 #' @param file Output file path.  .bed extension may be omitted (will be added automatically if it is missing).
 #' @param X The \eqn{m \times n}{m-by-n} genotype matrix.
+#' @param verbose If TRUE (default) function reports the path of the file being written (after autocompleting the extension).
 #'
 #' @return Nothing
 #'
@@ -36,17 +37,23 @@ NULL
 #' \url{https://www.cog-genomics.org/plink/1.9/formats#bed}
 #'
 #' @export
-write_bed <- function(file, X) {
+write_bed <- function(file, X, verbose = TRUE) {
     # die if things are missing
     if (missing(file))
         stop('Fatal: output file path is required!')
     if (missing(X))
         stop('Fatal: genotype matrix (X) is required!')
+    
     # make sure X is a matrix
     if (!is.matrix(X))
         stop('Fatal: genotypes (X) must be a matrix!')
+    
     # add bed extension if it wasn't already there
     file <- add_ext(file, 'bed')
+    
+    # announce what we ended up writing, nice to know
+    if (verbose)
+        message('Writing: ', file)
     
     # process and write in Rcpp!
     # at least an order of magnitude faster than my best pure R solution

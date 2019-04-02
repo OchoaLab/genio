@@ -36,7 +36,7 @@ read_fam <- function(file, verbose = TRUE) {
         file = file,
         ext = 'fam',
         tib_names = fam_names,
-        col_types = 'ccccii',
+        col_types = 'ccccid',
         verbose = verbose
     )
 }

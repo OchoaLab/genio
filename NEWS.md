@@ -19,3 +19,5 @@
 # 2019-04-02 - genio 1.0.4.9000
 
 * Added `make_fam`, `make_bim`, and `write_plink` functions.
+* Fixed `read_fam` bug (used to require phenotypes to be integers, now can be double numbers).
+* Added `verbose` option to `write_bed`.

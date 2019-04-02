@@ -6,7 +6,7 @@
 #' @param file Output file (whatever is accepted by readr::write_tsv).
 #' If file is missing the expected *.bim extension, the function adds it.
 #' @param tib The tibble or data.frame to write.
-#' It must contain these columns: chr, id, posg, pos, ref, alt
+#' It must contain these columns: chr, id, posg, pos, ref, alt.
 #' Throws an error if any of these columns are missing.
 #' Additional columns are ignored.
 #' Columns are automatically reordered in output as expected in format.

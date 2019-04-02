@@ -33,6 +33,8 @@ library(genio)
 
 ### Make a BED/BIM/FAM file set for simulated data
 
+Note that `write_plink` writes all three BED/BIM/FAM files together, while each `write_{bed,bim,fam}` function creates a single file.
+
 ``` r
 # write your genotype matrix stored in an R native matrix
 
@@ -44,11 +46,23 @@ X[sample(10, 3)] <- NA
 # turn into 5x2 matrix
 X <- matrix(X, nrow=5, ncol=2)
 
+# also create a simulated phenotype vector
+pheno <- rnorm(2) # two individuals as above
+
+# write simulated data to all BED/BIM/FAM files in one handy command
+# missing BIM and FAM columns are automatically generated
+# data dimensions are validated for provided data
+write_plink('random', X, pheno = pheno)
+
+### same thing in separate steps:
+
 # create default tables to go with simulated genotype data
 fam <- make_fam(n = 2)
 bim <- make_bim(n = 5)
+# overwrite with simulated phenotype
+fam$pheno <- pheno
 
-# write simulated data to BED/BIM/FAM (one command each)
+# write simulated data to BED/BIM/FAM separately (one command each)
 # extension can be omitted and it still works!
 write_bed('random', X)
 write_fam('random', fam)

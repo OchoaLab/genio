@@ -1,3 +1,6 @@
+# need to load it explicitly for some tests
+library(tibble)
+
 context("test-genio")
 
 # all examples have 10 rows by construction, hardcode for tests here
@@ -529,8 +532,6 @@ test_that("make_fam works", {
     # delete output when done
     invisible(file.remove(fo))
 
-    # need to load it explicitly for this test
-    library(tibble)
     # try a case where we are missing standard columns, add extra columns
     fam <- tibble(pheno =  0:2, subpop = 2:0, age = 30:32)
     # autocomplete and reorder
@@ -573,8 +574,6 @@ test_that("make_bim works", {
     # delete output when done
     invisible(file.remove(fo))
 
-    # need to load it explicitly for this test
-    library(tibble)
     # try a case where we are missing standard columns, add extra columns
     bim <- tibble(chr = 1:10, fst = (1:10)/100, maf = fst)
     # autocomplete and reorder

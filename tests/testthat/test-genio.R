@@ -597,3 +597,20 @@ test_that("require_files_plink works", {
     # try something that doesn't exist, expect to fail
     expect_error( require_files_plink('file-that-does-not-exist') )
 })
+
+test_that("delete_files_plink works", {
+    # positive control
+    # create dummy BED/BIM/FAM files
+    file <- 'delete-me-test' # no extension
+    # add each extension and create empty files
+    file.create( paste0(file, '.bed') )
+    file.create( paste0(file, '.bim') )
+    file.create( paste0(file, '.fam') )
+    
+    # delete the BED/BIM/FAM files we just created
+    expect_silent( delete_files_plink(file) )
+
+    # negative control
+    # there will be warnings for files that didn't exist
+    expect_warning( delete_files_plink('file-that-does-not-exist') )
+})

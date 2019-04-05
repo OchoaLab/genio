@@ -24,19 +24,6 @@ X <- matrix(X, nrow = m, ncol = n)
 # simulate phenotype (to share across tests)
 pheno <- rnorm(n)
 
-# a helper function for these tests
-delete_plink <- function(file) {
-    # delete all three outputs when done
-    for (ext in exts_plink) {
-        # full path of file to delete
-        file_ext <- add_ext(file, ext)
-        # test that it's actually there!
-        expect_true( file.exists(file_ext) )
-        # now remove
-        invisible( file.remove(file_ext) )
-    }
-}
-
 test_that("write_bed works", {
     # test that there are errors when crucial data is missing
     expect_error(write_bed()) # all is missing
@@ -143,7 +130,7 @@ if (suppressMessages(suppressWarnings(require(BEDMatrix)))) {
         expect_equal(X, X2)
         # delete all three outputs when done
         # this also tests that all three files existed!
-        delete_plink(fo)
+        expect_silent( delete_files_plink(fo) )
 
         # this autocompletes bim and fam except for pheno
         write_plink(fo, X, pheno = pheno)
@@ -157,7 +144,7 @@ if (suppressMessages(suppressWarnings(require(BEDMatrix)))) {
         expect_equal(X, X2)
         # delete all three outputs when done
         # this also tests that all three files existed!
-        delete_plink(fo)
+        expect_silent( delete_files_plink(fo) )
 
         # create a case in which fam is also provided, make sure we get warning
         fam <- make_fam(n = n)
@@ -167,6 +154,6 @@ if (suppressMessages(suppressWarnings(require(BEDMatrix)))) {
         expect_equal(fam$pheno, rep.int(0, n))
         # delete all three outputs when done
         # this also tests that all three files existed!
-        delete_plink(fo)
+        expect_silent( delete_files_plink(fo) )
     })
 }

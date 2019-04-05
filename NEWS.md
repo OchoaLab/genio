@@ -25,4 +25,4 @@
 # 2019-04-05 - genio 1.0.5.9000
 
 * `write_plink` now returns `NULL` **invisibly**.
-* Added `require_files_plink`.
+* Added `require_files_plink`, `delete_files_plink`.

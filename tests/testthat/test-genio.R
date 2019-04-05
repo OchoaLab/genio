@@ -586,3 +586,14 @@ test_that("make_bim works", {
     # make sure chr was as we specified above and not overwritten with 1's
     expect_equal(bim$chr, 1:10)
 })
+
+test_that("require_files_plink works", {
+    # these should all just work (pass existing files)
+    require_files_plink('dummy-33-101-0.1')
+    require_files_plink('dummy-4-10-0.1')
+    require_files_plink('dummy-5-10-0.1')
+    require_files_plink('dummy-6-10-0.1')
+    require_files_plink('dummy-7-10-0.1')
+    # try something that doesn't exist, expect to fail
+    expect_error( require_files_plink('file-that-does-not-exist') )
+})

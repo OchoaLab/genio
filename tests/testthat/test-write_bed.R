@@ -25,7 +25,6 @@ X <- matrix(X, nrow = m, ncol = n)
 pheno <- rnorm(n)
 
 # a helper function for these tests
-exts_plink <- c('bed', 'bim', 'fam')
 delete_plink <- function(file) {
     # delete all three outputs when done
     for (ext in exts_plink) {

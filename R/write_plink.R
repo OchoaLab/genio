@@ -117,5 +117,6 @@ write_plink <- function(file, X, bim = NULL, fam = NULL, pheno = NULL, verbose =
     write_bim(file, bim, verbose=verbose)
 
     # don't return anything
-    return()
+    # actually returns NULL regardless, but make invisible
+    return(invisible())
 }

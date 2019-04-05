@@ -2,20 +2,20 @@
 write_tab_generic <- function(file, tib, ext, tib_names, verbose=TRUE) {
     # check that mandatory arguments aren't missing
     if (missing(file))
-        stop('Fatal: output file path (file) is required!')
+        stop('output file path (file) is required!')
     if (missing(tib))
-        stop('Fatal: input tibble/data.frame (tib) is required!')
+        stop('input tibble/data.frame (tib) is required!')
     if (missing(ext))
-        stop('Fatal: output extension (ext) is required!')
+        stop('output extension (ext) is required!')
     if (missing(tib_names))
-        stop('Fatal: table column names (tib_names) is required!')
+        stop('table column names (tib_names) is required!')
     
     # compare against expected columns
     # matching must be exact!
     # get indexes of missing columns
     indexes <- !(tib_names %in% names(tib))
     if (any(indexes))
-        stop('Fatal: missing column names from "', ext, '" input table: ', names(tib)[indexes])
+        stop('missing column names from "', ext, '" input table: ', names(tib)[indexes])
     # now that nothing is missing, extract and reorder columns as needed
     tib <- tib[, tib_names]
     

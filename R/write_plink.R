@@ -66,9 +66,9 @@
 write_plink <- function(file, X, bim = NULL, fam = NULL, pheno = NULL, verbose = TRUE) {
     # die if things are missing
     if (missing(file))
-        stop('Fatal: output file path is required!')
+        stop('output file path is required!')
     if (missing(X))
-        stop('Fatal: genotype matrix (X) is required!')
+        stop('genotype matrix (X) is required!')
 
     # check dimensions or create autocomplete data, as needed
 
@@ -84,7 +84,7 @@ write_plink <- function(file, X, bim = NULL, fam = NULL, pheno = NULL, verbose =
     } else {
         # require that dimensions match (nothing else is needed)
         if (nrow(bim) != m)
-            stop('Fatal: num loci in X (', m, ') and bim (', nrow(bim), ') disagree!')
+            stop('num loci in X (', m, ') and bim (', nrow(bim), ') disagree!')
     }
     
     # FAM checks
@@ -97,14 +97,14 @@ write_plink <- function(file, X, bim = NULL, fam = NULL, pheno = NULL, verbose =
             # we provided phenotype only, check it, then add it to fam
             # require that dimensions match
             if (length(pheno) != n)
-                stop('Fatal: num ind in X (', n, ') and pheno (', length(pheno), ') disagree!')
+                stop('num ind in X (', n, ') and pheno (', length(pheno), ') disagree!')
             # overwrite default phenotype with desired value
             fam$pheno <- pheno
         }
     } else {
         # require that dimensions match (nothing else is needed)
         if (nrow(fam) != n)
-            stop('Fatal: num ind in X (', n, ') and fam (', nrow(fam), ') disagree!')
+            stop('num ind in X (', n, ') and fam (', nrow(fam), ') disagree!')
         # warn if we also specified pheno, as it will be ignored
         if (!is.null(pheno))
             warning('`pheno` will be ignored, since `fam` was not NULL!')

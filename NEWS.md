@@ -26,3 +26,4 @@
 
 * `write_plink` now returns `NULL` **invisibly**.
 * Added `require_files_plink`, `delete_files_plink`.
+* Removed "Fatal: " prefix from stop messages.

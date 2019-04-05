@@ -5,9 +5,9 @@
 real_path <- function(file, ext) {
     # both inputs are mandatory
     if (missing(file))
-        stop('Fatal: input file is required!')
+        stop('input file is required!')
     if (missing(ext))
-        stop('Fatal: expected file extension (ext) is required!')
+        stop('expected file extension (ext) is required!')
     
     # if "file" was not a character object, then the following manipulations won't work, so just return that and hope for the best
     if (!is.character(file)) return(file)

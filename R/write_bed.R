@@ -40,13 +40,13 @@ NULL
 write_bed <- function(file, X, verbose = TRUE) {
     # die if things are missing
     if (missing(file))
-        stop('Fatal: output file path is required!')
+        stop('output file path is required!')
     if (missing(X))
-        stop('Fatal: genotype matrix (X) is required!')
+        stop('genotype matrix (X) is required!')
     
     # make sure X is a matrix
     if (!is.matrix(X))
-        stop('Fatal: genotypes (X) must be a matrix!')
+        stop('genotypes (X) must be a matrix!')
     
     # add bed extension if it wasn't already there
     file <- add_ext(file, 'bed')

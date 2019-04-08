@@ -21,6 +21,7 @@ The correspondence is:
 \item{M:}{ 1 (male) }
 \item{F:}{ 2 (female) }
 }
+Any other characters will also be mapped to 0 (unknown) but with a warning (U does not generate warnings).
 }
 \examples{
 # verify the mapping above

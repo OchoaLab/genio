@@ -8,6 +8,7 @@
 #'   \item{1:}{ M (male) }
 #'   \item{2:}{ F (female) }
 #' }
+#' Any other cases will also be mapped to U (unknown) but with a warning (0 does not generate warnings).
 #'
 #' @param sex Integer vector of sex codes
 #'
@@ -42,8 +43,12 @@ sex_to_char <- function(sex) {
     
     # look for things that were not translated
     indeces <- !( sex %in% c('U', 'M', 'F') ) # bad cases (potentially)
-    if (any(indeces))
-        stop('invalid sex values outside of 0,1,2: ', unique(sex[indeces]))
+    if (any(indeces)) {
+        # message
+        warning('invalid sex values outside of 0,1,2 treated as missing: ', unique(sex[indeces]))
+        # map them to unknowns
+        sex[indeces] <- 'U'
+    }
     
     # return modified vector when done
     return(sex)

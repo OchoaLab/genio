@@ -8,6 +8,7 @@
 #'   \item{M:}{ 1 (male) }
 #'   \item{F:}{ 2 (female) }
 #' }
+#' Any other characters will also be mapped to 0 (unknown) but with a warning (U does not generate warnings).
 #'
 #' @param sex Character vector of sex codes
 #'
@@ -43,8 +44,12 @@ sex_to_int <- function(sex) {
     
     # look for things that were not translated
     indeces <- !( sex %in% 0:2 ) # bad cases (potentially)
-    if (any(indeces))
-        stop('invalid sex values outside of U,M,F: ', unique(sex[indeces]))
+    if (any(indeces)) {
+        # message
+        warning('invalid sex values outside of U,M,F treated as missing: ', unique(sex[indeces]))
+        # map them to zeroes
+        sex[indeces] <- 0
+    }
     
     # convert to integers
     sex <- as.numeric(sex)

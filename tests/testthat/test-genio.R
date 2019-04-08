@@ -629,8 +629,9 @@ test_that("sex_to_int works", {
     expect_equal( sex_to_int(sex_char), sex_int )
     
     # negative controls
-    expect_error( sex_to_int(c('A', 'B', 'C', 'D')) ) # all invalid
-    expect_error( sex_to_int(c('U', 'M', 'F', 'A')) ) # only last one is invalid
+    # these throw warnings now (not fatal)
+    expect_warning( sex_to_int(c('A', 'B', 'C', 'D')) ) # all invalid
+    expect_warning( sex_to_int(c('U', 'M', 'F', 'A')) ) # only last one is invalid
 })
 
 test_that("sex_to_char works", {
@@ -644,8 +645,9 @@ test_that("sex_to_char works", {
     expect_equal( sex_to_char(sex_int), sex_char )
     
     # negative controls
-    expect_error( sex_to_char(4:10) ) # all invalid
-    expect_error( sex_to_char(0:3) ) # only last one is invalid
+    # these throw warnings now (not fatal)
+    expect_warning( sex_to_char(4:10) ) # all invalid
+    expect_warning( sex_to_char(0:3) ) # only last one is invalid
 
     # test that functions invert themselves as expected
     expect_equal( sex_to_char( sex_to_int(sex_char) ), sex_char )

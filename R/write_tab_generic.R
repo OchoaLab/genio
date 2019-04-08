@@ -9,13 +9,10 @@ write_tab_generic <- function(file, tib, ext, tib_names, verbose=TRUE) {
         stop('output extension (ext) is required!')
     if (missing(tib_names))
         stop('table column names (tib_names) is required!')
+
+    # validate tibble (check against expected column names)
+    validate_tab_generic(tib, ext, tib_names)
     
-    # compare against expected columns
-    # matching must be exact!
-    # get indexes of missing columns
-    indexes <- !(tib_names %in% names(tib))
-    if (any(indexes))
-        stop('missing column names from "', ext, '" input table: ', names(tib)[indexes])
     # now that nothing is missing, extract and reorder columns as needed
     tib <- tib[, tib_names]
     

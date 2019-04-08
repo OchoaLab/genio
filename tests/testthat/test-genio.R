@@ -614,3 +614,92 @@ test_that("delete_files_plink works", {
     # there will be warnings for files that didn't exist
     expect_warning( delete_files_plink('file-that-does-not-exist') )
 })
+
+test_that("sex_to_int works", {
+    # die if input is missing
+    expect_error( sex_to_int() )
+        
+    # positive control
+    # construct a simple test where we know the answers
+    sex_char <- c('U', 'M', 'F', 'F', 'M', 'U')
+    sex_int <- c(0:2, 2:0)
+    expect_equal( sex_to_int(sex_char), sex_int )
+    # lowercase should work too
+    sex_char <- c('u', 'm', 'f', 'f', 'm', 'u')
+    expect_equal( sex_to_int(sex_char), sex_int )
+    
+    # negative controls
+    expect_error( sex_to_int(c('A', 'B', 'C', 'D')) ) # all invalid
+    expect_error( sex_to_int(c('U', 'M', 'F', 'A')) ) # only last one is invalid
+})
+
+test_that("sex_to_char works", {
+    # die if input is missing
+    expect_error( sex_to_char() )
+        
+    # positive control
+    # construct a simple test where we know the answers
+    sex_int <- c(0:2, 2:0)
+    sex_char <- c('U', 'M', 'F', 'F', 'M', 'U')
+    expect_equal( sex_to_char(sex_int), sex_char )
+    
+    # negative controls
+    expect_error( sex_to_char(4:10) ) # all invalid
+    expect_error( sex_to_char(0:3) ) # only last one is invalid
+
+    # test that functions invert themselves as expected
+    expect_equal( sex_to_char( sex_to_int(sex_char) ), sex_char )
+    expect_equal( sex_to_int( sex_to_char(sex_int) ), sex_int )
+})
+
+test_that("validate_tab_generic works", {
+    # load sample file
+    fi <- system.file("extdata", 'sample.fam', package = "genio", mustWork = TRUE)
+    # this should just work (no "expect" test)
+    fam <- read_fam(fi)
+
+    # test that there are errors when crucial data is missing
+    expect_error(validate_tab_generic()) # all is missing
+    expect_error(validate_tab_generic(tib = fam)) # ext, tib_names are missing
+    expect_error(validate_tab_generic(ext = 'fam')) # tib, tib_names are missing
+    expect_error(validate_tab_generic(tib_names = fam_names)) # tib, ext are missing
+    expect_error(validate_tab_generic(tib = fam, ext = 'fam')) # tib_names are missing
+    expect_error(validate_tab_generic(tib = fam, tib_names = fam_names)) # ext missing
+    expect_error(validate_tab_generic(ext = 'fam', tib_names = fam_names)) # tib missing
+
+    # when all is present and valid, no errors or warnings are thrown
+    expect_silent(validate_tab_generic(tib = fam, ext = 'fam', tib_names = fam_names))
+
+    # more negative controls
+    # tibble must be a data.frame (includes tibbles)
+    expect_error(validate_tab_generic(tib = 'not-tibble', ext = 'fam', tib_names = fam_names))
+    # set wrong columns (so they're missing)
+    expect_error(validate_tab_generic(tib = fam, ext = 'fam', tib_names = bim_names))
+    # NOTE: ext is only used to print the informative messages, but it is not itself validated or matched against anything
+})
+
+test_that("ind_to_fam works", {
+    # load sample files
+    # FAM (negative control)
+    fi <- system.file("extdata", 'sample.fam', package = "genio", mustWork = TRUE)
+    fam <- read_fam(fi)
+    # IND (positive control)
+    fi <- system.file("extdata", 'sample.ind', package = "genio", mustWork = TRUE)
+    ind <- read_ind(fi)
+    
+    # die if input is missing
+    expect_error( ind_to_fam() )
+    # die if input is not an IND table
+    expect_error( ind_to_fam(fam) )
+    # convert a proper IND file... (overwrites earlier FAM)
+    fam <- ind_to_fam(ind)
+    # check that we have the values we expect
+    expect_equal( fam$id, ind$id )
+    expect_equal( fam$fam, ind$label )
+    expect_equal( fam$sex, sex_to_int(ind$sex) ) # needs conversion
+    expect_equal( sex_to_char(fam$sex), ind$sex ) # gratuitously test reverse conversion
+    # these were default values, check that they are so
+    expect_true( all(fam$pat == 0) )
+    expect_true( all(fam$mat == 0) )
+    expect_true( all(fam$pheno == 0) )
+})

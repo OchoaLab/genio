@@ -27,3 +27,7 @@
 * `write_plink` now returns `NULL` **invisibly**.
 * Added `require_files_plink`, `delete_files_plink`.
 * Removed "Fatal: " prefix from stop messages.
+
+# 2019-04-08 - genio 1.0.6.9000
+
+* Added `ind_to_fam`, `sex_to_int`, `sex_to_char`.

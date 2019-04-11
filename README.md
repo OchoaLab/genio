@@ -11,23 +11,23 @@ Otherwise, the package consists of wrappers for `readr` functions that add missi
 <!--
 You can install the released version of genio from [CRAN](https://CRAN.R-project.org) with:
 
-``` r
+``` R
 install.packages("genio")
 ```
 -->
 
 Install the latest development version from GitHub:
-``` r
+```R
 install.packages("devtools") # if needed
 library(devtools)
-devtools::install_github("OchoaLab/genio", build_opts=c())
+install_github("OchoaLab/genio", build_opts = c())
 ```
 
 ## Example
 
 Load library:
 
-``` r
+```R
 library(genio)
 ```
 
@@ -35,7 +35,7 @@ library(genio)
 
 Note that `write_plink` writes all three BED/BIM/FAM files together, while each `write_{bed,bim,fam}` function creates a single file.
 
-``` r
+```R
 # write your genotype matrix stored in an R native matrix
 
 # (here we create a small example with random data)
@@ -44,7 +44,7 @@ X <- rbinom(10, 2, 0.5)
 # replace 3 random genotypes with missing values
 X[sample(10, 3)] <- NA
 # turn into 5x2 matrix
-X <- matrix(X, nrow=5, ncol=2)
+X <- matrix(X, nrow = 5, ncol = 2)
 
 # also create a simulated phenotype vector
 pheno <- rnorm(2) # two individuals as above
@@ -71,7 +71,7 @@ write_bim('random', bim)
 
 ### Reading and writing existing data
 
-``` r
+```R
 # read individual and locus data into "tibbles"
 
 # plink formats

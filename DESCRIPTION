@@ -5,7 +5,8 @@ Authors@R:
     person(given = "Alejandro",
 	   family = "Ochoa",
 	   role = c("aut", "cre"),
-	   email = "alejandro.ochoa@duke.edu")
+	   email = "alejandro.ochoa@duke.edu",
+           comment = c(ORCID = "0000-0003-4928-3403"))
 Description: The 'genio' (GenIO = Genetics I/O) package implements simple parsers and writers for tables associated with statistical genetics data.  A lightning-fast plink-format BED writer is provided.  Other functions are `readr` wrappers that are more constrained, user-friendly, and efficient for these particular applications; handles plink and eigenstrat tables (FAM, BIM, IND, and SNP files).  There are also "make" functions for FAM and BIM tables with default values to go with simulated genotype data.
 License: GPL-3
 Encoding: UTF-8

@@ -22,7 +22,7 @@ Each genotype per locus (m loci) and individual (n total) counts the number of a
 No *.fam or *.bim files are created by this basic function.
 }
 \details{
-Genotypes with values outside of \eqn{[0,2]} cause a fatal error, in which case the partial output is deleted.
+Genotypes with values outside of \eqn{[0,2]} cause an error, in which case the partial output is deleted.
 However, beware that decimals get truncated internally, so values that truncate to 0, 1, or 2 will not raise errors.
 The BED format does not accept fractional dosages, so such data will not be written as expected.
 }

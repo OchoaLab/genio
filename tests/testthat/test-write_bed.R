@@ -199,6 +199,10 @@ if (suppressMessages(suppressWarnings(require(BEDMatrix)))) {
         X2 <- read_bed_hack(fo)
         # compare now
         expect_equal(X, X2)
+        # read with my new function
+        data <- read_plink(fo)
+        # compare again
+        expect_equal(X, data$X)
         # delete all three outputs when done
         # this also tests that all three files existed!
         expect_silent( delete_files_plink(fo) )
@@ -213,6 +217,10 @@ if (suppressMessages(suppressWarnings(require(BEDMatrix)))) {
         X2 <- read_bed_hack(fo)
         # compare now
         expect_equal(X, X2)
+        # read with my new function
+        data <- read_plink(fo)
+        # compare again
+        expect_equal(X, data$X)
         # delete all three outputs when done
         # this also tests that all three files existed!
         expect_silent( delete_files_plink(fo) )

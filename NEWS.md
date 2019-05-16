@@ -35,4 +35,5 @@
 
 # 2019-05-16 - genio 1.0.7.9000
 
-* Added `read_bed`!
+* Added `read_bed` and `read_plink`!
+  Now all plink reading and writing operations are supported.

@@ -1,8 +1,9 @@
 # genio
 
-The `genio` (GENetics I/O) package provides easy-to-use and efficient writers and parsers for formats from statistical genetics research.
+The `genio` (GENetics I/O) package provides easy-to-use and efficient readers and writers for formats from statistical genetics research.
 Currently targets plink and eigenstrat formats (more to come).
-Lightning fast `write_bed` (written in Rcpp) writes genotypes (in native R matrices) into plink BED format.
+Plink BED/BIM/FAM formats are fully supported.
+Lightning fast `read_bed` and `write_bed` (written in Rcpp) reads and writes genotypes between native R matrices and plink BED format.
 `make_*` functions create default FAM and BIM files to go with simulated genotype data.
 Otherwise, the package consists of wrappers for `readr` functions that add missing extensions and column names (often absent in these files).
 
@@ -74,29 +75,37 @@ write_bim('random', bim)
 ```R
 # read individual and locus data into "tibbles"
 
-# plink formats
-fam <- read_fam('sample.fam')
+# read plink data all at once
+data <- read_plink('sample')
+# extract genotypes and annotation tables
+X   <- data$X
+bim <- data$bim
+fam <- data$fam
+
+# plink files read individually
 bim <- read_bim('sample.bim')
+fam <- read_fam('sample.fam')
 X   <- read_bed('sample.bed', nrow(bim), nrow(fam))
 
 # eigenstrat formats
-ind <- read_ind('sample.ind')
 snp <- read_snp('sample.snp')
+ind <- read_ind('sample.ind')
 
 # in all cases extension can be omitted and it still works!
-fam <- read_fam('sample')
 bim <- read_bim('sample')
-ind <- read_ind('sample')
+fam <- read_fam('sample')
 snp <- read_snp('sample')
+ind <- read_ind('sample')
 
 # write these data to other files
 # here extensions are also added automatically
+# write all plink files together, ensuring consistency
+write_plink('new', X, bim, fam)
+# write plink files individually
 write_fam('new', fam)
 write_bim('new', bim)
 write_bed('new', X)
+# eigenstrat files
 write_ind('new', ind)
 write_snp('new', snp)
 ```
-
-NOTE:
-To read BED files I recommend the `BEDMatrix` package, which offers low-memory functionality I do not aim to reproduce in this package.

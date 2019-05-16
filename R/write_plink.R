@@ -112,9 +112,9 @@ write_plink <- function(file, X, bim = NULL, fam = NULL, pheno = NULL, verbose =
 
     # now everything has been checked and/or created
     # time to write file!
-    write_bed(file, X, verbose=verbose)
-    write_fam(file, fam, verbose=verbose)
-    write_bim(file, bim, verbose=verbose)
+    write_bed(file, X, verbose = verbose)
+    write_fam(file, fam, verbose = verbose)
+    write_bim(file, bim, verbose = verbose)
 
     # don't return anything
     # actually returns NULL regardless, but make invisible

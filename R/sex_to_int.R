@@ -46,7 +46,7 @@ sex_to_int <- function(sex) {
     indeces <- !( sex %in% 0:2 ) # bad cases (potentially)
     if (any(indeces)) {
         # message
-        warning('invalid sex values outside of U,M,F treated as missing: ', unique(sex[indeces]))
+        warning('Invalid sex values outside of U,M,F treated as missing: ', unique(sex[indeces]))
         # map them to zeroes
         sex[indeces] <- 0
     }

@@ -15,7 +15,7 @@ IntegerMatrix read_bed_cpp(const char* file, int m_loci, int n_ind) {
   FILE *file_stream = fopen( file, "rb" );
   // die right away if needed, before initializing buffers etc
   if ( file_stream == NULL )
-    stop("Fatal: could not open BED file for reading!  The file may not exist.");
+    stop("Could not open BED file for reading!  The file may not exist.");
 
   /////////////////////////
   // check magic numbers //
@@ -38,7 +38,7 @@ IntegerMatrix read_bed_cpp(const char* file, int m_loci, int n_ind) {
     free( buffer ); // free buffer memory
     fclose( file_stream ); // close file
     // now send error message to R
-    stop("input BED file did not have a complete header (3-byte magic numbers)!");
+    stop("Input BED file did not have a complete header (3-byte magic numbers)!");
   }
   
   // require that they match our only supported specification of locus-major order and latest format
@@ -51,7 +51,7 @@ IntegerMatrix read_bed_cpp(const char* file, int m_loci, int n_ind) {
       free( buffer ); // free buffer memory
       fclose( file_stream ); // close file
       // now send error message to R
-      stop("input BED file is not in supported format (magic numbers do not match).  Only latest locus-major format is supported!");
+      stop("Input BED file is not in supported format (magic numbers do not match).  Only latest locus-major format is supported!");
     }
   }
   
@@ -80,7 +80,7 @@ IntegerMatrix read_bed_cpp(const char* file, int m_loci, int n_ind) {
       fclose( file_stream ); // close file
       // now send error message to R
       char msg[100];
-      sprintf(msg, "truncated file: row %d terminated at %d bytes, expected %d.\n", i+1, (int) n_buf_read, (int) n_buf); // convert to 1-based coordinates
+      sprintf(msg, "Truncated file: row %d terminated at %d bytes, expected %d.", i+1, (int) n_buf_read, (int) n_buf); // convert to 1-based coordinates
       stop(msg);
     }
 
@@ -128,7 +128,7 @@ IntegerMatrix read_bed_cpp(const char* file, int m_loci, int n_ind) {
 	    fclose( file_stream ); // close file
 	    // now send error message to R
 	    char msg[200];
-	    sprintf(msg, "row %d padding was non-zero.  Either the specified number of individuals is incorrect or the input file is corrupt!\n", i+1); // convert to 1-based coordinates
+	    sprintf(msg, "Row %d padding was non-zero.  Either the specified number of individuals is incorrect or the input file is corrupt!", i+1); // convert to 1-based coordinates
 	    stop(msg);
 	  }
 	}
@@ -148,7 +148,7 @@ IntegerMatrix read_bed_cpp(const char* file, int m_loci, int n_ind) {
   free( buffer );
   if ( n_buf_read != 0 ) {
     // now send error message to R
-    stop("input BED file continued after all requested rows were read!  Either the specified the number of loci was too low or the input file is corrupt!");
+    stop("Input BED file continued after all requested rows were read!  Either the specified the number of loci was too low or the input file is corrupt!");
   }
 
   // return genotype matrix

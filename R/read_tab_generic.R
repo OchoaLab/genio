@@ -2,13 +2,13 @@
 read_tab_generic <- function(file, ext, tib_names, col_types, verbose = TRUE) {
     # check that mandatory arguments aren't missing
     if (missing(file))
-        stop('input file path (file) is required!')
+        stop('Input file path (file) is required!')
     if (missing(ext))
-        stop('input extension (ext) is required!')
+        stop('Input extension (ext) is required!')
     if (missing(tib_names))
-        stop('table column names (tib_names) is required!')
+        stop('Table column names (tib_names) is required!')
     if (missing(col_types))
-        stop('table column types (col_types) is required!')
+        stop('Table column types (col_types) is required!')
     
     # add .ext and/or .gz if missing and needed
     file <- real_path(file, ext)

@@ -27,6 +27,6 @@ require_files_plink <- function(file) {
     # check each in order to produce most informative messages
     for (file_plink in files_plink) {
         if (!file.exists(file_plink))
-            stop('required file is missing: ', file_plink)
+            stop('Required file is missing: ', file_plink)
     }
 }

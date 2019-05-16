@@ -2,13 +2,13 @@
 write_tab_generic <- function(file, tib, ext, tib_names, verbose=TRUE) {
     # check that mandatory arguments aren't missing
     if (missing(file))
-        stop('output file path (file) is required!')
+        stop('Output file path (file) is required!')
     if (missing(tib))
-        stop('input tibble/data.frame (tib) is required!')
+        stop('Input tibble/data.frame (tib) is required!')
     if (missing(ext))
-        stop('output extension (ext) is required!')
+        stop('Output extension (ext) is required!')
     if (missing(tib_names))
-        stop('table column names (tib_names) is required!')
+        stop('Table column names (tib_names) is required!')
 
     # validate tibble (check against expected column names)
     validate_tab_generic(tib, ext, tib_names)

@@ -45,7 +45,7 @@ sex_to_char <- function(sex) {
     indeces <- !( sex %in% c('U', 'M', 'F') ) # bad cases (potentially)
     if (any(indeces)) {
         # message
-        warning('invalid sex values outside of 0,1,2 treated as missing: ', unique(sex[indeces]))
+        warning('Invalid sex values outside of 0,1,2 treated as missing: ', unique(sex[indeces]))
         # map them to unknowns
         sex[indeces] <- 'U'
     }

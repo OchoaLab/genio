@@ -54,11 +54,11 @@
 read_bed <- function(file, m_loci, n_ind, verbose = TRUE) {
     # die if things are missing
     if (missing(file))
-        stop('output file path is required!')
+        stop('Output file path is required!')
     if (missing(m_loci))
-        stop('number of loci (m_loci) is required!')
+        stop('Number of loci (m_loci) is required!')
     if (missing(n_ind))
-        stop('number of individuals (n_ind) is required!')
+        stop('Number of individuals (n_ind) is required!')
     
     # add bed extension if it wasn't already there
     file <- add_ext(file, 'bed')

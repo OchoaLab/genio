@@ -44,7 +44,7 @@
 read_plink <- function(file, verbose = TRUE) {
     # die if things are missing
     if (missing(file))
-        stop('input file path is required!')
+        stop('Input file path is required!')
 
     # remove bed extension if present
     file <- sub('\\.bed$', '', file)

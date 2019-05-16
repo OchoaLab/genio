@@ -15,7 +15,7 @@ void write_bed_cpp(const char* file, IntegerMatrix X) {
   // open output file
   FILE *file_stream = fopen( file, "w" );
   if ( file_stream == NULL )
-    stop("could not open BED file for writing!");
+    stop("Could not open BED file for writing!");
 
   // write header
   // assume standard locus-major order and latest format
@@ -48,7 +48,7 @@ void write_bed_cpp(const char* file, IntegerMatrix X) {
 	remove( file ); // delete partial output (will be useless binary data anyway)
 	// now send error message to R
 	char msg[100];
-	sprintf(msg, "invalid genotype '%d' at row %d, col %d.\n", X(i,j), i+1, j+1); // convert to 1-based coordinates
+	sprintf(msg, "Invalid genotype '%d' at row %d, col %d.", X(i,j), i+1, j+1); // convert to 1-based coordinates
 	stop(msg);
       }
 

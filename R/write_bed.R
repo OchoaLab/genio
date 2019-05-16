@@ -8,7 +8,7 @@ NULL
 #' Each genotype per locus (m loci) and individual (n total) counts the number of alternative alleles or \code{NA} for missing data.
 #' No *.fam or *.bim files are created by this basic function.
 #'
-#' Genotypes with values outside of \eqn{[0,2]} cause a fatal error, in which case the partial output is deleted.
+#' Genotypes with values outside of \eqn{[0,2]} cause an error, in which case the partial output is deleted.
 #' However, beware that decimals get truncated internally, so values that truncate to 0, 1, or 2 will not raise errors.
 #' The BED format does not accept fractional dosages, so such data will not be written as expected.
 #' 
@@ -40,13 +40,13 @@ NULL
 write_bed <- function(file, X, verbose = TRUE) {
     # die if things are missing
     if (missing(file))
-        stop('output file path is required!')
+        stop('Output file path is required!')
     if (missing(X))
-        stop('genotype matrix (X) is required!')
+        stop('Genotype matrix (X) is required!')
     
     # make sure X is a matrix
     if (!is.matrix(X))
-        stop('genotypes (X) must be a matrix!')
+        stop('Genotypes (X) must be a matrix!')
     
     # add bed extension if it wasn't already there
     file <- add_ext(file, 'bed')

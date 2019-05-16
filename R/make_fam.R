@@ -44,7 +44,7 @@ make_fam <- function(tib, n = NA) {
         # there's nothing to edit, create a blank tibble
         # this is the only case in which n is required
         if (is.na(n))
-            stop('both `tib` and `n` are missing!')
+            stop('Both `tib` and `n` are missing!')
         # initialize tibble this way
         tib <- tibble::tibble(.rows = n)
     } else {

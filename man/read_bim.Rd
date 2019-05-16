@@ -29,7 +29,7 @@ bim
 # can specify without extension
 file <- sub('\\\\.bim$', '', file) # remove extension from this path on purpose
 file # verify .bim is missing
-bim <- read_bim(file) # load it anyway!
+bim <- read_bim(file) # loads too!
 bim
 
 }

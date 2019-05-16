@@ -77,6 +77,7 @@ write_bim('random', bim)
 # plink formats
 fam <- read_fam('sample.fam')
 bim <- read_bim('sample.bim')
+X   <- read_bed('sample.bed', nrow(bim), nrow(fam))
 
 # eigenstrat formats
 ind <- read_ind('sample.ind')
@@ -92,9 +93,9 @@ snp <- read_snp('sample')
 # here extensions are also added automatically
 write_fam('new', fam)
 write_bim('new', bim)
+write_bed('new', X)
 write_ind('new', ind)
 write_snp('new', snp)
-
 ```
 
 NOTE:

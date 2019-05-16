@@ -32,3 +32,7 @@
 
 * Added `ind_to_fam`, `sex_to_int`, `sex_to_char`.
 * 2019-05-13: added ORCID to author info
+
+# 2019-05-16 - genio 1.0.7.9000
+
+* Added `read_bed`!

@@ -24,7 +24,7 @@ X <- matrix(X, nrow = m, ncol = n)
 # simulate phenotype (to share across tests)
 pheno <- rnorm(n)
 
-test_that("write_bed works", {
+test_that("write_bed and read_bed work", {
     # test that there are errors when crucial data is missing
     expect_error(write_bed()) # all is missing
     expect_error(write_bed('file')) # X is missing
@@ -34,6 +34,23 @@ test_that("write_bed works", {
     
     # this should work
     write_bed(fo, X)
+
+    # read tests
+    # parse data back, verify agreement!
+    X2 <- read_bed(fo, m, n)
+    expect_equal(X, X2)
+    # errors for missing params
+    expect_error( read_bed() ) # missing all
+    expect_error( read_bed(m_loci = m, n_ind = n) ) # missing file
+    expect_error( read_bed(fo, n_ind = n) ) # missing m_loci
+    expect_error( read_bed(fo, m) ) # missing n_ind
+    # error tests for bad dimensions
+    expect_error( read_bed(fo, n, m) ) # reversed dimensions: padding checks and padding mismatches catch these!
+    expect_error( read_bed(fo, m+1, n) )
+    expect_error( read_bed(fo, m-1, n) )
+    expect_error( read_bed(fo, m, n-1) )
+    expect_error( read_bed(fo, m, n+4) ) # have to be off by a whole byte to notice some of these errors
+    
     # delete output when done
     invisible(file.remove(fo_bed))
 
@@ -106,6 +123,42 @@ if (suppressMessages(suppressWarnings(require(BEDMatrix)))) {
         file.remove(f2)
     }
 
+    # generic testing function for read_bed_cpp
+    testOneInput_read_cpp <- function(nameIn) {
+        # load dummy file
+        X <- read_bed_hack(nameIn)
+        # load using my code
+        file <- add_ext(nameIn, 'bed')
+        expect_silent(
+            X2 <- read_bed_cpp(file, nrow(X), ncol(X)) # hack use dimensions from the X read by BEDMatrix
+        )
+        
+        # compare now
+        expect_equal(X, X2)
+    }
+
+    # generic testing function for read_bed
+    testOneInput_read <- function(nameIn) {
+        # load dummy file
+        X <- read_bed_hack(nameIn)
+        # load using my code
+        file <- add_ext(nameIn, 'bed')
+        X2 <- read_bed(file, nrow(X), ncol(X)) # hack use dimensions from the X read by BEDMatrix
+        
+        # compare now
+        expect_equal(X, X2)
+
+        # ensure expected failures do fail
+        # mess with dimensions on purpose
+        expect_error( read_bed(file, ncol(X), nrow(X)) ) # reverse dimensions, get caught because of padding checks (non-commutative unless both are factors of 4)
+        expect_error( read_bed(file, nrow(X)+1, ncol(X)) )
+        expect_error( read_bed(file, nrow(X)-1, ncol(X)) )
+        expect_error( read_bed(file, nrow(X), ncol(X)-1) )
+        # sadly many +1 individual cases don't cause error because they just look like zeroes (in all loci) if there is enough padding.
+        # do expect an error if we're off by a whole byte (4 individuals)
+        expect_error( read_bed(file, nrow(X), ncol(X)+4) )
+    }
+    
     test_that("write_bed agrees with BEDMatrix", {
         # repeat on several files
         testOneInput('dummy-33-101-0.1')
@@ -113,6 +166,24 @@ if (suppressMessages(suppressWarnings(require(BEDMatrix)))) {
         testOneInput('dummy-5-10-0.1')
         testOneInput('dummy-6-10-0.1')
         testOneInput('dummy-7-10-0.1')
+    })
+    
+    test_that("read_bed_cpp agrees with BEDMatrix", {
+        # repeat on several files
+        testOneInput_read_cpp('dummy-33-101-0.1')
+        testOneInput_read_cpp('dummy-4-10-0.1')
+        testOneInput_read_cpp('dummy-5-10-0.1')
+        testOneInput_read_cpp('dummy-6-10-0.1')
+        testOneInput_read_cpp('dummy-7-10-0.1')
+    })
+    
+    test_that("read_bed agrees with BEDMatrix", {
+        # repeat on several files
+        testOneInput_read('dummy-33-101-0.1')
+        testOneInput_read('dummy-4-10-0.1')
+        testOneInput_read('dummy-5-10-0.1')
+        testOneInput_read('dummy-6-10-0.1')
+        testOneInput_read('dummy-7-10-0.1')
     })
     
     test_that("write_plink works", {
@@ -157,3 +228,4 @@ if (suppressMessages(suppressWarnings(require(BEDMatrix)))) {
         expect_silent( delete_files_plink(fo) )
     })
 }
+

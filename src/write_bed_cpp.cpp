@@ -2,36 +2,35 @@
 using namespace Rcpp;
 
 // [[Rcpp::export]]
-void write_bed_cpp(const char* fo, IntegerMatrix X) {
+void write_bed_cpp(const char* file, IntegerMatrix X) {
   // - fo assumed to be full path (no missing extensions)
   
-  int nrow = X.nrow();
-  int ncol = X.ncol();
+  int n_ind = X.nrow();
+  int m_loci = X.ncol();
   // number of columns (bytes) in output (for buffer), after byte compression
-  int nbuf = ( ncol + 3 ) / 4;
+  int n_buf = ( m_loci + 3 ) / 4;
   // initialize row buffer
-  unsigned char *buffer = (unsigned char *) malloc( nbuf );
+  unsigned char *buffer = (unsigned char *) malloc( n_buf );
 
   // open output file
-  FILE *fho = fopen( fo, "w" );
-  if ( fho == NULL )
-    stop("Fatal: could not open BED file for writing!");
+  FILE *file_stream = fopen( file, "w" );
+  if ( file_stream == NULL )
+    stop("could not open BED file for writing!");
 
   // write header
   // assume standard locus-major order and latest format
   unsigned char byte_header[3] = {0x6c, 0x1b, 1};
-  fwrite( byte_header, sizeof(unsigned char), 3, fho );
+  fwrite( byte_header, sizeof(unsigned char), 3, file_stream );
 
   // navigate data and process
-  // int j; // to map buffer to input indeces
-  int k, rem;
-  for (int i = 0; i < nrow; i++) {
+  int i, j, k, rem;
+  for (i = 0; i < n_ind; i++) {
     // zero out buffer for new row
-    bzero( buffer, nbuf );
+    bzero( buffer, n_buf );
     // always reset these at start of row
     k = 0; // to map input to buffer indeces
     rem = 0; // to map bit position within byte
-    for (int j = 0; j < ncol; j++) {
+    for (j = 0; j < m_loci; j++) {
       // this does some efficient bit operations:
       // - "|=" adds things in the empty bit positions
       // - "<<" puts the new number in the right bit position
@@ -45,11 +44,11 @@ void write_bed_cpp(const char* fo, IntegerMatrix X) {
       } else if (X(i,j) != 2) { // 2 -> 0, so do nothing there, but die if we had any other values!
 	// wrap up everything properly
 	free( buffer ); // free buffer memory
-	fclose( fho ); // close file
-	remove( fo ); // delete partial output (will be useless binary data anyway)
+	fclose( file_stream ); // close file
+	remove( file ); // delete partial output (will be useless binary data anyway)
 	// now send error message to R
 	char msg[100];
-	sprintf(msg, "Error: invalid genotype '%d' at row %d, col %d.\n", X(i,j), i+1, j+1); // convert to 1-based coordinates
+	sprintf(msg, "invalid genotype '%d' at row %d, col %d.\n", X(i,j), i+1, j+1); // convert to 1-based coordinates
 	stop(msg);
       }
 
@@ -63,10 +62,10 @@ void write_bed_cpp(const char* fo, IntegerMatrix X) {
     }
     
     // write buffer (row) out 
-    fwrite( buffer, 1, nbuf, fho );
+    fwrite( buffer, 1, n_buf, file_stream );
   }
 
-  fclose( fho );
+  fclose( file_stream );
 
   // done with buffer
   free( buffer );

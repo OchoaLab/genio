@@ -1,4 +1,5 @@
 #include <Rcpp.h>
+#include <string.h>
 using namespace Rcpp;
 
 // [[Rcpp::export]]
@@ -26,7 +27,7 @@ void write_bed_cpp(const char* file, IntegerMatrix X) {
   int i, j, k, rem;
   for (i = 0; i < n_ind; i++) {
     // zero out buffer for new row
-    bzero( buffer, n_buf );
+    memset( buffer, 0, n_buf );
     // always reset these at start of row
     k = 0; // to map input to buffer indeces
     rem = 0; // to map bit position within byte

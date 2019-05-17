@@ -34,7 +34,7 @@ In addition, as each locus is encoded in an integer number of bytes, and each by
 
 This function only supports locus-major BED files, which are the standard for modern data.
 Format is validated via the BED file's magic numbers (first three bytes of file).
-Older BED files can be convered using plink.
+Older BED files can be converted using plink.
 }
 \examples{
 # first obtain data dimensions from BIM and FAM files

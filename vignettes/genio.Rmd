@@ -65,7 +65,7 @@ X <- matrix(X, nrow = m_loci, ncol = n_ind)
 X[1:10, 1:10]
 ```
 
-To create annotation tables that look a bit more interesting than the defaults, let us create some slighly more realistic values.
+To create annotation tables that look a bit more interesting than the defaults, let us create some slightly more realistic values.
 Here we use our first `genio` function!
 ```{R}
 library(genio)
@@ -95,7 +95,7 @@ bim$alt <- sample(c('A', 'T'), m_loci, replace = TRUE)
 bim
 ```
 
-Now we similarly create and edit the individiual annotations table.
+Now we similarly create and edit the individual annotations table.
 ```{R}
 # Specify the number of individuals
 fam <- make_fam( n = n_ind )
@@ -181,7 +181,7 @@ In this scenario, we get a simple rule of thumb that every 1000 individuals cons
 4 * 1000 * 500000 / 1024 /1024 /1024
 ```
 This is the amount of free memory required just to load the matrix.
-Of course, several common matrix operations for genotypes consume even more memory, so more free memory will be needed to acomplish anything.
+Of course, several common matrix operations for genotypes consume even more memory, so more free memory will be needed to accomplish anything.
 
 # Comparison to other packages
 
@@ -366,7 +366,7 @@ The `genio` reader is the fastest (as seen below) for several reasons.
 Genotypes are read very efficiently using `Rcpp` code, and stored directly into an R matrix, which is most efficient if that is the end goal.
 The annotation tables are also read most efficiently, using the `readr` package internally.
 
-The `BEDMatrix` reader is also written in `Rcpp`, but since its goal is to provide efficient random access to genotypes stored in a file, it sacrifies speed when the goal is to read the entire data into an R matrix.
+The `BEDMatrix` reader is also written in `Rcpp`, but since its goal is to provide efficient random access to genotypes stored in a file, it sacrifices speed when the goal is to read the entire data into an R matrix.
 The annotation tables are read with `data.table`, which is [actually the fastest](https://csgillespie.github.io/efficientR/5-3-importing-data.html), though the difference in performance is small compared to `readr` for reasonably-sized files.
 
 The `snpStats` reader is written in `C`, so it is also very fast for its initial step, but converting the genotypes from the `snpStats` format into a native R matrix proves too expensive.

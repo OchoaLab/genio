@@ -11,7 +11,7 @@
 #'
 #' This function only supports locus-major BED files, which are the standard for modern data.
 #' Format is validated via the BED file's magic numbers (first three bytes of file).
-#' Older BED files can be convered using plink.
+#' Older BED files can be converted using plink.
 #' 
 #' @param file Input file path.
 #' *.bed extension may be omitted (will be added automatically if it is missing).

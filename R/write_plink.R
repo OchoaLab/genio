@@ -10,7 +10,7 @@
 #' \code{\link{make_bim}} and
 #' \code{\link{make_fam}},
 #' which is useful behavior for simulated data.
-#' Lastly, the phenotype can be provided as a separate argument and incorporated automatically if \code{fam=NULL} (a common scenarion for simulated genotypes and traits).
+#' Lastly, the phenotype can be provided as a separate argument and incorporated automatically if \code{fam=NULL} (a common scenario for simulated genotypes and traits).
 #' Below suppose there are \eqn{m} loci and \eqn{n} individuals.
 #' 
 #' @param file Output file path, without extensions (each of .bed, .bim, .fam extensions will be added automatically as needed).

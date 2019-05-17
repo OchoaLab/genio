@@ -2,7 +2,7 @@
 #'
 #' This package fully supports reading and writing plink BED/BIM/FAM files, as illustrated below.
 #' These functions make it easy to create dummy annotation tables to go with simulated genotype data too.
-#' Latly, there is functionality to read and write Eigenstrat tables.
+#' Lastly, there is functionality to read and write Eigenstrat tables.
 #' 
 #' @examples
 #' # read existing BED/BIM/FAM files

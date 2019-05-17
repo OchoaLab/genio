@@ -37,7 +37,7 @@ In addition, if \code{bim=NULL} or \code{fam=NULL}, these are auto-generated usi
 \code{\link{make_bim}} and
 \code{\link{make_fam}},
 which is useful behavior for simulated data.
-Lastly, the phenotype can be provided as a separate argument and incorporated automatically if \code{fam=NULL} (a common scenarion for simulated genotypes and traits).
+Lastly, the phenotype can be provided as a separate argument and incorporated automatically if \code{fam=NULL} (a common scenario for simulated genotypes and traits).
 Below suppose there are \eqn{m} loci and \eqn{n} individuals.
 }
 \examples{

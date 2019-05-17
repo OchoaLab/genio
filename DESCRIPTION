@@ -19,7 +19,8 @@ Suggests:
     rmarkdown,
     lfa,
     BEDMatrix,
-    snpStats
+    snpStats,
+    pryr
 Imports:
     readr,
     tibble,

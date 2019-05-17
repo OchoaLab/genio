@@ -213,12 +213,12 @@ To compare the two genotype reading functions on an equal footing, let us assume
 # Since most of the reading is actually happening now,
 # we time this step now.
 time_read_bedmatrix_2 <- system.time(
-    X_BEDMatrix <- as.matrix(X_BEDMatrix)
+    X_BEDMatrix_Rmat <- as.matrix(X_BEDMatrix)
 )
 time_read_bedmatrix_2
 # Now we can test that the BEDMatrix agrees with the original matrix we simulated.
 # Need to transpose first.
-stopifnot( all( X == t(X_BEDMatrix), na.rm = TRUE) )
+stopifnot( all( X == t(X_BEDMatrix_Rmat), na.rm = TRUE) )
 ```
 
 ## snpStats
@@ -406,6 +406,54 @@ barplot(
     ylab = 'runtime (s)'
 )
 ```
+
+## Memory comparison
+
+High memory consumption is the main sacrifice for the ease of use of native R matrices, and in this respect `genio` consumes the most memory (second only to `lfa`).
+
+We use the `pryr` package to compare the memory usage of each native genotype object.
+
+```{R, fig.width = 6, fig.height = 4, fig.align = 'center'}
+library(pryr)
+# Store directly into a vector
+sizes <- c(
+    object_size( X ),
+    object_size( data_genio$X ),
+    object_size( X_BEDMatrix ),
+    object_size( data_snpStats$genotypes ),
+    object_size( X_lfa )
+)
+names_sizes <- c(
+    'original',
+    'genio',
+    'BEDMatrix',
+    'snpStats',
+    'lfa'
+)
+# Create barplot
+barplot(
+    sizes,
+    names.arg = names_sizes,
+    main = 'Native genotype object sizes',
+    xlab = 'packages',
+    ylab = 'memory (bytes)'
+)
+```
+
+The `BEDMatrix` package is ideal for very large files, since data is loaded into memory only as needed.
+So the main object does not actually hold any genotypes in memory.
+It is up to the user to decide how much data to access at once to trade-off speed and memory consumption.
+
+Although `snpStats` does manage memory better than `genio`, is is strictly by a fixed factor of 4.
+The reason is that each genotype is encoded in a native R matrix using 4 bytes (when encoded as an integer, as the original matrix and the matrix `genio` read; this is actually platform dependent).
+On the other hand, `snpStats` uses strictly one byte per genotype.
+
+`lfa` uses 8 bytes per genotype because its genotype matrix treats is elements as doubles rather than integers, so it uses twice as much memory as `genio`.
+
+Overall, there is a narrow window in data sizes in which a genotype matrix is too large to be encoded as a native R matrix but not too large that it will fit as a `snpStats` object.
+That, and the very different interface of `snpStats` makes it not very worthwhile in my opinion, unless there are very specific functions provided by that package that you need and are not implemented elsewhere.
+I prefer to use `BEDMatrix` for large datasets.
+
 
 # Cleanup
 

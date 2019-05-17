@@ -1,6 +1,6 @@
 Package: genio
 Title: Statistical GENetics Input/Output Functions
-Version: 1.0.7.9000
+Version: 1.0.8
 Authors@R: 
     person(given = "Alejandro",
 	   family = "Ochoa",

@@ -39,3 +39,9 @@
   Now all plink reading and writing operations are supported.
 * Added package documentation summarizing main read and write functions.
 * Added vignette comparing our BED reader and writer to those of `BEDMatrix`, `snpStats`, and `lfa`.
+
+# 2019-05-17 - genio 1.0.8
+
+* First CRAN submission
+* Added memory estimation and comparisons sections to vignette.
+

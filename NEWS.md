@@ -37,3 +37,5 @@
 
 * Added `read_bed` and `read_plink`!
   Now all plink reading and writing operations are supported.
+* Added package documentation summarizing main read and write functions.
+* Added vignette comparing our BED reader and writer to those of `BEDMatrix`, `snpStats`, and `lfa`.

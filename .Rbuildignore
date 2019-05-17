@@ -1,2 +1,4 @@
 ^LICENSE\.md$
 scripts/
+^doc$
+^Meta$

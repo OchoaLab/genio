@@ -1,0 +1,421 @@
+---
+title: "Read and write BED files with `genio`"
+author: "Alejandro Ochoa"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Read and write BED files with genio}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r, cache = FALSE, include = FALSE}
+## copied from examples from the "simmer" R package
+## after: https://www.enchufa2.es/archives/suggests-and-vignettes.html
+## by Iñaki Úcar
+required <- c("lfa", "BEDMatrix", "snpStats") # first is not a CRAN package, only suggested since popkin doesn't need it to run... might as well do the same for other dependencies
+
+if (!all(sapply(required, requireNamespace, quietly = TRUE)))
+  knitr::opts_chunk$set(eval = FALSE)
+```
+
+# Introduction
+
+The `genio` (GenIO = Genetics I/O) package aims to facilitate reading and writing genetics data.
+The focus of this vignette is processing plink BED/BIM/FAM files.
+
+There are some limited alternatives for reading and/or writing BED files in R, which are slower and harder to use, which motivated me to write this package.
+Here we make direct comparisons to those packages, to illustrate the advantages of `genio`.
+
+# Generate a large matrix of random genotypes
+
+Let's begin by creating a large genotype matrix with completely random data, and with missing values so this becomes non-trivial to read and write.
+
+```{R}
+# Data dimensions.
+# Choose non-multiples of 4 to test edge cases of BED parsers.
+# Number of loci.
+m_loci <- 10001
+# Number of individuals
+n_ind <- 1001
+# Overall allele frequency
+# (we don't do any actual genetics in this vignette,
+# so just set to a reasonable value)
+p <- 0.5
+# Missingness rate
+miss <- 0.1
+
+# Total number of genotypes
+n_data <- n_ind * m_loci
+# Draw random genotypes from Binomial
+X <- rbinom( n_data, 2, p)
+# Add missing values
+X[ sample(n_data, n_data * miss) ] <- NA
+# Turn into matrix
+X <- matrix(X, nrow = m_loci, ncol = n_ind)
+
+# Inspect the first 10 individuals at the first 10 loci
+X[1:10, 1:10]
+```
+
+To create annotation tables that look a bit more interesting than the defaults, let us create some slighly more realistic values.
+Here we use our first `genio` function!
+```{R}
+library(genio)
+```
+
+First we create and edit the locus annotations table.
+```{R}
+# We have to specify the number of loci
+bim <- make_bim( n = m_loci )
+
+# Inspect the default values
+bim
+
+# Let's add the "chr" prefix to the chromosome values,
+# so we recognize them when we see them later.
+bim$chr <- paste0('chr', bim$chr)
+# Make SNP IDs look like "rs" IDs
+bim$id <- paste0('rs', bim$id)
+# Make positions 1000 bigger
+bim$pos <- bim$pos * 1000
+# Select randomly between Cs and Gs for the reference alleles
+bim$ref <- sample(c('C', 'G'), m_loci, replace = TRUE)
+# Select randomly between As and Ts for the alternative alleles
+bim$alt <- sample(c('A', 'T'), m_loci, replace = TRUE)
+
+# Inspect the table with our changes
+bim
+```
+
+Now we similarly create and edit the individiual annotations table.
+```{R}
+# Specify the number of individuals
+fam <- make_fam( n = n_ind )
+
+# Inspect the default values
+fam
+
+# Add prefixes to families and IDs to recognize them later
+fam$fam <- paste0('fam', fam$fam)
+fam$id <- paste0('id', fam$id)
+# Sex values are usually 1 and 2
+fam$sex <- sample(1:2, n_ind, replace = TRUE)
+# Let's make phenotypes continuous.
+# Draw independently from Standard Normal.
+fam$pheno <- rnorm(n_ind)
+# Let's leave maternal and paternal IDs as missing
+
+# Inspect again
+fam
+```
+
+# Write genotypes to plink files
+
+Let's write this random data to a file.
+This mode is intended for simulated data, generating dummy BIM and FAM files in the process and writing out all three.
+
+```{R}
+# Will delete at the end of the vignette
+file_plink <- 'vignette-random-data'
+
+# Write genotypes, along with the BIM and FAM files we created.
+# Omiting them would result in writing the original dummy version of these tables,
+# before we edited them.
+time_write_genio <- system.time(
+    write_plink(file_plink, X, bim, fam)
+)
+time_write_genio
+```
+
+# Read back the genotypes
+
+Here we demonstrate how easy it is to read the data back.
+To compare to other packages, we shall time loading all this data
+
+```{R}
+# Read the data back in memory.
+# Time this step
+time_read_genio <- system.time(
+    data_genio <- read_plink(file_plink)
+)
+time_read_genio
+
+# Inspect the data we just read back
+
+# The same random genotypes (first 10 individuals and loci):
+data_genio$X[1:10, 1:10]
+
+# The locus annotations
+data_genio$bim
+
+# The individual annotations
+data_genio$fam
+
+# Quickly test that the inputs and outputs are identical.
+# Genotypes have NAs, so we have to compare this way.
+stopifnot( all( X == data_genio$X, na.rm = TRUE) )
+stopifnot( bim == data_genio$bim )
+stopifnot( fam == data_genio$fam )
+```
+
+# Comparison to other packages
+
+There are several R packages that provide BED readers, and to a lesser extent some of the other functionality of `genio`.
+Here we compare directly to `BEDMatrix`, `snpStats`, and `lfa`.
+Each of these packages has different goals so they are optimized for their use cases.
+The `genio` parser is optimized to read the entire genotype data into a native R matrix, so that it is easy to inspect and manipulate for R beginners.
+Here we demonstrate that `genio` is not only the fastest at this task, but also the easiest to obtain in terms of requiring the least amount of coding.
+
+## BEDMatrix
+
+The `BEDMatrix` package allows access to genotypes from a BED file without loading the entire matrix in memory.
+This is very convenient for large datasets, as long as only small portions of the data are pulled at once.
+However, there are some disadvantages:
+
+- The `BEDMatrix` return object is not a regular R matrix, which confuses some users.
+- The `BEDMatrix` package provides no way to access the full annotation tables (BIM and FAM files).
+  - From BIM, only the locus ID and reference allele are returned, merged into a vector of strings and placed as column names.
+  - From FAM, only the family and individual IDs are returned, merged into a vector of strings and placed as row names.
+- `BEDMatrix` does not have any write functions.
+
+Here is an example of that usage and how the data compares.
+Note in particular that the `BEDMatrix` representation of the genotype matrix is transposed compared to the `genio` matrix:
+
+```{R}
+library(BEDMatrix)
+# Time it too.
+# Although the BIM and FAM tables are not returned,
+# they are partially parsed and kept in memory,
+# which can take time for large files
+time_read_bedmatrix_1 <- system.time(
+    X_BEDMatrix <- BEDMatrix(file_plink)
+)
+
+# Inspect the first 10 loci and individuals as usual.
+# Note it is transposed compared to our X.
+# Also note the column and row names.
+X_BEDMatrix[1:10, 1:10]
+```
+
+Therefore, for very large datasets, if it suffices to access the genotype data in small portions and the user is willing to deal with the limitations of the object, and no detailed annotation table information is required, then `BEDMatrix` is a better solution than the `read_bed` function provided in the `genio` package.
+
+To compare the two genotype reading functions on an equal footing, let us assume that the entire genotype matrix is required in memory and stored in a regular R matrix.
+```{R}
+# This turns it into a regular R matrix.
+# Since most of the reading is actually happening now,
+# we time this step now.
+time_read_bedmatrix_2 <- system.time(
+    X_BEDMatrix <- as.matrix(X_BEDMatrix)
+)
+time_read_bedmatrix_2
+# Now we can test that the BEDMatrix agrees with the original matrix we simulated.
+# Need to transpose first.
+stopifnot( all( X == t(X_BEDMatrix), na.rm = TRUE) )
+```
+
+## snpStats
+
+The `snpStats` package is the most fully-featured alternative to `genio`.
+One of its advantages is its memory efficiency, encoding the entire data in less memory than a native R matrix.
+However, this memory efficiency comes at the cost of making the data harder to access, especially for inexperienced R users.
+Like `genio`, and in contrast to the other packages, `snpStats` also reads the BIM and FAM tables fully, and provides a BED writer, but it is considerably harder to use.
+
+First we illustrate data parsing.
+The annotation tables are similar but column names are different, and certain missing values (zero in text files) are converted to `NA` instead.
+```{R}
+library(snpStats)
+
+# Read data, time it.
+time_read_snpStats_1 <- system.time(
+    data_snpStats <- read.plink(file_plink)
+)
+time_read_snpStats_1
+
+# Inspect the data
+
+# Genotypes.
+# Note data is not visualized this way.
+# This matrix is also transposed compared to the genio matrix.
+data_snpStats$genotypes
+
+# Locus annotations
+head( data_snpStats$map )
+
+# Individual annotations
+head (data_snpStats$fam )
+```
+
+As for `BEDMatrix`, assuming we ultimately desire to convert the entire data into a regular R matrix, an extra step is required:
+```{R}
+# Transpose, then convert to a regular R matrix.
+# Let's time this step too.
+time_read_snpStats_2 <- system.time(
+    X_snpStats <- as( t(data_snpStats$genotypes), 'numeric')
+)
+time_read_snpStats_2
+
+# Now we can visualize the matrix.
+# First 10 loci and individuals, as before.
+# Note that, compared to (genio, BEDMatrix, lfa), alleles are encoded in reverse,
+# so 0s and 2s are flipped in this matrix.
+X_snpStats[1:10, 1:10]
+
+# Again verify that the matrices are identical.
+# (Here 2-X flips back 0s and 2s)
+stopifnot( all( X == 2 - X_snpStats, na.rm = TRUE) )
+```
+
+`snpStats` is the only package other than `genio` to provide a BED writer.
+Here we demonstrate how hard it is to use it to write our data.
+```{R}
+# let's write this to another file
+file_plink_copy <- 'vignette-random-data-copy'
+
+# copy objects to not change originals
+X_snpStats <- X
+bim_snpStats <- as.data.frame(bim) # to use rownames
+fam_snpStats <- as.data.frame(fam) # ditto
+
+# all data requires matching row and/or column names
+rownames(X_snpStats) <- bim$id
+colnames(X_snpStats) <- fam$id
+rownames(bim_snpStats) <- bim$id
+rownames(fam_snpStats) <- fam$id
+
+# We shall time several required steps in order to write genotypes in a standard R matrix,
+# and the related annotation tables, to BED.
+time_write_snpStats <- system.time({
+    # Transpose and convert our genotypes to SnpMatrix object.
+    # We flip 0s and 2s before converting
+    X_snpStats <- as(2 - t(X_snpStats), 'SnpMatrix')
+    
+    # This complicated command is required to write the data.
+    # Although X, fam, and bim are passed as for genio's write_plink,
+    # here the name of every column must be specified (there are no reasonable defaults).
+    # Interestingly, the parameter names of snpStats' write.plink
+    # do not agree with read.plink from the same package.
+    write.plink(
+        file_plink_copy,
+        snps = X_snpStats,
+        subject.data = fam_snpStats,
+        pedigree = fam,
+        id = id,
+        father = pat,
+        mother = mat,
+        sex = sex,
+        phenotype = pheno,
+        snp.data = bim_snpStats,
+        chromosome = chr,
+        genetic.distance = posg,
+        position = pos,
+        allele.1 = ref,
+        allele.2 = alt
+    )
+})
+
+# remove the new file, no longer need it
+delete_files_plink(file_plink_copy)
+```
+
+## LFA
+
+The `lfa` package also provides a minimal BED parser, ignoring the BIM and FAM files except to count loci and individuals.
+Its genotype matrix is exactly like `genio`'s: same class (R matrix) and orientation (loci along rows).
+The package does not provide file writers or other such utilities.
+```{R}
+library(lfa)
+# Parse the genotype matrix
+time_read_lfa <- system.time(
+    X_lfa <- read.bed(file_plink)
+)
+time_read_lfa
+
+# Again verify that the matrices are identical
+stopifnot( all( X == X_lfa, na.rm = TRUE) )
+```
+
+
+## Overall time comparisons
+
+The `genio` reader is the fastest (as seen below) for several reasons.
+Genotypes are read very efficiently using `Rcpp` code, and stored directly into an R matrix, which is most efficient if that is the end goal.
+The annotation tables are also read most efficiently, using the `readr` package internally.
+
+The `BEDMatrix` reader is also written in `Rcpp`, but since its goal is to provide efficient random access to genotypes stored in a file, it sacrifies speed when the goal is to read the entire data into an R matrix.
+The annotation tables are read with `data.table`, which is [actually the fastest](https://csgillespie.github.io/efficientR/5-3-importing-data.html), though the difference in performance is small compared to `readr` for reasonably-sized files.
+
+The `snpStats` reader is written in `C`, so it is also very fast for its initial step, but converting the genotypes from the `snpStats` format into a native R matrix proves too expensive.
+The annotation tables are read with the base function `read.table`, which is also the slowest.
+
+The `lfa` reader is written in pure R, which is part of the reason it is the slowest in this comparison.
+The annotation tables are read with `read.table`, as in `snpStats`.
+
+```{R, fig.width = 6, fig.height = 4, fig.align = 'center'}
+# Extract component 3 of each time object,
+# which is is total time elapsed.
+# Sum the two steps it takes for each of BEDMatrix and snpStats to obtain a native R matrix.
+times_read <- c(
+    time_read_genio[3],
+    time_read_bedmatrix_1[3] + time_read_bedmatrix_2[3],
+    time_read_snpStats_1[3] + time_read_snpStats_2[3],
+    time_read_lfa[3]
+)
+names_read <- c(
+    'genio',
+    'BEDMatrix',
+    'snpStats',
+    'lfa'
+)
+# Create barplot
+barplot(
+    times_read,
+    names.arg = names_read,
+    main = 'BED reader runtimes',
+    xlab = 'packages',
+    ylab = 'runtime (s)'
+)
+```
+
+Now we compare the writers.
+Only `snpStats` and `genio` have a BED writer.
+Not only was the `genio` writer much easier to use, it is also considerably faster.
+
+```{R, fig.width = 4, fig.height = 4, fig.align = 'center'}
+times_write <- c(
+    time_write_genio[3],
+    time_write_snpStats[3]
+)
+names_write <- c(
+    'genio',
+    'snpStats'
+)
+# Create barplot
+barplot(
+    times_write,
+    names.arg = names_write,
+    main = 'BED writer runtimes',
+    xlab = 'packages',
+    ylab = 'runtime (s)'
+)
+```
+
+# Cleanup
+
+This handy function removes the three BED/BIM/FAM files we generated at the beginning of this vignette.
+
+```{R}
+delete_files_plink(file_plink)
+```
+
+Let's close by showing the package versions used when this vignette was last built, as the implementations compared here could change in the future.
+```{R}
+sessionInfo()
+```

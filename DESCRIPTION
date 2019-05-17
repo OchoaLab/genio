@@ -14,12 +14,18 @@ LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 6.1.1.9000
 Suggests: 
-    testthat
+    testthat,
+    knitr,
+    rmarkdown,
+    lfa,
+    BEDMatrix,
+    snpStats
 Imports:
     readr,
     tibble,
     Rcpp
 LinkingTo:
     Rcpp
+VignetteBuilder: knitr
 URL: https://github.com/OchoaLab/genio
 BugReports: https://github.com/OchoaLab/genio/issues

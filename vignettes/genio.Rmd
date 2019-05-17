@@ -166,6 +166,23 @@ stopifnot( bim == data_genio$bim )
 stopifnot( fam == data_genio$fam )
 ```
 
+# Memory estimation
+
+One drawback of `genio` and other related approaches is high memory consumption (see more on that at the end of this vignette).
+It is entirely possible that an attempt to parse a genotype matrix into memory will fail with an "out of memory" error message.
+Let's estimate memory usage here.
+
+Genotypes are stored as integers by `genio`, which in R on a modern machine (64 bit architecture) consumes 4 bytes!
+So an $n \times m$ matrix takes up at least $4 n m$ bytes (an R matrix contains an additional constant overhead, which does not depend on $n,m$ and is relatively small for large matrices).
+
+To get an idea of how much this is, let's assume a standard genotyping array, where $m$ is about half a million.
+In this scenario, we get a simple rule of thumb that every 1000 individuals consume a little less than 2G:
+```{r}
+4 * 1000 * 500000 / 1024 /1024 /1024
+```
+This is the amount of free memory required just to load the matrix.
+Of course, several common matrix operations for genotypes consume even more memory, so more free memory will be needed to acomplish anything.
+
 # Comparison to other packages
 
 There are several R packages that provide BED readers, and to a lesser extent some of the other functionality of `genio`.

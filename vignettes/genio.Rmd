@@ -20,7 +20,7 @@ knitr::opts_chunk$set(
 ## copied from examples from the "simmer" R package
 ## after: https://www.enchufa2.es/archives/suggests-and-vignettes.html
 ## by Iñaki Úcar
-required <- c("lfa", "BEDMatrix", "snpStats") # first is not a CRAN package, only suggested since popkin doesn't need it to run... might as well do the same for other dependencies
+required <- c("lfa", "BEDMatrix", "snpStats", "pryr") # first is not a CRAN package, only suggested since popkin doesn't need it to run... might as well do the same for other dependencies
 
 if (!all(sapply(required, requireNamespace, quietly = TRUE)))
   knitr::opts_chunk$set(eval = FALSE)

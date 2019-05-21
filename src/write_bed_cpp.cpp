@@ -70,7 +70,8 @@ void write_bed_cpp(const char* file, IntegerMatrix X) {
     fwrite( buffer, 1, n_buf, file_stream );
   }
 
-  fclose( file_stream );
+  if ( fclose( file_stream ) != 0 )
+    stop("Input BED file stream close failed!");
 
   // done with buffer
   free( buffer );

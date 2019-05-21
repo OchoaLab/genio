@@ -148,7 +148,9 @@ IntegerMatrix read_bed_cpp(const char* file, int m_loci, int n_ind) {
   // let's check that file was indeed done
   n_buf_read = fread( buffer, sizeof(unsigned char), n_buf, file_stream );
   // wrap up regardless
-  fclose( file_stream );
+  // and more troubleshooting messages (for windows)
+  if ( fclose( file_stream ) != 0 )
+    stop("Input BED file stream close failed!");
   free( buffer );
   if ( n_buf_read != 0 ) {
     // now send error message to R

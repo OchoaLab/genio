@@ -110,13 +110,19 @@ IntegerMatrix read_bed_cpp(const char* file, int m_loci, int n_ind) {
 	  xij = buf_k & 3;
 	
 	  // re-encode into proper values, store in R matrix
+	  // for maximum speed, test for most common cases first: the homozygotes
+	  // - this is because of the binomial expansion:
+	  //   (p-q)^2 = p^2 + q^2 - 2pq > 0,
+	  //   so `2pq` is always smaller than `p^2 + q^2`.
+	  //   `2pq` becomes rarer under population structure!
+	  // next most common ought to be the heterozygote, then NA, but as these are mutually exclusive then it doesn't matter
 	  if (xij == 0) {
 	    X(i, j) = 2; // 0 -> 2
-	  } else if (xij == 1) { // 1 -> NA
-	    X(i, j) = NA_INTEGER;
 	  } else if (xij == 2) {
 	    X(i, j) = 1; // 2 -> 1
-	  }
+	  } else if (xij == 1) {
+	    X(i, j) = NA_INTEGER; // 1 -> NA
+	  } 
 	  // there are no other values, so 3 -> 0 must be the case here
 	  // R's IntegerMatrix are initialized to zeroes, so no edits are necessary!
 	  

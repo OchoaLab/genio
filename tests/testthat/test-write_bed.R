@@ -53,7 +53,10 @@ test_that("write_bed and read_bed work", {
     
     # delete output when done
     invisible(file.remove(fo_bed))
-
+    # make sure deletion worked
+    if ( file.exists( fo_bed ) )
+        stop('Could not delete: ', fo_bed)
+    
     # now add invalid values to X, make sure it dies!
     X2 <- X
     # add a negative value in a random location
@@ -75,11 +78,14 @@ test_that("write_bed and read_bed work", {
     # NOTE: if X contains values that truncate to the correct range (say, 1.5, which becomes 1 upon truncation), then that's what Rcpp does internally and no errors are raised!
 })
 
+# let's include BEDMatrix in tests, if it's available
+test_BEDMatrix <- FALSE
 
 # this test requires BEDMatrix to read file and print it back out
 if (suppressMessages(suppressWarnings(require(BEDMatrix)))) {
 
     # wrapper to get BEDMatrix to read a matrix in the format we expect it to be
+    # NOTE: since file handles don't appear to close properly, don't use this on files that have to be deleted as part of the test!
     read_bed_hack <- function(file, m = NULL, n = NULL) {
         # run this way since BEDMatrix is rather verbose
         # when there's no paired FAM/BIM, here provide dimensions and we're good (NULL requires FAM/BIM)
@@ -94,146 +100,109 @@ if (suppressMessages(suppressWarnings(require(BEDMatrix)))) {
         return(X)
     }
 
-    # generic testing function
-    testOneInput <- function(nameIn) {
-        nameOut <- paste0(nameIn, '_rewrite')
-
-        # load dummy file
-        X <- read_bed_hack(nameIn)
-        # write second version (BED only)
-        write_bed(nameOut, X)
-        
-        # compare outputs, they should be identical!
-        # this is less than ideal, but at least it's a pure R solution (not depending on linux 'cmp' or 'diff')
-        f1 <- add_ext(nameIn, 'bed')
-        f2 <- add_ext(nameOut, 'bed')
-        # load all data brute force
-        data1 <- readLines(f1, warn=FALSE)
-        data2 <- readLines(f2, warn=FALSE)
-        # compare now
-        expect_equal(data1, data2)
-
-        # extra redundant check...
-        # reload, again
-        X2 <- read_bed_hack(nameOut, m = nrow(X), n = ncol(X))
-        # compare now
-        expect_equal(X, X2)
-
-        # remove temporary output file
-        file.remove(f2)
-    }
-
-    # generic testing function for read_bed_cpp
-    testOneInput_read_cpp <- function(nameIn) {
-        # load dummy file
-        X <- read_bed_hack(nameIn)
-        # load using my code
-        file <- add_ext(nameIn, 'bed')
-        expect_silent(
-            X2 <- read_bed_cpp(file, nrow(X), ncol(X)) # hack use dimensions from the X read by BEDMatrix
-        )
-        
-        # compare now
-        expect_equal(X, X2)
-    }
-
-    # generic testing function for read_bed
-    testOneInput_read <- function(nameIn) {
-        # load dummy file
-        X <- read_bed_hack(nameIn)
-        # load using my code
-        file <- add_ext(nameIn, 'bed')
-        X2 <- read_bed(file, nrow(X), ncol(X)) # hack use dimensions from the X read by BEDMatrix
-        
-        # compare now
-        expect_equal(X, X2)
-
-        # ensure expected failures do fail
-        # mess with dimensions on purpose
-        expect_error( read_bed(file, ncol(X), nrow(X)) ) # reverse dimensions, get caught because of padding checks (non-commutative unless both are factors of 4)
-        expect_error( read_bed(file, nrow(X)+1, ncol(X)) )
-        expect_error( read_bed(file, nrow(X)-1, ncol(X)) )
-        expect_error( read_bed(file, nrow(X), ncol(X)-1) )
-        # sadly many +1 individual cases don't cause error because they just look like zeroes (in all loci) if there is enough padding.
-        # do expect an error if we're off by a whole byte (4 individuals)
-        expect_error( read_bed(file, nrow(X), ncol(X)+4) )
-    }
-    
-    test_that("write_bed agrees with BEDMatrix", {
-        # repeat on several files
-        testOneInput('dummy-33-101-0.1')
-        testOneInput('dummy-4-10-0.1')
-        testOneInput('dummy-5-10-0.1')
-        testOneInput('dummy-6-10-0.1')
-        testOneInput('dummy-7-10-0.1')
-    })
-    
-    test_that("read_bed_cpp agrees with BEDMatrix", {
-        # repeat on several files
-        testOneInput_read_cpp('dummy-33-101-0.1')
-        testOneInput_read_cpp('dummy-4-10-0.1')
-        testOneInput_read_cpp('dummy-5-10-0.1')
-        testOneInput_read_cpp('dummy-6-10-0.1')
-        testOneInput_read_cpp('dummy-7-10-0.1')
-    })
-    
-    test_that("read_bed agrees with BEDMatrix", {
-        # repeat on several files
-        testOneInput_read('dummy-33-101-0.1')
-        testOneInput_read('dummy-4-10-0.1')
-        testOneInput_read('dummy-5-10-0.1')
-        testOneInput_read('dummy-6-10-0.1')
-        testOneInput_read('dummy-7-10-0.1')
-    })
-    
-    test_that("write_plink works", {
-        # test that there are errors when crucial data is missing
-        expect_error(write_plink()) # all is missing
-        expect_error(write_plink('file')) # tibble is missing
-        expect_error(write_plink(X = matrix(NA, 1, 1))) # file is missing
-
-        # this autocompletes bim and fam!
-        write_plink(fo, X)
-        # make sure we can read outputs!
-        # NOTE this uses BEDMatrix, which loads all three files by default and checks their dimensions!
-        X2 <- read_bed_hack(fo)
-        # compare now
-        expect_equal(X, X2)
-        # read with my new function
-        data <- read_plink(fo)
-        # compare again
-        expect_equal(X, data$X)
-        # delete all three outputs when done
-        # this also tests that all three files existed!
-        expect_silent( delete_files_plink(fo) )
-
-        # this autocompletes bim and fam except for pheno
-        write_plink(fo, X, pheno = pheno)
-        # in this case parse fam and make sure we recover pheno!
-        fam <- read_fam(fo)
-        # compare!
-        expect_equal(fam$pheno, pheno)
-        # gratuitously retest genotype reading (and BEDMatrix-mediated consistency of data)
-        X2 <- read_bed_hack(fo)
-        # compare now
-        expect_equal(X, X2)
-        # read with my new function
-        data <- read_plink(fo)
-        # compare again
-        expect_equal(X, data$X)
-        # delete all three outputs when done
-        # this also tests that all three files existed!
-        expect_silent( delete_files_plink(fo) )
-
-        # create a case in which fam is also provided, make sure we get warning
-        fam <- make_fam(n = n)
-        expect_warning( write_plink(fo, X, fam = fam, pheno = pheno) )
-        # parse fam and make sure pheno was missing
-        fam <- read_fam(fo)
-        expect_equal(fam$pheno, rep.int(0, n))
-        # delete all three outputs when done
-        # this also tests that all three files existed!
-        expect_silent( delete_files_plink(fo) )
-    })
+    test_BEDMatrix <- TRUE
 }
+
+# generic testing function
+testOneInput <- function(nameIn, m_loci, n_ind) {
+    # load using my code
+    X <- read_bed(nameIn, m_loci, n_ind) # hack use dimensions from the X read by BEDMatrix
+
+    if (test_BEDMatrix) {
+        # load dummy file
+        X2 <- read_bed_hack(nameIn)
+        # compare now
+        expect_equal(X, X2)
+    }
+    
+    # ensure expected failures do fail
+    # mess with dimensions on purpose
+    expect_error( read_bed(nameIn, n_ind, m_loci) ) # reverse dimensions, get caught because of padding checks (non-commutative unless both are factors of 4)
+    expect_error( read_bed(nameIn, m_loci+1, n_ind) )
+    expect_error( read_bed(nameIn, m_loci-1, n_ind) )
+    expect_error( read_bed(nameIn, m_loci, n_ind-1) )
+    # sadly many +1 individual cases don't cause error because they just look like zeroes (in all loci) if there is enough padding.
+    # do expect an error if we're off by a whole byte (4 individuals)
+    expect_error( read_bed(nameIn, m_loci, n_ind+4) )
+    
+    # write second version (BED only)
+    nameOut <- paste0(nameIn, '_rewrite')
+    write_bed(nameOut, X)
+    
+    # compare outputs, they should be identical!
+    # this is less than ideal, but at least it's a pure R solution (not depending on linux 'cmp' or 'diff')
+    f1 <- add_ext(nameIn, 'bed')
+    f2 <- add_ext(nameOut, 'bed')
+    # load all data brute force
+    data1 <- readLines(f1, warn=FALSE)
+    data2 <- readLines(f2, warn=FALSE)
+    # compare now
+    expect_equal(data1, data2)
+
+    # remove temporary output file
+    file.remove(f2)
+    # make sure deletion worked
+    if ( file.exists(f2) )
+        stop('Could not delete: ', f2)
+}
+
+test_that("write_bed and read_bed agree with each other and BEDMatrix", {
+    # repeat on several files
+    testOneInput('dummy-33-101-0.1', 101, 33)
+    testOneInput('dummy-4-10-0.1', 10, 4)
+    testOneInput('dummy-5-10-0.1', 10, 5)
+    testOneInput('dummy-6-10-0.1', 10, 6)
+    testOneInput('dummy-7-10-0.1', 10, 7)
+})
+
+test_that("write_plink works", {
+    # test that there are errors when crucial data is missing
+    expect_error(write_plink()) # all is missing
+    expect_error(write_plink('file')) # tibble is missing
+    expect_error(write_plink(X = matrix(NA, 1, 1))) # file is missing
+
+    # for tests, change fo (file out) here
+    fo <- 'test-write-plink-1'
+
+    # this autocompletes bim and fam!
+    write_plink(fo, X)
+    # make sure we can read outputs!
+    # read with my new function
+    data <- read_plink(fo)
+    # compare again
+    expect_equal(X, data$X)
+    # delete all three outputs when done
+    # this also tests that all three files existed!
+    expect_silent( delete_files_plink(fo) )
+
+    # change again
+    fo <- 'test-write-plink-2'
+
+    # this autocompletes bim and fam except for pheno
+    write_plink(fo, X, pheno = pheno)
+    # in this case parse fam and make sure we recover pheno!
+    fam <- read_fam(fo)
+    # compare!
+    expect_equal(fam$pheno, pheno)
+    # read with my new function
+    data <- read_plink(fo)
+    # compare again
+    expect_equal(X, data$X)
+    # delete all three outputs when done
+    # this also tests that all three files existed!
+    expect_silent( delete_files_plink(fo) )
+
+    # change again
+    fo <- 'test-write-plink-3'
+
+    # create a case in which fam is also provided, make sure we get warning
+    fam <- make_fam(n = n)
+    expect_warning( write_plink(fo, X, fam = fam, pheno = pheno) )
+    # parse fam and make sure pheno was missing
+    fam <- read_fam(fo)
+    expect_equal(fam$pheno, rep.int(0, n))
+    # delete all three outputs when done
+    # this also tests that all three files existed!
+    expect_silent( delete_files_plink(fo) )
+})
 

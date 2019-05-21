@@ -40,9 +40,10 @@
 * Added package documentation summarizing main read and write functions.
 * Added vignette comparing our BED reader and writer to those of `BEDMatrix`, `snpStats`, and `lfa`.
 
-# 2019-05-20 - genio 1.0.8
+# 2019-05-21 - genio 1.0.8
 
 * First CRAN submission
 * Added memory estimation and comparisons sections to vignette.
 * Windows debugging
   * Now writing is in binary mode, like reading already was.
+  * Reduced comparisons to `BEDMatrix` in testing, since it leaves temporary files open and on Windows they do not get deleted and leave confusing error messages behind.

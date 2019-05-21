@@ -14,7 +14,7 @@ void write_bed_cpp(const char* file, IntegerMatrix X) {
   unsigned char *buffer = (unsigned char *) malloc( n_buf );
 
   // open output file
-  FILE *file_stream = fopen( file, "w" );
+  FILE *file_stream = fopen( file, "wb" );
   if ( file_stream == NULL )
     stop("Could not open BED file for writing!");
 

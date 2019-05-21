@@ -4,7 +4,7 @@
 \name{genio}
 \alias{genio}
 \alias{genio-package}
-\title{genio (GENetics I/O): A package for reading and writing statistical genetics data}
+\title{genio (GENetics I/O): A package for reading and writing genetics data}
 \description{
 This package fully supports reading and writing plink BED/BIM/FAM files, as illustrated below.
 These functions make it easy to create dummy annotation tables to go with simulated genotype data too.

@@ -1,4 +1,4 @@
-#' genio (GENetics I/O): A package for reading and writing statistical genetics data
+#' genio (GENetics I/O): A package for reading and writing genetics data
 #'
 #' This package fully supports reading and writing plink BED/BIM/FAM files, as illustrated below.
 #' These functions make it easy to create dummy annotation tables to go with simulated genotype data too.

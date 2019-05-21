@@ -1,6 +1,6 @@
 # genio
 
-The `genio` (GENetics I/O) package provides easy-to-use and efficient readers and writers for formats from statistical genetics research.
+The `genio` (GENetics I/O) package provides easy-to-use and efficient readers and writers for formats in genetics research.
 Currently targets plink and eigenstrat formats (more to come).
 Plink BED/BIM/FAM formats are fully supported.
 Lightning fast `read_bed` and `write_bed` (written in Rcpp) reads and writes genotypes between native R matrices and plink BED format.
@@ -9,13 +9,11 @@ Otherwise, the package consists of wrappers for `readr` functions that add missi
 
 ## Installation
 
-<!--
 You can install the released version of genio from [CRAN](https://CRAN.R-project.org) with:
 
 ``` R
 install.packages("genio")
 ```
--->
 
 Install the latest development version from GitHub:
 ```R

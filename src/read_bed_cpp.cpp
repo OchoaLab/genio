@@ -14,8 +14,12 @@ IntegerMatrix read_bed_cpp(const char* file, int m_loci, int n_ind) {
   // open input file in "binary" mode
   FILE *file_stream = fopen( file, "rb" );
   // die right away if needed, before initializing buffers etc
-  if ( file_stream == NULL )
-    stop("Could not open BED file for reading!  The file may not exist.");
+  if ( file_stream == NULL ) {
+    // send error message to R
+    char msg[100];
+    sprintf(msg, "Could not open BED file `%s` for reading: %s", file, strerror( errno ));
+    stop(msg);
+  }
 
   /////////////////////////
   // check magic numbers //
@@ -51,7 +55,7 @@ IntegerMatrix read_bed_cpp(const char* file, int m_loci, int n_ind) {
       free( buffer ); // free buffer memory
       fclose( file_stream ); // close file
       // now send error message to R
-      stop("Input BED file is not in supported format (magic numbers do not match).  Only latest locus-major format is supported!");
+      stop("Input BED file is not in supported format.  Either magic numbers do not match, or requested sample-major format is not supported.  Only latest locus-major format is supported!");
     }
   }
   

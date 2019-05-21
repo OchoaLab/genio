@@ -15,9 +15,13 @@ void write_bed_cpp(const char* file, IntegerMatrix X) {
 
   // open output file
   FILE *file_stream = fopen( file, "wb" );
-  if ( file_stream == NULL )
-    stop("Could not open BED file for writing!");
-
+  if ( file_stream == NULL ) {
+    // send error message to R
+    char msg[100];
+    sprintf(msg, "Could not open BED file `%s` for writing: %s", file, strerror( errno ));
+    stop(msg);
+  }
+  
   // write header
   // assume standard locus-major order and latest format
   unsigned char byte_header[3] = {0x6c, 0x1b, 1};

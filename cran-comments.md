@@ -11,13 +11,13 @@ There were no ERRORs or WARNINGs.
 - Maintainer: 'Alejandro Ochoa <alejandro.ochoa@duke.edu>'
   New submission
   Possibly mis-spelled words in DESCRIPTION:
-    BIM (10:179, 10:451, 10:522)
-    FAM (10:183, 10:446, 10:514)
-    GENetics (2:20)
+    BIM (10:167, 10:440, 10:511)
+    FAM (10:171, 10:435, 10:503)
+    GENetics (2:8)
     GenIO (10:27)
-    eigenstrat (10:427)
-    plink (10:169, 10:417)
-    readr (10:302)
+    eigenstrat (10:416)
+    plink (10:157, 10:406)
+    readr (10:291)
   - All of these words are spelled correctly.
 
 ## Downstream dependencies

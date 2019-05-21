@@ -14,6 +14,7 @@ NULL
 #' 
 #' @param file Output file path.  .bed extension may be omitted (will be added automatically if it is missing).
 #' @param X The \eqn{m \times n}{m-by-n} genotype matrix.
+#' Row and column names, if present, are ignored.
 #' @param verbose If TRUE (default) function reports the path of the file being written (after autocompleting the extension).
 #'
 #' @return Nothing
@@ -25,7 +26,7 @@ NULL
 #' # replace 3 random genotypes with missing values
 #' X[sample(10, 3)] <- NA
 #' # turn into 5x2 matrix
-#' X <- matrix(X, nrow=5, ncol=2)
+#' X <- matrix(X, nrow = 5, ncol = 2)
 #' # write this data to file in BED format
 #' # (only *.bed gets created, no *.fam or *.bim in this call)
 #' write_bed(file_out, X)
@@ -33,6 +34,8 @@ NULL
 #' file.remove(file_out)
 #'
 #' @seealso
+#' \code{\link{write_plink}} for writing a set of BED/BIM/FAM files.
+#' 
 #' Plink BED format reference:
 #' \url{https://www.cog-genomics.org/plink/1.9/formats#bed}
 #'

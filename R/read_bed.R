@@ -15,10 +15,18 @@
 #' 
 #' @param file Input file path.
 #' *.bed extension may be omitted (will be added automatically if it is missing).
+#' @param names_loci Vector of loci names, to become the row names of the genotype matrix.
+#' If provided, its length sets \code{m_loci} below.
+#' If \code{NULL}, the returned genotype matrix will not have row names, and \code{m_loci} must be provided.
+#' @param names_ind Vector of individual names, to become the column names of the genotype matrix.
+#' If provided, its length sets \code{n_ind} below.
+#' If \code{NULL}, the returned genotype matrix will not have column names, and \code{n_ind} must be provided.
 #' @param m_loci Number of loci in the input genotype table.
-#' User must provide this value, as it is not inferrable from the BED file itself.
+#' Required if \code{names_loci = NULL}, as its value is not inferrable from the BED file itself.
+#' Ignored if \code{names_loci} is provided.
 #' @param n_ind Number of individuals in the input genotype table.
-#' User must provide this value, as it is not inferrable from the BED file itself.
+#' Required if \code{names_ind = NULL}, as its value is not inferrable from the BED file itself.
+#' Ignored if \code{names_ind} is provided.
 #' @param verbose If TRUE (default) function reports the path of the file being read (after autocompleting the extension).
 #'
 #' @return The \eqn{m \times n}{m-by-n} genotype matrix.
@@ -32,33 +40,43 @@
 #' # read annotation tables
 #' bim <- read_bim(file_bim)
 #' fam <- read_fam(file_fam)
-#' # dimensions are number of rows of each case
-#' m_loci <- nrow(bim)
-#' n_ind <- nrow(fam)
 #' 
 #' # read an existing plink *.bim file
-#' X <- read_bed(file_bed, m_loci, n_ind)
+#' # pass locus and individual IDs as vectors, setting data dimensions too
+#' X <- read_bed(file_bed, bim$id, fam$id)
 #' X
 #'
 #' # can specify without extension
 #' file_bed <- sub('\\.bed$', '', file_bed) # remove extension from this path on purpose
 #' file_bed # verify .bed is missing
-#' X <- read_bed(file_bed, m_loci, n_ind) # loads too!
+#' X <- read_bed(file_bed, bim$id, fam$id) # loads too!
 #' X
 #' 
 #' @seealso
+#' \code{\link{read_plink}} for reading a set of BED/BIM/FAM files.
+#' 
 #' Plink BED format reference:
 #' \url{https://www.cog-genomics.org/plink/1.9/formats#bed}
 #'
 #' @export
-read_bed <- function(file, m_loci, n_ind, verbose = TRUE) {
+read_bed <- function(file, names_loci = NULL, names_ind = NULL, m_loci = NA, n_ind = NA, verbose = TRUE) {
     # die if things are missing
     if (missing(file))
         stop('Output file path is required!')
-    if (missing(m_loci))
-        stop('Number of loci (m_loci) is required!')
-    if (missing(n_ind))
-        stop('Number of individuals (n_ind) is required!')
+
+    # set dimensions via names if provided
+    if ( !is.null(names_loci) ) {
+        m_loci <- length( names_loci )
+    } else {
+        if (is.na(m_loci))
+            stop('Either `names_loci` or number of loci (`m_loci`) is required!')
+    }
+    if ( !is.null(names_ind) ) {
+        n_ind <- length( names_ind )
+    } else {
+        if (is.na(n_ind))
+            stop('Either `names_ind` or number of individuals (`n_ind`) is required!')
+    }
     
     # add bed extension if it wasn't already there
     file <- add_ext(file, 'bed')
@@ -69,4 +87,13 @@ read_bed <- function(file, m_loci, n_ind, verbose = TRUE) {
     
     # read in Rcpp!
     X <- read_bed_cpp(file, m_loci, n_ind)
+
+    # add row and/or column names if available
+    if ( !is.null(names_loci) )
+        rownames(X) <- names_loci
+    if ( !is.null(names_ind) )
+        colnames(X) <- names_ind
+    
+    # return!
+    return ( X )
 }

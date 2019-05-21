@@ -12,7 +12,8 @@
 #' Alternatively, input file path may have .bed extension (but not .bim, .fam, or other extensions).
 #' @param verbose If TRUE (default) function reports the paths of the files being read (after autocompleting the extensions).
 #'
-#' @return A named list with items in this order: X (genotype matrix), bim (tibble), fam (tibble)
+#' @return A named list with items in this order: X (genotype matrix), bim (tibble), fam (tibble).
+#' X has row and column names corresponding to the \code{id} values of the bim and fam tibbles.
 #'
 #' @examples
 #' # first get path to BED file
@@ -56,18 +57,14 @@ read_plink <- function(file, verbose = TRUE) {
     bim <- read_bim(file, verbose = verbose)
     fam <- read_fam(file, verbose = verbose)
 
-    # extract data dimensions from the previous tables
-    m_loci <- nrow(bim)
-    n_ind <- nrow(fam)
-
     # read genotypes, using the above data dimensions
     X <- read_bed(
         file = file,
-        m_loci = m_loci,
-        n_ind = n_ind,
+        names_loci = bim$id,
+        names_ind = fam$id,
         verbose = verbose
     )
-
+    
     # returned desired named list with all data
     return(
         list(

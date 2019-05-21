@@ -26,6 +26,8 @@ fam_names <- c('fam', 'id', 'pat', 'mat', 'sex', 'pheno')
 #' fam
 #' 
 #' @seealso
+#' \code{\link{read_plink}} for reading a set of BED/BIM/FAM files.
+#' 
 #' Plink FAM format reference:
 #' \url{https://www.cog-genomics.org/plink/1.9/formats#fam}
 #'

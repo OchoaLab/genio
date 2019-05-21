@@ -117,6 +117,17 @@ fam$pheno <- rnorm(n_ind)
 fam
 ```
 
+Lastly, let's copy the locus and individual IDs as row and column names of the genotype matrix, respectively.
+Although this step is not required, it is encouraged for consistency (if present, values are checked when writing files).
+```{R}
+# Add column and row names from bim and fam tables we just created.
+rownames(X) <- bim$id
+colnames(X) <- fam$id
+# Inspect again the first 10 individuals and loci
+X[1:10, 1:10]
+```
+
+
 # Write genotypes to plink files
 
 Let's write this random data to a file.
@@ -138,7 +149,7 @@ time_write_genio
 # Read back the genotypes
 
 Here we demonstrate how easy it is to read the data back.
-To compare to other packages, we shall time loading all this data
+To compare to other packages, we shall time loading all this data.
 
 ```{R}
 # Read the data back in memory.
@@ -150,7 +161,7 @@ time_read_genio
 
 # Inspect the data we just read back
 
-# The same random genotypes (first 10 individuals and loci):
+# The same random genotypes (first 10 individuals and loci, now with row and column names):
 data_genio$X[1:10, 1:10]
 
 # The locus annotations
@@ -177,11 +188,18 @@ So an $n \times m$ matrix takes up at least $4 n m$ bytes (an R matrix contains 
 
 To get an idea of how much this is, let's assume a standard genotyping array, where $m$ is about half a million.
 In this scenario, we get a simple rule of thumb that every 1000 individuals consume a little less than 2G:
-```{r}
-4 * 1000 * 500000 / 1024 /1024 /1024
+```{R}
+# Constants
+bytes_per_genotype <- 4
+bytes_per_gb <- 1024 ^ 3
+# Example data dimensions
+num_ind <- 1000
+num_loci <- 500000
+# Gigabytes per 1000 individuals for a typical genotyping array
+bytes_per_genotype * num_ind * num_loci / bytes_per_gb
 ```
 This is the amount of free memory required just to load the matrix.
-Of course, several common matrix operations for genotypes consume even more memory, so more free memory will be needed to accomplish anything.
+Several common matrix operations for genotypes consume even more memory, so more free memory will be needed to accomplish anything.
 
 # Comparison to other packages
 
@@ -211,14 +229,14 @@ library(BEDMatrix)
 # Time it too.
 # Although the BIM and FAM tables are not returned,
 # they are partially parsed and kept in memory,
-# which can take time for large files
+# which can take time for extremely large files
 time_read_bedmatrix_1 <- system.time(
     X_BEDMatrix <- BEDMatrix(file_plink)
 )
 
 # Inspect the first 10 loci and individuals as usual.
 # Note it is transposed compared to our X.
-# Also note the column and row names.
+# Also note the column and row names are different from genio's.
 X_BEDMatrix[1:10, 1:10]
 ```
 
@@ -293,17 +311,19 @@ stopifnot( all( X == 2 - X_snpStats, na.rm = TRUE) )
 `snpStats` is the only package other than `genio` to provide a BED writer.
 Here we demonstrate how hard it is to use it to write our data.
 ```{R}
-# let's write this to another file
+# Let's write this to another file
 file_plink_copy <- 'vignette-random-data-copy'
 
-# copy objects to not change originals
+# Copy objects to not change originals
 X_snpStats <- X
 bim_snpStats <- as.data.frame(bim) # to use rownames
 fam_snpStats <- as.data.frame(fam) # ditto
 
-# all data requires matching row and/or column names
-rownames(X_snpStats) <- bim$id
-colnames(X_snpStats) <- fam$id
+# All data requires matching row and/or column names.
+# These first two were already done above.
+#rownames(X_snpStats) <- bim$id
+#colnames(X_snpStats) <- fam$id
+# Row names here are redundant but required.
 rownames(bim_snpStats) <- bim$id
 rownames(fam_snpStats) <- fam$id
 
@@ -355,6 +375,9 @@ time_read_lfa <- system.time(
 )
 time_read_lfa
 
+# This genotype matrix does not have column or row names:
+X_lfa[1:10, 1:10]
+
 # Again verify that the matrices are identical
 stopifnot( all( X == X_lfa, na.rm = TRUE) )
 ```
@@ -362,17 +385,17 @@ stopifnot( all( X == X_lfa, na.rm = TRUE) )
 
 ## Overall time comparisons
 
-The `genio` reader is the fastest (as seen below) for several reasons.
+The `genio` reader is the fastest (tied with `BEDMatrix`, as seen below) for several reasons.
 Genotypes are read very efficiently using `Rcpp` code, and stored directly into an R matrix, which is most efficient if that is the end goal.
 The annotation tables are also read most efficiently, using the `readr` package internally.
 
-The `BEDMatrix` reader is also written in `Rcpp`, but since its goal is to provide efficient random access to genotypes stored in a file, it sacrifices speed when the goal is to read the entire data into an R matrix.
+The `BEDMatrix` reader is also written in `Rcpp`, but its main goal is to provide efficient random access to genotypes stored in a file, which makes obtaining an `R` matrix more awkward, though surprisingly without paying a time penalty for it.
 The annotation tables are read with `data.table`, which is [actually the fastest](https://csgillespie.github.io/efficientR/5-3-importing-data.html), though the difference in performance is small compared to `readr` for reasonably-sized files.
 
 The `snpStats` reader is written in `C`, so it is also very fast for its initial step, but converting the genotypes from the `snpStats` format into a native R matrix proves too expensive.
 The annotation tables are read with the base function `read.table`, which is also the slowest.
 
-The `lfa` reader is written in pure R, which is part of the reason it is the slowest in this comparison.
+The `lfa` reader is written in pure `R`, which explains why it is the slowest in this comparison.
 The annotation tables are read with `read.table`, as in `snpStats`.
 
 ```{R, fig.width = 6, fig.height = 4, fig.align = 'center'}

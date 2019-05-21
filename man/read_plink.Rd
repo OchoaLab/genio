@@ -13,7 +13,8 @@ Alternatively, input file path may have .bed extension (but not .bim, .fam, or o
 \item{verbose}{If TRUE (default) function reports the paths of the files being read (after autocompleting the extensions).}
 }
 \value{
-A named list with items in this order: X (genotype matrix), bim (tibble), fam (tibble)
+A named list with items in this order: X (genotype matrix), bim (tibble), fam (tibble).
+X has row and column names corresponding to the \code{id} values of the bim and fam tibbles.
 }
 \description{
 This function reads a genotype matrix (X) and its associated locus (bim) and individual (fam) data tables in the three plink files in BED, BIM, and FAM formats, respectively.

@@ -43,7 +43,11 @@
 # 2019-05-21 - genio 1.0.8
 
 * First CRAN submission
+* Genotype matrix row and column names from BIM/FAM files
+  * `read_plink` now includes row and column names automatically.
+  * `read_bed` accepts either row and column names or just their numbers.
+  * `write_plink` checks these row and column names against the BIM and FAM tables for consistency, if these are all present.
 * Added memory estimation and comparisons sections to vignette.
 * Windows debugging
-  * Now writing is in binary mode, like reading already was.
+  * Now BED writing is in binary mode, like reading already was.
   * Reduced comparisons to `BEDMatrix` in testing, since it leaves temporary files open and on Windows they do not get deleted and leave confusing error messages behind.

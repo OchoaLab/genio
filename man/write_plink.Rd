@@ -60,9 +60,7 @@ file_out <- 'delete-me-example'
 write_plink(file_out, X, pheno=pheno)
 
 # delete all three outputs when done
-file.remove( paste0(file_out, '.bed') )
-file.remove( paste0(file_out, '.bim') )
-file.remove( paste0(file_out, '.fam') )
+delete_files_plink( file_out )
 
 }
 \seealso{

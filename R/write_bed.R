@@ -20,7 +20,7 @@ NULL
 #' @return Nothing
 #'
 #' @examples
-#' file_out <- 'delete-me-example.bed' # will also work without extension
+#' file_out <- tempfile('delete-me-example', fileext = '.bed') # will also work without extension
 #' # create 10 random genotypes
 #' X <- rbinom(10, 2, 0.5)
 #' # replace 3 random genotypes with missing values

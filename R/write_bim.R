@@ -26,7 +26,7 @@
 #'     alt = 'B'
 #' )
 #' # a dummy file
-#' file_out <- 'delete-me-example.bim' # will also work without extension
+#' file_out <- tempfile('delete-me-example', fileext = '.bim') # will also work without extension
 #' # write the table out in *.bim format (no header, columns in right order)
 #' write_bim(file_out, tib)
 #' # delete output when done

@@ -1,18 +1,24 @@
 Package: genio
-Title: GENetics Input/Output Functions
-Version: 1.0.8
+Title: Genetics Input/Output Functions
+Version: 1.0.9
 Authors@R: 
     person(given = "Alejandro",
 	   family = "Ochoa",
 	   role = c("aut", "cre"),
 	   email = "alejandro.ochoa@duke.edu",
            comment = c(ORCID = "0000-0003-4928-3403"))
-Description: The 'genio' (GenIO = Genetics I/O) package implements readers and writers for file formats associated with genetics data.  Reading and writing plink BED/BIM/FAM formats is fully supported, including a lightning-fast BED reader and writer implementations.  Other functions are `readr` wrappers that are more constrained, user-friendly, and efficient for these particular applications; handles plink and eigenstrat tables (FAM, BIM, IND, and SNP files).  There are also "make" functions for FAM and BIM tables with default values to go with simulated genotype data.
+Description: Implements readers and writers for file formats associated with genetics data.  Reading and writing plink BED/BIM/FAM formats is fully supported, including a lightning-fast BED reader and writer implementations.  Other functions are 'readr' wrappers that are more constrained, user-friendly, and efficient for these particular applications; handles plink and eigenstrat tables (FAM, BIM, IND, and SNP files).  There are also "make" functions for FAM and BIM tables with default values to go with simulated genotype data.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 6.1.1.9000
+Imports:
+    readr,
+    tibble,
+    Rcpp
+LinkingTo:
+    Rcpp
 Suggests: 
     testthat,
     knitr,
@@ -21,12 +27,6 @@ Suggests:
     BEDMatrix,
     snpStats,
     pryr
-Imports:
-    readr,
-    tibble,
-    Rcpp
-LinkingTo:
-    Rcpp
 VignetteBuilder: knitr
 URL: https://github.com/OchoaLab/genio
 BugReports: https://github.com/OchoaLab/genio/issues

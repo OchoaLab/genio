@@ -23,7 +23,7 @@
 #'     label = 1
 #' )
 #' # a dummy file
-#' file_out <- 'delete-me-example.ind' # will also work without extension
+#' file_out <- tempfile('delete-me-example', fileext = '.ind') # will also work without extension
 #' # write the table out in *.ind format (no header, columns in right order)
 #' write_ind(file_out, tib)
 #' # delete output when done

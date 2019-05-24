@@ -10,7 +10,7 @@ context("test-write_bed")
 n <- 5
 m <- 10
 miss <- 0.1 # add missingness for good measure
-fo <- 'delete-me-random-test' # output name without extensions!
+fo <- tempfile('delete-me-random-test') # output name without extensions!
 fo_bed <- add_ext(fo, 'bed') # output with extension
 # create ancestral allele frequencies
 p_anc <- runif(m)
@@ -131,7 +131,7 @@ testOneInput <- function(nameIn, m_loci, n_ind) {
     expect_error( read_bed(nameIn, m_loci = m_loci,   n_ind = n_ind+4) )
     
     # write second version (BED only)
-    nameOut <- paste0(nameIn, '_rewrite')
+    nameOut <- tempfile( paste0(nameIn, '_rewrite') )
     write_bed(nameOut, X)
     
     # compare outputs, they should be identical!
@@ -167,7 +167,7 @@ test_that("write_plink works", {
     expect_error(write_plink(X = matrix(NA, 1, 1))) # file is missing
 
     # for tests, change fo (file out) here
-    fo <- 'test-write-plink-1'
+    fo <- tempfile('test-write-plink-1')
 
     # this autocompletes bim and fam!
     write_plink(fo, X)
@@ -184,7 +184,7 @@ test_that("write_plink works", {
     expect_silent( delete_files_plink(fo) )
 
     # change again
-    fo <- 'test-write-plink-2'
+    fo <- tempfile('test-write-plink-2')
 
     # this autocompletes bim and fam except for pheno
     write_plink(fo, X, pheno = pheno)
@@ -204,7 +204,7 @@ test_that("write_plink works", {
     expect_silent( delete_files_plink(fo) )
 
     # change again
-    fo <- 'test-write-plink-3'
+    fo <- tempfile('test-write-plink-3')
 
     # create a case in which fam is also provided, make sure we get warning
     fam <- make_fam(n = n)

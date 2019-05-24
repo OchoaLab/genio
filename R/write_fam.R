@@ -26,7 +26,7 @@
 #'     pheno = 1
 #' )
 #' # a dummy file
-#' file_out <- 'delete-me-example.fam' # will also work without extension
+#' file_out <- tempfile('delete-me-example', fileext = '.fam') # will also work without extension
 #' # write the table out in *.fam format (no header, columns in right order)
 #' write_fam(file_out, tib)
 #' # delete output when done

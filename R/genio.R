@@ -25,7 +25,7 @@
 #' plink_data <- read_plink(file)
 #'
 #' # write data into new BED/BIM/FAM files
-#' file_out <- 'delete-me-example'
+#' file_out <- tempfile('delete-me-example')
 #' write_plink(file_out, X, bim, fam)
 #'
 #' # delete example files when done

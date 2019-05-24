@@ -135,7 +135,7 @@ This mode is intended for simulated data, generating dummy BIM and FAM files in 
 
 ```{R}
 # Will delete at the end of the vignette
-file_plink <- 'vignette-random-data'
+file_plink <- tempfile('vignette-random-data')
 
 # Write genotypes, along with the BIM and FAM files we created.
 # Omiting them would result in writing the original dummy version of these tables,
@@ -312,7 +312,7 @@ stopifnot( all( X == 2 - X_snpStats, na.rm = TRUE) )
 Here we demonstrate how hard it is to use it to write our data.
 ```{R}
 # Let's write this to another file
-file_plink_copy <- 'vignette-random-data-copy'
+file_plink_copy <- tempfile('vignette-random-data-copy')
 
 # Copy objects to not change originals
 X_snpStats <- X
@@ -385,18 +385,22 @@ stopifnot( all( X == X_lfa, na.rm = TRUE) )
 
 ## Overall time comparisons
 
-The `genio` reader is the fastest (tied with `BEDMatrix`, as seen below) for several reasons.
+Note that reading performance varies on different machines depending on the balance between hard drive access and processor speeds (where the relative bottleneck is).
+That being said, the `genio` reader is consistently the fastest, if not a close second (see below for tests on your machine), for several reasons.
 Genotypes are read very efficiently using `Rcpp` code, and stored directly into an R matrix, which is most efficient if that is the end goal.
 The annotation tables are also read most efficiently, using the `readr` package internally.
 
 The `BEDMatrix` reader is also written in `Rcpp`, but its main goal is to provide efficient random access to genotypes stored in a file, which makes obtaining an `R` matrix more awkward, though surprisingly without paying a time penalty for it.
 The annotation tables are read with `data.table`, which is [actually the fastest](https://csgillespie.github.io/efficientR/5-3-importing-data.html), though the difference in performance is small compared to `readr` for reasonably-sized files.
+However, `BEDMatrix` does not process or return full annotation tables, which gives it an unfair advantage compared to `genio`, as `BEDMatrix` takes shortcuts to only read the columns it needs.
+If the annotation tables are needed, reading them will incur an additional (and in some cases considerable) time penalty.
 
 The `snpStats` reader is written in `C`, so it is also very fast for its initial step, but converting the genotypes from the `snpStats` format into a native R matrix proves too expensive.
 The annotation tables are read with the base function `read.table`, which is also the slowest.
+In terms of completeness of output (full genotypes and annotations tables), only this package matches `genio`, which makes it the fairest comparison.
 
 The `lfa` reader is written in pure `R`, which explains why it is the slowest in this comparison.
-The annotation tables are read with `read.table`, as in `snpStats`.
+The annotation tables are read with `read.table`, as in `snpStats`, but are not returned at all.
 
 ```{R, fig.width = 6, fig.height = 4, fig.align = 'center'}
 # Extract component 3 of each time object,
@@ -484,14 +488,14 @@ The `BEDMatrix` package is ideal for very large files, since data is loaded into
 So the main object does not actually hold any genotypes in memory.
 It is up to the user to decide how much data to access at once to trade-off speed and memory consumption.
 
-Although `snpStats` does manage memory better than `genio`, is is strictly by a fixed factor of 4.
-The reason is that each genotype is encoded in a native R matrix using 4 bytes (when encoded as an integer, as the original matrix and the matrix `genio` read; this is actually platform dependent).
+`snpStats` manages memory better than `genio`, but strictly by a factor of 4.
+Each genotype is encoded as an integer in `R` (in general) and `genio` (in particular), which uses 4 bytes (this is actually platform dependent).
 On the other hand, `snpStats` uses strictly one byte per genotype.
 
 `lfa` uses 8 bytes per genotype because its genotype matrix treats is elements as doubles rather than integers, so it uses twice as much memory as `genio`.
 
-Overall, there is a narrow window in data sizes in which a genotype matrix is too large to be encoded as a native R matrix but not too large that it will fit as a `snpStats` object.
-That, and the very different interface of `snpStats` makes it not very worthwhile in my opinion, unless there are very specific functions provided by that package that you need and are not implemented elsewhere.
+Overall, there is a narrow window in data sizes in which a genotype matrix is too large for a native R matrix but small enough for a `snpStats` object.
+That, and the much more complex interface of `snpStats`, makes it not very worthwhile in my opinion, unless there is need for functions provided only by that package.
 I prefer to use `BEDMatrix` for large datasets.
 
 

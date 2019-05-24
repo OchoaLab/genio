@@ -26,7 +26,7 @@
 #'     alt = 'B'
 #' )
 #' # a dummy file
-#' file_out <- 'delete-me-example.snp' # will also work without extension
+#' file_out <- tempfile('delete-me-example', fileext = '.snp') # will also work without extension
 #' # write the table out in *.snp format (no header, columns in right order)
 #' write_snp(file_out, tib)
 #' # delete output when done

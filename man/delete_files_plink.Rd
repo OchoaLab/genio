@@ -17,7 +17,7 @@ This function deletes each of the plink binary files (BED/BIM/FAM extensions) gi
 }
 \examples{
 # create dummy BED/BIM/FAM files
-file <- 'delete-me-test' # no extension
+file <- tempfile('delete-me-test') # no extension
 # add each extension and create empty files
 file.create( paste0(file, '.bed') )
 file.create( paste0(file, '.bim') )

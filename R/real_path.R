@@ -10,14 +10,17 @@ real_path <- function(file, ext) {
         stop('Expected file extension (ext) is required!')
     
     # if "file" was not a character object, then the following manipulations won't work, so just return that and hope for the best
-    if (!is.character(file)) return(file)
+    if (!is.character(file))
+        return(file)
     # ditto if file already exists, we're set!
-    if (file.exists(file)) return(file)
+    if (file.exists(file))
+        return(file)
     # now assume file as specified is not found
 
     # if the file already ends in .gz, don't do anything!
     # this is because .gz must be the final extension, we won't try to fix this path
-    if ( grepl('\\.gz$', file) ) return(file)
+    if ( grepl('\\.gz$', file) )
+        return(file)
     # now assume .gz is missing
     
     # test presence of expected extension
@@ -27,7 +30,8 @@ real_path <- function(file, ext) {
         # try adding extension if input file wasn't found
         fileGz <- paste0(file, '.gz')
         # if the second version exists, use that!
-        if (file.exists(fileGz)) file <- fileGz
+        if (file.exists(fileGz))
+            file <- fileGz
         # return file, whatever that is here
         return(file)
     }
@@ -42,8 +46,10 @@ real_path <- function(file, ext) {
     } else {
         # try add gzip extension too
         fileExtGz <- paste0(fileExt, '.gz')
-        if (file.exists(fileExtGz)) file <- fileExtGz
+        if (file.exists(fileExtGz))
+            file <- fileExtGz
     }
+    
     # return whatever file is now (in case of failure it's just input)
     return(file)
 }

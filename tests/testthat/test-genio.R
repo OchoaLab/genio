@@ -312,7 +312,7 @@ test_that("write_fam works", {
     # load sample file
     fi <- system.file("extdata", 'sample.fam', package = "genio", mustWork = TRUE)
     # create a dummy output we'll delete later
-    fo <- 'delete-me_test-write.fam'
+    fo <- tempfile('delete-me_test-write', fileext = '.fam')
     # this should just work (tested earlier)
     fam1 <- read_fam(fi)
     # try writing it back elsewhere
@@ -362,7 +362,7 @@ test_that("write_bim works", {
     # load sample file
     fi <- system.file("extdata", 'sample.bim', package = "genio", mustWork = TRUE)
     # create a dummy output we'll delete later
-    fo <- 'delete-me_test-write.bim'
+    fo <- tempfile('delete-me_test-write', fileext = '.bim')
     # this should just work (tested earlier)
     bim1 <- read_bim(fi)
     # try writing it back elsewhere
@@ -412,7 +412,7 @@ test_that("write_ind works", {
     # load sample file
     fi <- system.file("extdata", 'sample.ind', package = "genio", mustWork = TRUE)
     # create a dummy output we'll delete later
-    fo <- 'delete-me_test-write.ind'
+    fo <- tempfile('delete-me_test-write', fileext = '.ind')
     # this should just work (tested earlier)
     ind1 <- read_ind(fi)
     # try writing it back elsewhere
@@ -462,7 +462,7 @@ test_that("write_snp works", {
     # load sample file
     fi <- system.file("extdata", 'sample.snp', package = "genio", mustWork = TRUE)
     # create a dummy output we'll delete later
-    fo <- 'delete-me_test-write.snp'
+    fo <- tempfile('delete-me_test-write', fileext = '.snp')
     # this should just work (tested earlier)
     snp1 <- read_snp(fi)
     # try writing it back elsewhere
@@ -515,7 +515,7 @@ test_that("make_fam works", {
 
     # ultimate test, make sure we can write it and also parse it without issues
     # create a dummy output we'll delete later
-    fo <- 'delete-me_test-make.fam'
+    fo <- tempfile('delete-me_test-make', fileext = '.fam')
     # to make comparison exact, change some column modes from numeric to character
     fam$fam <- as.character(fam$fam)
     fam$id <- as.character(fam$id)
@@ -557,7 +557,7 @@ test_that("make_bim works", {
 
     # ultimate test, make sure we can write it and also parse it without issues
     # create a dummy output we'll delete later
-    fo <- 'delete-me_test-make.bim'
+    fo <- tempfile('delete-me_test-make', fileext = '.bim')
     # to make comparison exact, change some column modes from numeric to character
     bim$chr <- as.character(bim$chr)
     bim$id <- as.character(bim$id)

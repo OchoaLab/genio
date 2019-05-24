@@ -51,3 +51,9 @@
 * Windows debugging
   * Now BED writing is in binary mode, like reading already was.
   * Reduced comparisons to `BEDMatrix` in testing, since it leaves temporary files open and on Windows they do not get deleted and leave confusing error messages behind.
+
+# 2019-05-24 - genio 1.0.9
+
+* CRAN-requested edits, resubmission
+  * DESCRIPTION edits
+  * Changed examples, vignettes, and tests to write files to the default temporary directory.

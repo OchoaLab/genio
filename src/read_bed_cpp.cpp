@@ -1,4 +1,5 @@
 #include <Rcpp.h>
+#include <cerrno>
 using namespace Rcpp;
 
 // expected header (magic numbers)

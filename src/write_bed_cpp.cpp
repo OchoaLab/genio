@@ -1,5 +1,6 @@
 #include <Rcpp.h>
 #include <string.h>
+#include <cerrno>
 using namespace Rcpp;
 
 // [[Rcpp::export]]

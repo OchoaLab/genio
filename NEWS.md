@@ -60,7 +60,7 @@
 
 # 2019-05-28 - genio 1.0.10
 
-* CRAN submission follow ups, fixing issues not observed originally
+* CRAN submission follow ups, fixing issues that arose on other systems:
   * Added `include <cerrno>` to my cpp code.
   * Fixed a "heap buffer overflow" detected by valgrind that only occurred for data with fewer than 9 individuals (included many of my toy tests).
-
+  * Edited a test within vignette to allow for small machine precision-level errors.

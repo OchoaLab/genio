@@ -174,7 +174,11 @@ data_genio$fam
 # Genotypes have NAs, so we have to compare this way.
 stopifnot( all( X == data_genio$X, na.rm = TRUE) )
 stopifnot( bim == data_genio$bim )
-stopifnot( fam == data_genio$fam )
+# FAM has mixed content (chars, ints, and doubles).
+# First 5 columns should be exact match:
+stopifnot( fam[,1:5] == data_genio$fam[,1:5] )
+# Exact equality may fail for pheno due to precisions, so test this way instead:
+stopifnot( max(abs(fam$pheno - data_genio$fam$pheno)) < 1e-4 )
 ```
 
 # Memory estimation

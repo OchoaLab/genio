@@ -25,22 +25,19 @@ IntegerMatrix read_bed_cpp(const char* file, int m_loci, int n_ind) {
   /////////////////////////
   // check magic numbers //
   /////////////////////////
-  
-  // number of columns (bytes) in input (for buffer), after byte compression
-  // size set for full row, but overloaded used first for this header comparison
-  // chose size_t to have it match n_buf_read value returned by fread
-  size_t n_buf = ( n_ind + 3 ) / 4;
-  // initialize row buffer
-  unsigned char *buffer = (unsigned char *) malloc( n_buf );
+
+  // for header only
+  unsigned char *buffer_header = (unsigned char *) malloc( 3 );
   // for extra sanity checks, keep track of bytes actually read (to recognize truncated files)
+  // reuse this one for genotypes below
   size_t n_buf_read;
   
   // read header bytes (magic numbers)
-  n_buf_read = fread( buffer, sizeof(unsigned char), 3, file_stream );
+  n_buf_read = fread( buffer_header, sizeof(unsigned char), 3, file_stream );
   // this might just indicate an empty file
   if ( n_buf_read != 3 ) {
     // wrap up everything properly
-    free( buffer ); // free buffer memory
+    free( buffer_header ); // free buffer memory
     fclose( file_stream ); // close file
     // now send error message to R
     stop("Input BED file did not have a complete header (3-byte magic numbers)!");
@@ -51,19 +48,29 @@ IntegerMatrix read_bed_cpp(const char* file, int m_loci, int n_ind) {
   // use explicit loop instead
   int pos;
   for (pos = 0; pos < 3; pos++) {
-    if ( plink_bed_byte_header[pos] != buffer[pos] ) {
+    if ( plink_bed_byte_header[pos] != buffer_header[pos] ) {
       // wrap up everything properly
-      free( buffer ); // free buffer memory
+      free( buffer_header ); // free buffer memory
       fclose( file_stream ); // close file
       // now send error message to R
       stop("Input BED file is not in supported format.  Either magic numbers do not match, or requested sample-major format is not supported.  Only latest locus-major format is supported!");
     }
   }
-  
 
+  // free header buffer, completely done with it
+  free( buffer_header );
+
+  
   ////////////////////
   // read genotypes //
   ////////////////////
+  
+  // number of columns (bytes) in input (for buffer), after byte compression
+  // size set for full row, but overloaded used first for this header comparison
+  // chose size_t to have it match n_buf_read value returned by fread
+  size_t n_buf = ( n_ind + 3 ) / 4;
+  // initialize row buffer
+  unsigned char *buffer = (unsigned char *) malloc( n_buf );
   
   // initialize our genotype matrix
   IntegerMatrix X(m_loci, n_ind);

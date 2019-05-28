@@ -57,3 +57,10 @@
 * CRAN-requested edits, resubmission
   * DESCRIPTION edits
   * Changed examples, vignettes, and tests to write files to the default temporary directory.
+
+# 2019-05-28 - genio 1.0.10
+
+* CRAN submission follow ups, fixing issues not observed originally
+  * Added `include <cerrno>` to my cpp code.
+  * Fixed a "heap buffer overflow" detected by valgrind that only occurred for data with fewer than 9 individuals (included many of my toy tests).
+

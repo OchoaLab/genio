@@ -27,7 +27,8 @@
 #' This will be ignored (with a warning) if \code{fam} is provided.
 #' @param verbose If TRUE (default) function reports the paths of the files being written (after autocompleting the extensions).
 #'
-#' @return NULL
+#' @return Invisibly, a named list with items in this order: X (genotype matrix), bim (tibble), fam (tibble).
+#' This is most useful when either BIM or FAM tables were auto-generated.
 #'
 #' @examples
 #' # here is an example for a simulation
@@ -125,7 +126,14 @@ write_plink <- function(file, X, bim = NULL, fam = NULL, pheno = NULL, verbose =
     write_fam(file, fam, verbose = verbose)
     write_bim(file, bim, verbose = verbose)
 
-    # don't return anything
-    # actually returns NULL regardless, but make invisible
-    return(invisible())
+    # invisibly return the data passed and/or created
+    return(
+        invisible(
+            list(
+                X = X,
+                bim = bim,
+                fam = fam
+            )
+        )
+    )
 }

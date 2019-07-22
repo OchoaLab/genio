@@ -68,3 +68,5 @@
 # 2019-07-22 - genio 1.0.11
 
 * Added `read_phen` and `write_phen`, a phenotype format (very similar to plink's FAM) used by GCTA and EMMAX.
+* Now `write_plink` returns the data it wrote, invisibly as a list.
+  Most useful for auto-generated data.

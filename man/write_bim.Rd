@@ -19,7 +19,7 @@ Columns are automatically reordered in output as expected in format.}
 \item{verbose}{If TRUE (default) function reports the path of the file being written (after autocompleting the extension).}
 }
 \value{
-The input \code{tib} invisibly (what readr::write_tsv returns).
+The output \code{tib} invisibly (what readr::write_tsv returns).
 }
 \description{
 This function writes a tibble with the right columns into a standard plink *.bim file.

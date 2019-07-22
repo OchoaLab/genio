@@ -12,7 +12,7 @@
 #' Columns are automatically reordered in output as expected in format.
 #' @param verbose If TRUE (default) function reports the path of the file being written (after autocompleting the extension).
 #'
-#' @return The input `tib` invisibly (what readr::write_tsv returns).
+#' @return The output `tib` invisibly (what readr::write_tsv returns).
 #'
 #' @examples
 #' # create a dummy tibble with the right columns

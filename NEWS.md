@@ -64,3 +64,7 @@
   * Added `include <cerrno>` to my cpp code.
   * Fixed a "heap buffer overflow" detected by valgrind that only occurred for data with fewer than 9 individuals (included many of my toy tests).
   * Edited a test within vignette to allow for small machine precision-level errors.
+
+# 2019-07-22 - genio 1.0.11
+
+* Added `read_phen` and `write_phen`, a phenotype format (very similar to plink's FAM) used by GCTA and EMMAX.

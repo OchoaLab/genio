@@ -1,5 +1,5 @@
 # this abstracts general tab writing regardless of specifics of some of the various formats supported
-write_tab_generic <- function(file, tib, ext, tib_names, verbose=TRUE) {
+write_tab_generic <- function(file, tib, ext, tib_names, verbose = TRUE) {
     # check that mandatory arguments aren't missing
     if (missing(file))
         stop('Output file path (file) is required!')
@@ -24,5 +24,5 @@ write_tab_generic <- function(file, tib, ext, tib_names, verbose=TRUE) {
         message('Writing: ', file)
     
     # writes using tab separators
-    readr::write_tsv(tib, file, col_names=FALSE)
+    readr::write_tsv(tib, file, col_names = FALSE)
 }

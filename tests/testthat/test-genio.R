@@ -117,6 +117,68 @@ test_that("read_fam works", {
 
 })
 
+test_that("read_phen works", {
+    # test that there are errors when crucial data is missing
+    expect_error(read_phen()) # file is missing
+    expect_error(read_phen('bogus-file')) # file is non-existent (read_table2 will complain)
+    
+    # load sample file
+    fi <- system.file("extdata", 'sample.phen', package = "genio", mustWork = TRUE)
+    # this should just work (no "expect" test)
+    phen <- read_phen(fi)
+    # test that number of columns is as expected
+    expect_equal(ncol(phen), length(phen_names))
+    # test that names are in right order too
+    expect_equal(names(phen), phen_names)
+    # the example had n_rows lines only, check that too
+    expect_equal(nrow(phen), n_rows)
+
+    # repeat with missing extension
+    fiNoExt <- sub('\\.phen$', '', fi)
+    # this should just work (no "expect" test)
+    phen <- read_phen(fiNoExt)
+    # test that number of columns is as expected
+    expect_equal(ncol(phen), length(phen_names))
+    # test that names are in right order too
+    expect_equal(names(phen), phen_names)
+    # the example had n_rows lines only, check that too
+    expect_equal(nrow(phen), n_rows)
+
+    # repeat with compressed file (and true full path)
+    fi <- system.file("extdata", 'sample2.phen.gz', package = "genio", mustWork = TRUE)
+    # this should just work (no "expect" test)
+    phen <- read_phen(fi)
+    # test that number of columns is as expected
+    expect_equal(ncol(phen), length(phen_names))
+    # test that names are in right order too
+    expect_equal(names(phen), phen_names)
+    # the example had n_rows lines only, check that too
+    expect_equal(nrow(phen), n_rows)
+    
+    # repeat with missing .gz extension
+    fiNoGz <- sub('\\.gz$', '', fi)
+    # this should just work (no "expect" test)
+    phen <- read_phen(fiNoGz)
+    # test that number of columns is as expected
+    expect_equal(ncol(phen), length(phen_names))
+    # test that names are in right order too
+    expect_equal(names(phen), phen_names)
+    # the example had n_rows lines only, check that too
+    expect_equal(nrow(phen), n_rows)
+
+    # repeat with missing .phen.gz double extension
+    fiNoGzNoExt <- sub('\\.phen$', '', fiNoGz)
+    # this should just work (no "expect" test)
+    phen <- read_phen(fiNoGzNoExt)
+    # test that number of columns is as expected
+    expect_equal(ncol(phen), length(phen_names))
+    # test that names are in right order too
+    expect_equal(names(phen), phen_names)
+    # the example had n_rows lines only, check that too
+    expect_equal(nrow(phen), n_rows)
+
+})
+
 test_that("read_bim works", {
     # test that there are errors when crucial data is missing
     expect_error(read_bim()) # file is missing
@@ -328,7 +390,7 @@ test_that("write_fam works", {
     fam1_r <- fam1[, sample.int(ncol(fam1))]
     # try writing it back elsewhere
     write_fam(fo, fam1_r)
-    # and read it back again to comare
+    # and read it back again to compare
     fam2 <- read_fam(fo)
     # compare
     expect_equal(fam1, fam2)
@@ -340,7 +402,7 @@ test_that("write_fam works", {
     fam1_r$junk <- 1 # add a junk column
     # try writing it back elsewhere
     write_fam(fo, fam1_r)
-    # and read it back again to comare
+    # and read it back again to compare
     fam2 <- read_fam(fo)
     # compare
     expect_equal(fam1, fam2)
@@ -351,6 +413,70 @@ test_that("write_fam works", {
     fam1_r <- fam1 # copy first
     fam1_r$id <- NULL # delete this column
     expect_error(write_fam(fo, fam1_r))
+})
+
+test_that("write_phen works", {
+    # test that there are errors when crucial data is missing
+    expect_error(write_phen()) # all is missing
+    expect_error(write_phen('file')) # tibble is missing
+    expect_error(write_phen(tib=data.frame(id=1))) # file is missing (tib is incomplete too, but that gets tested downstream)
+    
+    # load sample file
+    fi <- system.file("extdata", 'sample.phen', package = "genio", mustWork = TRUE)
+    # create a dummy output we'll delete later
+    fo <- tempfile('delete-me_test-write', fileext = '.phen')
+    # this should just work (tested earlier)
+    phen1 <- read_phen(fi)
+    # try writing it back elsewhere
+    write_phen(fo, phen1)
+    # and read it back again to compare
+    phen2 <- read_phen(fo)
+    # compare
+    expect_equal(phen1, phen2)
+    # delete output when done
+    invisible(file.remove(fo))
+
+    # repeat by randomly reordering data, should automatically reorder too
+    phen1_r <- phen1[, sample.int(ncol(phen1))]
+    # try writing it back elsewhere
+    write_phen(fo, phen1_r)
+    # and read it back again to compare
+    phen2 <- read_phen(fo)
+    # compare
+    expect_equal(phen1, phen2)
+    # delete output when done
+    invisible(file.remove(fo))
+
+    # repeat by adding junk columns, should be automatically ignored
+    phen1_r <- phen1 # copy first
+    phen1_r$junk <- 1 # add a junk column
+    # try writing it back elsewhere
+    write_phen(fo, phen1_r)
+    # and read it back again to compare
+    phen2 <- read_phen(fo)
+    # compare
+    expect_equal(phen1, phen2)
+    # delete output when done
+    invisible(file.remove(fo))
+
+    # delete a column, test that an error is thrown
+    phen1_r <- phen1 # copy first
+    phen1_r$id <- NULL # delete this column
+    expect_error(write_phen(fo, phen1_r))
+
+    # create a random trait, test that writing and reading it both work
+    # random quantitiative trait
+    phen1$pheno <- rnorm(n_rows)
+    # introduce NAs too!
+    phen1$pheno[7:8] <- NA
+    # try writing it back elsewhere
+    write_phen(fo, phen1)
+    # and read it back again to compare
+    phen2 <- read_phen(fo)
+    # compare
+    expect_equal(phen1, phen2)
+    # delete output when done
+    invisible(file.remove(fo))
 })
 
 test_that("write_bim works", {

@@ -84,6 +84,9 @@ read_bed <- function(file, names_loci = NULL, names_ind = NULL, m_loci = NA, n_i
     # announce what we ended up loading, nice to know
     if (verbose)
         message('Reading: ', file)
+
+    # C++ doesn't work with tildes in names, so let's expand path before we pass to C++
+    file <- path.expand(file)
     
     # read in Rcpp!
     X <- read_bed_cpp(file, m_loci, n_ind)

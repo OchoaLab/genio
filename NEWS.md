@@ -70,3 +70,8 @@
 * Added `read_phen` and `write_phen`, a phenotype format (very similar to plink's FAM) used by GCTA and EMMAX.
 * Now `write_plink` returns the data it wrote, invisibly as a list.
   Most useful for auto-generated data.
+
+# 2019-08-05 - genio 1.0.11.9000
+
+* Fixed a "buffer overflow" bug that occured when input files started with "~/" on Unix systems.
+

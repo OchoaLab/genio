@@ -1,5 +1,6 @@
+logo
 ^LICENSE\.md$
-scripts/
+scripts
 ^doc$
 ^Meta$
 ^cran-comments\.md$

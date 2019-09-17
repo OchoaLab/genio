@@ -1,3 +1,5 @@
+<img src="logo.png" alt="Gen I/O" align="right" />
+
 # genio
 
 The `genio` (GENetics I/O) package provides easy-to-use and efficient readers and writers for formats in genetics research.

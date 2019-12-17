@@ -4,8 +4,14 @@
 \alias{read_bed}
 \title{Read a genotype matrix in plink BED format}
 \usage{
-read_bed(file, names_loci = NULL, names_ind = NULL, m_loci = NA,
-  n_ind = NA, verbose = TRUE)
+read_bed(
+  file,
+  names_loci = NULL,
+  names_ind = NULL,
+  m_loci = NA,
+  n_ind = NA,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{file}{Input file path.

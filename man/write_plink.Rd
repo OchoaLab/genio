@@ -4,8 +4,7 @@
 \alias{write_plink}
 \title{Write genotype and sample data into a plink BED/BIM/FAM file set.}
 \usage{
-write_plink(file, X, bim = NULL, fam = NULL, pheno = NULL,
-  verbose = TRUE)
+write_plink(file, X, bim = NULL, fam = NULL, pheno = NULL, verbose = TRUE)
 }
 \arguments{
 \item{file}{Output file path, without extensions (each of .bed, .bim, .fam extensions will be added automatically as needed).}

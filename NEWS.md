@@ -73,5 +73,10 @@
 
 # 2019-08-05 - genio 1.0.11.9000
 
-* Fixed a "buffer overflow" bug that occured when input files started with "~/" on Unix systems.
+* Fixed a "buffer overflow" bug that occurred when input files started with "~/" on Unix systems.
 
+# 2019-12-17 - genio 1.0.12
+
+* Second CRAN submission
+* Moved logo to `man/figures/`
+* Minor Roxygen-related updates.

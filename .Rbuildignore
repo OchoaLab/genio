@@ -1,6 +1,7 @@
 ^logo
 ^LICENSE\.md$
 scripts
+unpub
 ^doc$
 ^Meta$
 ^cran-comments\.md$

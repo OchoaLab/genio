@@ -831,3 +831,93 @@ test_that("ind_to_fam works", {
     expect_true( all(fam$mat == 0) )
     expect_true( all(fam$pheno == 0) )
 })
+
+test_that("tidy_kinship works", {
+    # create a toy kinship example
+    n <- 3
+    kinship <- matrix(
+        c(
+            0.5, 0.1, 0.0,
+            0.1, 0.6, 0.2,
+            0.0, 0.2, 0.7
+        ),
+        nrow = n
+    )
+    # add names (best for tidy version)
+    colnames(kinship) <- paste0('pop', 1:n)
+    rownames(kinship) <- paste0('pop', 1:n)
+    
+    # this returns tidy version
+    kinship_tidy <- tidy_kinship( kinship )
+    # test colnames
+    expect_equal(
+        colnames( kinship_tidy ),
+        c('id1', 'id2', 'kinship')
+    )
+    # test row number
+    expect_equal(
+        nrow( kinship_tidy ),
+        n * ( n + 1 ) / 2
+    )
+    # construct exact expectation here
+    kinship_tidy_expect <- tibble(
+        id1 = paste0('pop', c(1, 1, 2, 1:3)),
+        id2 = paste0('pop', c(3, 2, 3, 1:3)),
+        kinship = c(0, 0.1, 0.2, 0.5, 0.6, 0.7)
+    )
+    expect_equal(
+        kinship_tidy_expect,
+        kinship_tidy
+    )
+    
+    # now test unsorted version
+    kinship_tidy <- tidy_kinship( kinship, sort = FALSE )
+    # test colnames
+    expect_equal(
+        colnames( kinship_tidy ),
+        c('id1', 'id2', 'kinship')
+    )
+    # test row number
+    expect_equal(
+        nrow( kinship_tidy ),
+        n * ( n + 1 ) / 2
+    )
+    # construct exact expectation here
+    kinship_tidy_expect <- tibble(
+        id1 = paste0('pop', c(1, 1, 1, 2, 2, 3)),
+        id2 = paste0('pop', c(1, 2, 3, 2, 3, 3)),
+        kinship = c(0.5, 0.1, 0, 0.6, 0.2, 0.7)
+    )
+    expect_equal(
+        kinship_tidy_expect,
+        kinship_tidy
+    )
+
+    # test with sorting but without names
+    colnames(kinship) <- NULL
+    rownames(kinship) <- NULL
+    # this must throw a warning
+    expect_warning(
+        kinship_tidy <- tidy_kinship( kinship )
+    )
+    # test colnames
+    expect_equal(
+        colnames( kinship_tidy ),
+        c('id1', 'id2', 'kinship')
+    )
+    # test row number
+    expect_equal(
+        nrow( kinship_tidy ),
+        n * ( n + 1 ) / 2
+    )
+    # construct exact expectation here
+    kinship_tidy_expect <- tibble(
+        id1 = as.character( c(1, 1, 2, 1:3) ),
+        id2 = as.character( c(3, 2, 3, 1:3) ),
+        kinship = c(0, 0.1, 0.2, 0.5, 0.6, 0.7)
+    )
+    expect_equal(
+        kinship_tidy_expect,
+        kinship_tidy
+    )
+})

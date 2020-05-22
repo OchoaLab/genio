@@ -80,3 +80,7 @@
 * Second CRAN submission
 * Moved logo to `man/figures/`
 * Minor Roxygen-related updates.
+
+# 2020-05-21 - genio 1.0.13
+
+* Added `tidy_kinship` to transform a square symmetric matrix into a long-format table that is easy to sort and add annotations to

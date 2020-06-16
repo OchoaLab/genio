@@ -21,12 +21,6 @@ exts_plink <- c('bed', 'bim', 'fam')
 #' 
 #' @export
 require_files_plink <- function(file) {
-    # list of files that must exist
-    files_plink <- paste0(file, '.', exts_plink)
-    
-    # check each in order to produce most informative messages
-    for (file_plink in files_plink) {
-        if (!file.exists(file_plink))
-            stop('Required file is missing: ', file_plink)
-    }
+    # apply more generic function
+    require_files_generic(file, exts_plink)
 }

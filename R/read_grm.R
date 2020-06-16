@@ -10,7 +10,7 @@
 #' 
 #' - `kinship`: The symmetric `n`-times-`n` kinship matrix (GRM).  Has IDs as row and column names if the file with extension `.grm.id` was available.
 #' - `M`: The symmetric `n`-times-`n` matrix of pair sample sizes (number of non-missing loci pairs), if the file with extension `.grm.N.bin` was available.  Has IDs as row and column names if the file with extension `.grm.id` was available.
-#' - `id`: A tibble with two columns: `fam` and `id`, same as in plink FAM files.  Returned if the file with extension `.grm.id` was available.
+#' - `fam`: A tibble with two columns: `fam` and `id`, same as in plink FAM files.  Returned if the file with extension `.grm.id` was available.
 #'
 #' @examples
 #' # read an existing set of GRM files
@@ -19,7 +19,7 @@
 #' obj <- read_grm(file)
 #' stopifnot( !is.null( obj$kinship ) ) # the kinship matrix
 #' stopifnot( !is.null( obj$M ) )       # the pair sample sizes matrix
-#' stopifnot( !is.null( obj$id ) )      # the fam and ID tibble
+#' stopifnot( !is.null( obj$fam ) )     # the fam and ID tibble
 #' 
 #' @seealso
 #' Greatly adapted from sample code from GCTA:
@@ -32,16 +32,16 @@ read_grm <- function( name, n_ind = NA, verbose = TRUE ) {
     # complete paths
     file_bin <- paste0( name, ".grm.bin" )
     file_sizes <- paste0( name, ".grm.N.bin" )
-    file_ids <- paste0( name, ".grm.id" )
+    file_fam <- paste0( name, ".grm.id" )
     # only the binary file is required
     if ( !file.exists( file_bin ) )
         stop( 'Required file missing: ', file_bin )
 
     # read IDs, if present
-    ids <- NULL
-    if ( file.exists( file_ids ) ) {
+    fam <- NULL
+    if ( file.exists( file_fam ) ) {
         # this is a table with two columns (family and id)
-        ids <- read_tab_generic(
+        fam <- read_tab_generic(
             file = name,
             ext = 'grm.id',
             tib_names = c('fam', 'id'),
@@ -49,9 +49,9 @@ read_grm <- function( name, n_ind = NA, verbose = TRUE ) {
             verbose = verbose
         )
         # get number of individuals
-        n_ind <- nrow( ids )
+        n_ind <- nrow( fam )
     } else if ( is.na( n_ind ) ) {
-        stop('Either `n_ind` or the IDs file are required: ', file_ids)
+        stop('Either `n_ind` or the IDs file are required: ', file_fam)
     }
     # number of pairs, including diagonal
     n2 <- n_ind * ( n_ind + 1 ) / 2
@@ -67,9 +67,9 @@ read_grm <- function( name, n_ind = NA, verbose = TRUE ) {
     # map to symmetric matrices as desired
     kinship <- vec_to_mat_sym( kinship_vec, n_ind )
     # add names (only IDs), if available
-    if ( !is.null( ids ) ) {
-        colnames( kinship ) <- ids$id
-        rownames( kinship ) <- ids$id
+    if ( !is.null( fam ) ) {
+        colnames( kinship ) <- fam$id
+        rownames( kinship ) <- fam$id
     }
     
     # prepare return value
@@ -86,17 +86,17 @@ read_grm <- function( name, n_ind = NA, verbose = TRUE ) {
         # map to symmetric matrices as desired
         M <- vec_to_mat_sym( M_vec, n_ind )
         # add names (only IDs), if available
-        if ( !is.null( ids ) ) {
-            colnames( M ) <- ids$id
-            rownames( M ) <- ids$id
+        if ( !is.null( fam ) ) {
+            colnames( M ) <- fam$id
+            rownames( M ) <- fam$id
         }
         # add to return value
         obj$M <- M
     }
 
     # add IDS data to the very end
-    if ( !is.null( ids ) )
-        obj$id <- ids
+    if ( !is.null( fam ) )
+        obj$fam <- fam
 
     # return all of the available data
     return( obj )

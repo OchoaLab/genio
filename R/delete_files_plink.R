@@ -19,17 +19,6 @@
 #' 
 #' @export
 delete_files_plink <- function(file) {
-    # list of files that must exist
-    files_plink <- paste0(file, '.', exts_plink)
-    
-    # check each in order to produce most informative messages
-    for (file_plink in files_plink) {
-        # test that it's actually there!
-        if( file.exists(file_plink) ) {
-            # remove if it was there
-            invisible( file.remove(file_plink) )
-        } else {
-            warning('File to remove did not exist: ', file_plink)
-        }
-    }
+    # use generic code
+    delete_files_generic(file, exts_plink)
 }

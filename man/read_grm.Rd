@@ -18,7 +18,7 @@ A list with named elements:
 \itemize{
 \item \code{kinship}: The symmetric \code{n}-times-\code{n} kinship matrix (GRM).  Has IDs as row and column names if the file with extension \code{.grm.id} was available.
 \item \code{M}: The symmetric \code{n}-times-\code{n} matrix of pair sample sizes (number of non-missing loci pairs), if the file with extension \code{.grm.N.bin} was available.  Has IDs as row and column names if the file with extension \code{.grm.id} was available.
-\item \code{id}: A tibble with two columns: \code{fam} and \code{id}, same as in plink FAM files.  Returned if the file with extension \code{.grm.id} was available.
+\item \code{fam}: A tibble with two columns: \code{fam} and \code{id}, same as in plink FAM files.  Returned if the file with extension \code{.grm.id} was available.
 }
 }
 \description{
@@ -31,7 +31,7 @@ file <- sub('\\\\.grm\\\\.bin$', '', file) # remove extension from this path on 
 obj <- read_grm(file)
 stopifnot( !is.null( obj$kinship ) ) # the kinship matrix
 stopifnot( !is.null( obj$M ) )       # the pair sample sizes matrix
-stopifnot( !is.null( obj$id ) )      # the fam and ID tibble
+stopifnot( !is.null( obj$fam ) )     # the fam and ID tibble
 
 }
 \seealso{

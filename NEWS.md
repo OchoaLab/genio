@@ -84,3 +84,8 @@
 # 2020-05-21 - genio 1.0.13
 
 * Added `tidy_kinship` to transform a square symmetric matrix into a long-format table that is easy to sort and add annotations to
+
+# 2020-06-16 - genio 1.0.13.9000
+
+* Added `read_grm` to read GCTA's binary genetic relatedness matrix (GRM) format.
+

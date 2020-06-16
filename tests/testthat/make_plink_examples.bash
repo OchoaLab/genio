@@ -1,5 +1,6 @@
 # set path of executable to make examples
 plink2=$HOME'/bin/plink2'
+gcta=$HOME'/bin/gcta_1.93.2beta/gcta64'
 
 # create random data
 
@@ -21,6 +22,11 @@ for n in {4..7}; do
     rm dummy-$n-$m-$miss.log
 done
 
+# create GRM for tests
+$gcta --bfile dummy-7-10-0.1 --make-grm --out dummy-7-10-0.1
+# cleanup
+rm dummy-7-10-0.1.log
+
 # random 10x10 to go with "extdata" sample
 n=10
 m=10
@@ -29,3 +35,10 @@ $plink2 --dummy $n $m $miss --make-bed --out sample
 mv sample.bed ../../inst/extdata/
 # remove rest
 rm sample.{bim,fam,log}
+
+# create GRM for sample
+cd ../../inst/extdata/
+# actually create GRM files
+$gcta --bfile sample --make-grm --out sample
+# cleanup
+rm sample.log

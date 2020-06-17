@@ -88,4 +88,4 @@
 # 2020-06-16 - genio 1.0.13.9000
 
 * Added `read_grm` and `write_grm` to read and write GCTA's binary genetic relatedness matrix (GRM) format.
-* Also added auxiliary functions `require_files_grm` and `delete_files_grm`.
+* Also added auxiliary functions `require_files_grm`, `delete_files_grm`, and `delete_files_phen`.

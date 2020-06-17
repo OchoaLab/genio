@@ -741,6 +741,21 @@ test_that("delete_files_plink works", {
     expect_warning( delete_files_plink('file-that-does-not-exist') )
 })
 
+test_that("delete_files_phen works", {
+    # positive control
+    # create dummy PHEN files
+    file <- 'delete-me-test' # no extension
+    # add each extension and create empty files
+    file.create( paste0(file, '.phen') )
+    
+    # delete the PHEN file we just created
+    expect_silent( delete_files_phen(file) )
+
+    # negative control
+    # there will be warnings for files that didn't exist
+    expect_warning( delete_files_phen('file-that-does-not-exist') )
+})
+
 test_that("sex_to_int works", {
     # die if input is missing
     expect_error( sex_to_int() )

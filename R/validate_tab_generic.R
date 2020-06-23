@@ -15,5 +15,5 @@ validate_tab_generic <- function(tib, ext, tib_names) {
     # check input names
     indexes <- !(tib_names %in% names(tib))
     if (any(indexes))
-        stop('Missing column names from "', ext, '" input table: ', tib_names[indexes])
+        stop('Missing column names from "', ext, '" input table: ', toString( tib_names[indexes] ) )
 }

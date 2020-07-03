@@ -94,4 +94,6 @@
 
 * Improved error message in `validate_tab_generic`.
 
+# 2020-07-03 - genio 1.0.15.9000
 
+* Function `write_bed` now has `append` option, for writing extremely large files in parts.

@@ -1,5 +1,5 @@
 # this abstracts general tab writing regardless of specifics of some of the various formats supported
-write_tab_generic <- function(file, tib, ext, tib_names, verbose = TRUE) {
+write_tab_generic <- function(file, tib, ext, tib_names, verbose = TRUE, append = FALSE) {
     # check that mandatory arguments aren't missing
     if (missing(file))
         stop('Output file path (file) is required!')
@@ -20,9 +20,14 @@ write_tab_generic <- function(file, tib, ext, tib_names, verbose = TRUE) {
     file <- add_ext(file, ext)
     
     # announce what we ended up writing, nice to know
-    if (verbose)
-        message('Writing: ', file)
+    if (verbose) {
+        if (append) {
+            message('Appending: ', file)
+        } else {
+            message('Writing: ', file)
+        }
+    }
     
     # writes using tab separators
-    readr::write_tsv(tib, file, col_names = FALSE)
+    readr::write_tsv(tib, file, col_names = FALSE, append = append)
 }

@@ -4,7 +4,7 @@
 \alias{write_bim}
 \title{Write plink *.bim files}
 \usage{
-write_bim(file, tib, verbose = TRUE)
+write_bim(file, tib, verbose = TRUE, append = FALSE)
 }
 \arguments{
 \item{file}{Output file (whatever is accepted by readr::write_tsv).
@@ -16,7 +16,9 @@ Throws an error if any of these columns are missing.
 Additional columns are ignored.
 Columns are automatically reordered in output as expected in format.}
 
-\item{verbose}{If TRUE (default) function reports the path of the file being written (after autocompleting the extension).}
+\item{verbose}{If \code{TRUE} (default) function reports the path of the file being written (after autocompleting the extension).}
+
+\item{append}{If \code{TRUE}, appends rows onto the file. (Default is \code{FALSE}).}
 }
 \value{
 The output \code{tib} invisibly (what readr::write_tsv returns).

@@ -10,7 +10,8 @@
 #' Throws an error if any of these columns are missing.
 #' Additional columns are ignored.
 #' Columns are automatically reordered in output as expected in format.
-#' @param verbose If TRUE (default) function reports the path of the file being written (after autocompleting the extension).
+#' @param verbose If `TRUE` (default) function reports the path of the file being written (after autocompleting the extension).
+#' @param append If `TRUE`, appends rows onto the file. (Default is `FALSE`).
 #'
 #' @return The output `tib` invisibly (what readr::write_tsv returns).
 #'
@@ -39,13 +40,14 @@
 #' \url{https://www.cog-genomics.org/plink/1.9/formats#bim}
 #'
 #' @export
-write_bim <- function(file, tib, verbose = TRUE) {
+write_bim <- function(file, tib, verbose = TRUE, append = FALSE) {
     # this generic writer does all the magic
     write_tab_generic(
         file = file,
         tib = tib,
         ext = 'bim',
         tib_names = bim_names,
-        verbose = verbose
+        verbose = verbose,
+        append = append
     )
 }

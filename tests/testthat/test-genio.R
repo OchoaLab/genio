@@ -529,6 +529,51 @@ test_that("write_bim works", {
     expect_error(write_bim(fo, bim1_r))
 })
 
+test_that("write_bim with `append = TRUE` works", {
+    # load sample file
+    fi <- system.file("extdata", 'sample.bim', package = "genio", mustWork = TRUE)
+    # create a dummy output we'll delete later
+    fo <- tempfile('delete-me_test-write', fileext = '.bim')
+    
+    # this should just work (tested earlier)
+    bim1 <- read_bim(fi)
+
+    # here's the awkward part, where we write it back in parts
+    # write every two lines
+    for ( i in 1 : ( nrow( bim1 ) / 2 ) ) {
+        # try writing it back elsewhere
+        write_bim(
+            fo,
+            bim1[ (2*i-1):(2*i), ],
+            append = TRUE
+        )
+    }
+    
+    # and read it back again to comare
+    bim2 <- read_bim(fo)
+    # compare
+    expect_equal(bim1, bim2)
+    # delete output when done
+    invisible(file.remove(fo))
+
+    # repeat writing one line at the time
+    for ( i in 1 : nrow( bim1 ) ) {
+        # try writing it back elsewhere
+        write_bim(
+            fo,
+            bim1[ i, ],
+            append = TRUE
+        )
+    }
+    
+    # and read it back again to comare
+    bim2 <- read_bim(fo)
+    # compare
+    expect_equal(bim1, bim2)
+    # delete output when done
+    invisible(file.remove(fo))
+})
+
 test_that("write_ind works", {
     # test that there are errors when crucial data is missing
     expect_error(write_ind()) # all is missing

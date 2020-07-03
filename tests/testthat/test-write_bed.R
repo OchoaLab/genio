@@ -255,3 +255,55 @@ test_that("write_plink works", {
     expect_silent( delete_files_plink(fo) )
 })
 
+test_that("write_plink with `append = TRUE` works", {
+    # for this test, we need an original BIM table to compare to
+    bim <- make_bim( n = m )
+    # need to change some modes for the purpose of the test only
+    bim$chr <- as.character( bim$chr )
+    bim$id <- as.character( bim$id )
+    bim$ref <- as.character( bim$ref )
+    bim$alt <- as.character( bim$alt )
+    
+    # here's the awkward part, where we write it back in parts
+    # write every two lines
+    for ( i in 1 : ( nrow( X ) / 2 ) ) {
+        indexes <- (2*i-1):(2*i)
+        # try writing it back elsewhere
+        write_plink(
+            fo,
+            X = X[ indexes, ],
+            bim = bim[ indexes, ],
+            append = TRUE
+        )
+    }
+    
+    # read tests
+    # parse data back, verify agreement!
+    obj2 <- read_plink(fo)
+    expect_equal( X_named, obj2$X ) # need named version for this test
+    expect_equal( bim, obj2$bim[] ) # need [] to change stupid readr class, for testing only
+    # delete all three outputs when done
+    # this also tests that all three files existed!
+    expect_silent( delete_files_plink(fo) )
+    
+    # repeat writing one line at the time
+    for ( i in 1 : nrow( X ) ) {
+        # try writing it back elsewhere
+        write_plink(
+            fo,
+            X = X[ i, , drop = FALSE ],
+            bim = bim[ i, ],
+            append = TRUE
+        )
+    }
+    
+    # read tests
+    # parse data back, verify agreement!
+    obj2 <- read_plink(fo)
+    expect_equal( X_named, obj2$X ) # need named version for this test
+    expect_equal( bim, obj2$bim[] ) # need [] to change stupid readr class, for testing only
+    # delete all three outputs when done
+    # this also tests that all three files existed!
+    expect_silent( delete_files_plink(fo) )
+})
+

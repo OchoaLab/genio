@@ -96,4 +96,4 @@
 
 # 2020-07-03 - genio 1.0.15.9000
 
-* Functions `write_bed` and `write_bim` now have `append` option, for writing extremely large files in parts.
+* Functions `write_plink`, `write_bed`, and `write_bim` now have `append` option, for writing extremely large files in parts.

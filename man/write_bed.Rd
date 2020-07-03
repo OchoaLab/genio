@@ -4,7 +4,7 @@
 \alias{write_bed}
 \title{Write a genotype matrix into plink BED format}
 \usage{
-write_bed(file, X, verbose = TRUE)
+write_bed(file, X, verbose = TRUE, append = FALSE)
 }
 \arguments{
 \item{file}{Output file path.  .bed extension may be omitted (will be added automatically if it is missing).}
@@ -12,7 +12,9 @@ write_bed(file, X, verbose = TRUE)
 \item{X}{The \eqn{m \times n}{m-by-n} genotype matrix.
 Row and column names, if present, are ignored.}
 
-\item{verbose}{If TRUE (default) function reports the path of the file being written (after autocompleting the extension).}
+\item{verbose}{If \code{TRUE} (default) function reports the path of the file being written (after autocompleting the extension).}
+
+\item{append}{If \code{TRUE}, appends variants onto the file. (Default is \code{FALSE}).}
 }
 \value{
 Nothing

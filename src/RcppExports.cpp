@@ -19,20 +19,21 @@ BEGIN_RCPP
 END_RCPP
 }
 // write_bed_cpp
-void write_bed_cpp(const char* file, IntegerMatrix X);
-RcppExport SEXP _genio_write_bed_cpp(SEXP fileSEXP, SEXP XSEXP) {
+void write_bed_cpp(const char* file, IntegerMatrix X, bool append);
+RcppExport SEXP _genio_write_bed_cpp(SEXP fileSEXP, SEXP XSEXP, SEXP appendSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const char* >::type file(fileSEXP);
     Rcpp::traits::input_parameter< IntegerMatrix >::type X(XSEXP);
-    write_bed_cpp(file, X);
+    Rcpp::traits::input_parameter< bool >::type append(appendSEXP);
+    write_bed_cpp(file, X, append);
     return R_NilValue;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
     {"_genio_read_bed_cpp", (DL_FUNC) &_genio_read_bed_cpp, 3},
-    {"_genio_write_bed_cpp", (DL_FUNC) &_genio_write_bed_cpp, 2},
+    {"_genio_write_bed_cpp", (DL_FUNC) &_genio_write_bed_cpp, 3},
     {NULL, NULL, 0}
 };
 

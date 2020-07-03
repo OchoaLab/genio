@@ -5,7 +5,7 @@ read_bed_cpp <- function(file, m_loci, n_ind) {
     .Call('_genio_read_bed_cpp', PACKAGE = 'genio', file, m_loci, n_ind)
 }
 
-write_bed_cpp <- function(file, X) {
-    invisible(.Call('_genio_write_bed_cpp', PACKAGE = 'genio', file, X))
+write_bed_cpp <- function(file, X, append) {
+    invisible(.Call('_genio_write_bed_cpp', PACKAGE = 'genio', file, X, append))
 }
 

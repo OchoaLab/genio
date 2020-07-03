@@ -82,6 +82,44 @@ test_that("write_bed and read_bed work", {
     # NOTE: if X contains values that truncate to the correct range (say, 1.5, which becomes 1 upon truncation), then that's what Rcpp does internally and no errors are raised!
 })
 
+test_that("write_bed with `append = TRUE` works", {
+
+    # here's the awkward part, where we write it back in parts
+    # write every two lines
+    for ( i in 1 : ( nrow( X ) / 2 ) ) {
+        # try writing it back elsewhere
+        write_bed(
+            fo,
+            X[ (2*i-1):(2*i), ],
+            append = TRUE
+        )
+    }
+    
+    # read tests
+    # parse data back, verify agreement!
+    X2 <- read_bed(fo, m_loci = m, n_ind = n)
+    expect_equal(X, X2)
+    # delete output when done
+    invisible(file.remove(fo_bed))
+
+    # repeat writing one line at the time
+    for ( i in 1 : nrow( X ) ) {
+        # try writing it back elsewhere
+        write_bed(
+            fo,
+            X[ i, , drop = FALSE ],
+            append = TRUE
+        )
+    }
+    
+    # read tests
+    # parse data back, verify agreement!
+    X2 <- read_bed(fo, m_loci = m, n_ind = n)
+    expect_equal(X, X2)
+    # delete output when done
+    invisible(file.remove(fo_bed))
+})
+
 # let's include BEDMatrix in tests, if it's available
 test_BEDMatrix <- FALSE
 

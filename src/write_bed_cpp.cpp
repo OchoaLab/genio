@@ -4,8 +4,9 @@
 using namespace Rcpp;
 
 // [[Rcpp::export]]
-void write_bed_cpp(const char* file, IntegerMatrix X) {
-  // - fo assumed to be full path (no missing extensions)
+void write_bed_cpp(const char* file, IntegerMatrix X, bool append) {
+  // - file assumed to be full path (no missing extensions)
+  // - append = TRUE changes mode and prevents writing of header
   
   int n_ind = X.nrow();
   int m_loci = X.ncol();
@@ -14,19 +15,24 @@ void write_bed_cpp(const char* file, IntegerMatrix X) {
   // initialize row buffer
   unsigned char *buffer = (unsigned char *) malloc( n_buf );
 
+  // append changes mode
+  const char *mode = ( append ) ? "a" : "wb";
   // open output file
-  FILE *file_stream = fopen( file, "wb" );
+  FILE *file_stream = fopen( file, mode );
   if ( file_stream == NULL ) {
     // send error message to R
     char msg[100];
     sprintf(msg, "Could not open BED file `%s` for writing: %s", file, strerror( errno ));
     stop(msg);
   }
-  
-  // write header
-  // assume standard locus-major order and latest format
-  unsigned char byte_header[3] = {0x6c, 0x1b, 1};
-  fwrite( byte_header, sizeof(unsigned char), 3, file_stream );
+
+  if ( !append ) {
+    // write header
+    // NOTE: append has to be FALSE for header to be written.  Outside R wrapper code forces append = FALSE when file does not exist (so this is written the first time only).  This Rcpp function does not check for file existence
+    // assume standard locus-major order and latest format
+    unsigned char byte_header[3] = {0x6c, 0x1b, 1};
+    fwrite( byte_header, sizeof(unsigned char), 3, file_stream );
+  }
 
   // navigate data and process
   int i, j, k, rem;

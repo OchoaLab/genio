@@ -15,7 +15,8 @@ NULL
 #' @param file Output file path.  .bed extension may be omitted (will be added automatically if it is missing).
 #' @param X The \eqn{m \times n}{m-by-n} genotype matrix.
 #' Row and column names, if present, are ignored.
-#' @param verbose If TRUE (default) function reports the path of the file being written (after autocompleting the extension).
+#' @param verbose If `TRUE` (default) function reports the path of the file being written (after autocompleting the extension).
+#' @param append If `TRUE`, appends variants onto the file. (Default is `FALSE`).
 #'
 #' @return Nothing
 #'
@@ -40,7 +41,7 @@ NULL
 #' \url{https://www.cog-genomics.org/plink/1.9/formats#bed}
 #'
 #' @export
-write_bed <- function(file, X, verbose = TRUE) {
+write_bed <- function(file, X, verbose = TRUE, append = FALSE) {
     # die if things are missing
     if (missing(file))
         stop('Output file path is required!')
@@ -50,15 +51,33 @@ write_bed <- function(file, X, verbose = TRUE) {
     # make sure X is a matrix
     if (!is.matrix(X))
         stop('Genotypes (X) must be a matrix!')
+
+    # make sure append is a scalar logical, so Rcpp never dies mysteriously
+    if ( length( append ) > 1 )
+        stop('`append` must be a scalar. Instead got length: ', length( append ) )
+    if ( !is.logical( append ) )
+        stop('`append` must be logical.  Instead got class: ', class( append ) )
     
     # add bed extension if it wasn't already there
     file <- add_ext(file, 'bed')
     
+    # let's test if file exists
+    # if it does, and we want to append, then that's as it should be
+    # if it doesn't exist, treat as non-append (so Rcpp code adds header first time)
+    # (testing for file existence is more painful within Rcpp, so meh)
+    if ( append && !file.exists( file ) )
+        append <- FALSE
+    
     # announce what we ended up writing, nice to know
-    if (verbose)
-        message('Writing: ', file)
+    if (verbose) {
+        if (append) {
+            message('Appending: ', file)
+        } else {
+            message('Writing: ', file)
+        }
+    }
     
     # process and write in Rcpp!
     # at least an order of magnitude faster than my best pure R solution
-    write_bed_cpp(file, X)
+    write_bed_cpp(file, X, append = append)
 }

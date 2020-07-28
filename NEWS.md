@@ -100,4 +100,4 @@
 
 # 2020-07-28 - genio 1.0.16.9000
 
-* Added `write_eigenvec` to write plink/GCTA eigenvector files.
+* Added `write_eigenvec` and `read_eigenvec` to read and write plink/GCTA eigenvector files.

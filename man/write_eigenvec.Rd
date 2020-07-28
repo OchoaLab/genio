@@ -4,10 +4,10 @@
 \alias{write_eigenvec}
 \title{Write eigenvectors table into a plink-format file}
 \usage{
-write_eigenvec(name, eigenvec, fam = NULL, ext = "eigenvec", verbose = TRUE)
+write_eigenvec(file, eigenvec, fam = NULL, ext = "eigenvec", verbose = TRUE)
 }
 \arguments{
-\item{name}{The base file name (without extension)}
+\item{file}{The output file name (possibly without extension)}
 
 \item{eigenvec}{A matrix or tibble containing the eigenvectors to include in the file.
 Column names other than \code{fam} and \code{id} can be anything and are all treated as eigenvectors (not written to file).}
@@ -42,16 +42,18 @@ fam <- tibble( fam = 1:n, id = 1:n )
 
 # write this data to .eigenvec file
 # output path without extension
-name <- tempfile('delete-me-example')
-eigenvec_final <- write_eigenvec( name, eigenvec, fam = fam )
+file <- tempfile('delete-me-example')
+eigenvec_final <- write_eigenvec( file, eigenvec, fam = fam )
 # inspect the tibble that was written to file (returned invisibly)
 eigenvec_final
 
 # remove temporary file (add extension before deletion)
-file.remove( paste0( name, '.eigenvec' ) )
+file.remove( paste0( file, '.eigenvec' ) )
 
 }
 \seealso{
+\code{\link{read_eigenvec}} for reading an eigenvec file.
+
 Plink 1 eigenvec format reference:
 \url{https://www.cog-genomics.org/plink/1.9/formats#eigenvec}
 

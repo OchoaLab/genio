@@ -5,7 +5,7 @@
 #' However, input `eigenvec` may also be a data.frame already containing the `fam` and `id` columns, and other reasonable intermediate cases are also handled.
 #' If both `eigenvec` and `fam` are provided and contain overlapping columns, those in `eigenvec` get overwritten with a warning.
 #'
-#' @param name The base file name (without extension)
+#' @param file The output file name (possibly without extension)
 #' @param eigenvec A matrix or tibble containing the eigenvectors to include in the file.
 #' Column names other than `fam` and `id` can be anything and are all treated as eigenvectors (not written to file).
 #' @param fam An optional `fam` table, which is used to add the `fam` and `id` columns to `eigenvec` (which overwrite columns of the same name in `eigenvec` if present, after a warning is produced).
@@ -29,15 +29,17 @@
 #' 
 #' # write this data to .eigenvec file
 #' # output path without extension
-#' name <- tempfile('delete-me-example')
-#' eigenvec_final <- write_eigenvec( name, eigenvec, fam = fam )
+#' file <- tempfile('delete-me-example')
+#' eigenvec_final <- write_eigenvec( file, eigenvec, fam = fam )
 #' # inspect the tibble that was written to file (returned invisibly)
 #' eigenvec_final
 #'
 #' # remove temporary file (add extension before deletion)
-#' file.remove( paste0( name, '.eigenvec' ) )
+#' file.remove( paste0( file, '.eigenvec' ) )
 #'
 #' @seealso
+#' \code{\link{read_eigenvec}} for reading an eigenvec file.
+#' 
 #' Plink 1 eigenvec format reference:
 #' \url{https://www.cog-genomics.org/plink/1.9/formats#eigenvec}
 #' 
@@ -48,10 +50,10 @@
 #' \url{https://cnsgenomics.com/software/gcta/#PCA}
 #' 
 #' @export
-write_eigenvec <- function( name, eigenvec, fam = NULL, ext = 'eigenvec', verbose = TRUE ) {
+write_eigenvec <- function( file, eigenvec, fam = NULL, ext = 'eigenvec', verbose = TRUE ) {
     # required parameters
-    if ( missing( name ) )
-        stop( '`name` is required!' )
+    if ( missing( file ) )
+        stop( '`file` is required!' )
     if ( missing( eigenvec ) )
         stop( '`eigenvec` is required!' )
     
@@ -107,8 +109,8 @@ write_eigenvec <- function( name, eigenvec, fam = NULL, ext = 'eigenvec', verbos
         }
     }
 
-    # output file path
-    file <- paste0( name, '.', ext )
+    # add extension if it wasn't already there
+    file <- add_ext(file, ext)
     
     # announce what we ended up writing, nice to know
     if (verbose)

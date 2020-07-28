@@ -1000,6 +1000,33 @@ test_that("tidy_kinship works", {
     )
 })
 
+test_that("read_eigenvec works", {
+    # test that errors occur when key data is missing
+    expect_error( read_eigenvec() ) # only file is required
+    expect_error( read_eigenvec( 'bogus-file' ) ) # file is non-existent (read_table2 will complain)
+
+    # actual number of eigenvectors in sample file
+    r <- 3
+    
+    # load sample file
+    fi <- system.file("extdata", 'sample.eigenvec', package = "genio", mustWork = TRUE)
+    expect_silent(
+        data <- read_eigenvec( fi, verbose = FALSE )
+    )
+    expect_true( is.list(data) )
+    expect_equal( length( data ), 2 )
+    expect_equal( names( data ), c('eigenvec', 'fam') )
+    expect_true( is.matrix( data$eigenvec ) )
+    expect_true( is.numeric( data$eigenvec ) )
+    expect_equal( nrow( data$eigenvec ), n_rows )
+    expect_equal( ncol( data$eigenvec ), r )
+    expect_true( is_tibble( data$fam ) )
+    expect_equal( nrow( data$fam ), n_rows )
+    expect_equal( ncol( data$fam ), 2 )
+    expect_equal( colnames( data$fam ), c('fam', 'id') )
+})
+
+
 test_that("write_eigenvec works", {
     # test that there are errors when crucial data is missing
     expect_error( write_eigenvec() ) # all is missing
@@ -1031,7 +1058,11 @@ test_that("write_eigenvec works", {
     # subset to top eigenvectors (columns)
     eigenvec <- eigenvec[ , 1:r ]
     # accompanying dummy fam file
-    fam <- tibble( fam = 1:n, id = 1:n )
+    # entries as character for reader/writer comparisons
+    fam <- tibble(
+        fam = as.character( 1:n ),
+        id = as.character( 1:n )
+    )
     # expected output in this extra simple case
     eigenvec_with_names <- eigenvec
     colnames( eigenvec_with_names ) <- 1:r
@@ -1048,6 +1079,10 @@ test_that("write_eigenvec works", {
     )
     # compare
     expect_equal( eigenvec_final, eigenvec_final_expected )
+    # now parse it with our read_eigenvec, this should also agree!
+    data <- read_eigenvec( name, verbose = FALSE )
+    expect_equal( data$eigenvec, eigenvec_with_names )
+    expect_equal( data$fam, fam )
     # delete output when done
     invisible( file.remove(fo) )
     

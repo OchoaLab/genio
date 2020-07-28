@@ -1,5 +1,6 @@
 # need to load it explicitly for some tests
 library(tibble)
+library(dplyr)
 
 context("test-genio")
 
@@ -998,3 +999,116 @@ test_that("tidy_kinship works", {
         kinship_tidy
     )
 })
+
+test_that("write_eigenvec works", {
+    # test that there are errors when crucial data is missing
+    expect_error( write_eigenvec() ) # all is missing
+    expect_error( write_eigenvec( 'file' ) ) # eigenvec is missing
+    expect_error( write_eigenvec( eigenvec = matrix(0) ) ) # file is missing (tib is incomplete too, but that gets tested downstream)
+
+    # create small but realistic eigenvec matrix
+    # number of individuals
+    n <- 10
+    # number of desired PCs
+    r <- 3
+    # number of SNPs
+    m <- 100
+    # allele frequency (boring, right in the middle)
+    p <- 0.5
+    # random genotypes
+    X <- matrix(
+        rbinom( n*m, 2, p ),
+        nrow = m,
+        ncol = n
+    )
+    # center and scale (with true ancestral allele freq)
+    X <- ( X - 2 * p ) / sqrt( 4 * p * ( 1 - p ) )
+    # kinship matrix
+    kinship <- crossprod( X )
+    # now get eigenvectors
+    # NOTE: eigen doesn't give colnames to this matrix!
+    eigenvec <- eigen( kinship )$vectors
+    # subset to top eigenvectors (columns)
+    eigenvec <- eigenvec[ , 1:r ]
+    # accompanying dummy fam file
+    fam <- tibble( fam = 1:n, id = 1:n )
+    # expected output in this extra simple case
+    eigenvec_with_names <- eigenvec
+    colnames( eigenvec_with_names ) <- 1:r
+    eigenvec_final_expected <- bind_cols( fam, as_tibble( eigenvec_with_names ) )
+    
+    # create a dummy output we'll delete later
+    # file base (no extension)
+    name <- tempfile( 'delete-me_test-write' )
+    # full file path (for manually deleting)
+    fo <- paste0( name, '.eigenvec' )
+    # write file, producing "final" table of interest
+    expect_silent(
+        eigenvec_final <- write_eigenvec( name, eigenvec, fam = fam, verbose = FALSE )
+    )
+    # compare
+    expect_equal( eigenvec_final, eigenvec_final_expected )
+    # delete output when done
+    invisible( file.remove(fo) )
+    
+    # repeat by reordering fam data, should automatically reorder too
+    fam_r <- fam[ , 2:1 ]
+    expect_silent(
+        eigenvec_final <- write_eigenvec( name, eigenvec, fam = fam_r, verbose = FALSE )
+    )
+    # compare
+    expect_equal( eigenvec_final, eigenvec_final_expected )
+    # delete output when done
+    invisible( file.remove(fo) )
+    
+    # repeat by adding junk columns, should be automatically ignored
+    fam_r <- fam # copy first
+    fam_r$junk <- 1 # add a junk column
+    expect_silent(
+        eigenvec_final <- write_eigenvec( name, eigenvec, fam = fam_r, verbose = FALSE )
+    )
+    # compare
+    expect_equal( eigenvec_final, eigenvec_final_expected )
+    # delete output when done
+    invisible( file.remove(fo) )
+
+    # other expected errors
+    
+    # delete a column, test that an error is thrown
+    fam_r <- fam # copy first
+    fam_r$id <- NULL # delete this column
+    expect_error(
+        write_eigenvec( name, eigenvec, fam = fam_r, verbose = FALSE )
+    )
+
+    # since eigenvec doesn't have fam/id columns, this errors (fam omitted)
+    expect_error(
+        write_eigenvec( name, eigenvec, verbose = FALSE )
+    )
+    # but including the "final" eigenvec as input should work
+    expect_silent(
+        eigenvec_final <- write_eigenvec( name, eigenvec_final_expected, verbose = FALSE )
+    )
+    # compare
+    expect_equal( eigenvec_final, eigenvec_final_expected )
+    # delete output when done
+    invisible( file.remove(fo) )
+
+    # since the final version and fam overlap in fam/id columns, this succeeds but with a warning
+    expect_warning(
+        eigenvec_final <- write_eigenvec( name, eigenvec_final_expected, fam = fam, verbose = FALSE )
+    )
+    # compare
+    expect_equal( eigenvec_final, eigenvec_final_expected )
+    # delete output when done
+    invisible( file.remove(fo) )
+
+    # error when number of individuals doesn't match between eigenvec and fam
+    expect_error(
+        write_eigenvec( name, eigenvec, fam = fam[ -1, ], verbose = FALSE )
+    )
+    expect_error(
+        write_eigenvec( name, eigenvec[ -1, ], fam = fam, verbose = FALSE )
+    )
+})
+

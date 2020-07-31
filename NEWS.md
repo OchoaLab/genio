@@ -101,3 +101,8 @@
 # 2020-07-28 - genio 1.0.16.9000
 
 * Added `write_eigenvec` and `read_eigenvec` to read and write plink/GCTA eigenvector files.
+
+# 2020-07-31 - genio 1.0.17.9000
+
+* Added `count_lines`, uses C++ code (via Rcpp) to count file lines extremely quickly.
+  Intended for counting numbers of individuals (from FAM and equivalent files) or numbers of loci (from BIM and equivalent files) when these files are extremely large and no other information is needed from those files.

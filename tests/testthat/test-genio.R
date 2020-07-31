@@ -1147,3 +1147,37 @@ test_that("write_eigenvec works", {
     )
 })
 
+test_that("count_lines works", {
+    # test that there are errors when crucial data is missing
+    expect_error( count_lines() ) # file is missing
+    expect_error( count_lines( 'bogus-file' ) ) # file is non-existent
+    
+    # load sample file
+    fi <- system.file("extdata", 'sample.fam', package = "genio", mustWork = TRUE)
+    # count lines!
+    expect_silent(
+        n_ind_lines <- count_lines( fi, verbose = FALSE )
+    )
+    # this is our only expectation
+    expect_equal( n_ind_lines, n_rows)
+    
+    # repeat with missing extension
+    fi_no_ext <- sub('\\.fam$', '', fi)
+    # if we don't add extension back, it should fail (file does not exist)
+    expect_error(
+        count_lines( fi_no_ext )
+    )
+    # count lines!
+    expect_silent(
+        n_ind_lines <- count_lines( fi_no_ext, ext = 'fam', verbose = FALSE )
+    )
+    # this is our only expectation
+    expect_equal( n_ind_lines, n_rows)
+
+    # test "iterator" version
+    expect_silent(
+        n_ind_lines <- count_lines( fi, verbose = FALSE, iter = TRUE )
+    )
+    # this is our only expectation
+    expect_equal( n_ind_lines, n_rows)
+})

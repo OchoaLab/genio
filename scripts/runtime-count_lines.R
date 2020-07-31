@@ -33,33 +33,25 @@ time_wc <- system.time(
     n_wc <- count_lines_wcl( file )
 )[3]
 
-# run genio versions
+# run genio version...
 message('genio')
 time_genio <- system.time(
     n_genio <- count_lines( file, verbose = FALSE )
-)[3]
-
-message('genio iter')
-time_genio_iter <- system.time(
-    n_genio_iter <- count_lines( file, verbose = FALSE, iter = TRUE )
 )[3]
 
 # gather results in tibble
 tib <- tibble(
     method = c(
         'wc',
-        'genio',
-        'genio_iter'
+        'genio'
     ),
     time = c(
         time_wc,
-        time_genio,
-        time_genio_iter
+        time_genio
     ),
     lines = c(
         n_wc,
-        n_genio,
-        n_genio_iter
+        n_genio
     )
 )
 

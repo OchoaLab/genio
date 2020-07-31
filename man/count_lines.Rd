@@ -4,7 +4,7 @@
 \alias{count_lines}
 \title{Count the number of lines of a file}
 \usage{
-count_lines(file, ext = NA, verbose = TRUE, iter = FALSE)
+count_lines(file, ext = NA, verbose = TRUE)
 }
 \arguments{
 \item{file}{The input file path to read (a string).}
@@ -14,8 +14,6 @@ If \code{NA} (default), \code{file} is expected to contain its extension already
 Otherwise, this extension is added, but only if this extension was not already there (so if inputs were \verb{file = 'file.bim', ext = 'bim'}, file is not altered and read without errors).}
 
 \item{verbose}{If \code{TRUE} (default), writes a message reporting the file whose lines are being counted (after adding extensions if it was needed).}
-
-\item{iter}{If \code{TRUE}, uses a version of the C++ code that uses iterators, should be even faster but makes more assumptions (the newline character should be encoded as 0x0a (ok in most reasonable encodings, including ISO-8859 and UTF-8)).}
 }
 \value{
 The number of lines in the file.
@@ -24,6 +22,9 @@ The number of lines in the file.
 This function returns the number of lines in a file.
 It is intended to result in fast retrieval of numbers of individuals (from FAM or equivalent files) or loci (BIM or equivalent files) when the input files are extremely large and no other information is required from these files.
 This code uses C++ to quickly counts lines (like linux's \code{wc -l} but this one is cross-platform).
+}
+\details{
+Note: this function does not work correctly with compressed files (they are not uncompressed prior to conting newlines).
 }
 \examples{
 # count number of individuals from an existing plink *.fam file

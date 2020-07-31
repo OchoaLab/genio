@@ -1159,7 +1159,7 @@ test_that("count_lines works", {
         n_ind_lines <- count_lines( fi, verbose = FALSE )
     )
     # this is our only expectation
-    expect_equal( n_ind_lines, n_rows)
+    expect_equal( n_ind_lines, n_rows )
     
     # repeat with missing extension
     fi_no_ext <- sub('\\.fam$', '', fi)
@@ -1172,12 +1172,15 @@ test_that("count_lines works", {
         n_ind_lines <- count_lines( fi_no_ext, ext = 'fam', verbose = FALSE )
     )
     # this is our only expectation
-    expect_equal( n_ind_lines, n_rows)
+    expect_equal( n_ind_lines, n_rows )
 
-    # test "iterator" version
+    # test on a file with a single line but missing its newline (a potential trouble case for C++ iterators solution)
+    fi <- 'no-newline.txt'
+    # count lines!
     expect_silent(
-        n_ind_lines <- count_lines( fi, verbose = FALSE, iter = TRUE )
+        n_lines <- count_lines( fi, verbose = FALSE )
     )
     # this is our only expectation
-    expect_equal( n_ind_lines, n_rows)
+    expect_equal( n_lines, 1 )
+
 })

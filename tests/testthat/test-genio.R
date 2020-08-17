@@ -1009,7 +1009,24 @@ test_that("read_eigenvec works", {
     r <- 3
     
     # load sample file
-    fi <- system.file("extdata", 'sample.eigenvec', package = "genio", mustWork = TRUE)
+    fi <- system.file("extdata", 'sample-gcta.eigenvec', package = "genio", mustWork = TRUE)
+    expect_silent(
+        data <- read_eigenvec( fi, verbose = FALSE )
+    )
+    expect_true( is.list(data) )
+    expect_equal( length( data ), 2 )
+    expect_equal( names( data ), c('eigenvec', 'fam') )
+    expect_true( is.matrix( data$eigenvec ) )
+    expect_true( is.numeric( data$eigenvec ) )
+    expect_equal( nrow( data$eigenvec ), n_rows )
+    expect_equal( ncol( data$eigenvec ), r )
+    expect_true( is_tibble( data$fam ) )
+    expect_equal( nrow( data$fam ), n_rows )
+    expect_equal( ncol( data$fam ), 2 )
+    expect_equal( colnames( data$fam ), c('fam', 'id') )
+
+    # repeat with plink2-formatted sample file (has a header that should simply be ignored)
+    fi <- system.file("extdata", 'sample-plink2.eigenvec', package = "genio", mustWork = TRUE)
     expect_silent(
         data <- read_eigenvec( fi, verbose = FALSE )
     )

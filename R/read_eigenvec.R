@@ -5,6 +5,10 @@
 #'
 #' @param file The input file path, potentially excluding extension.
 #' @param ext File extension (default "eigenvec") can be changed if desired.
+#' @param comment A string used to identify comments.
+#' Any text after the comment characters will be silently ignored.
+#' Passed to `\link[readr]{read_table2}`.
+#' '#' (default) works for plink2 eigenvec files, which have a header lines that starts with this character (the header is therefore ignored).
 #' @param verbose If TRUE (default) function reports the path of the file being written (after autocompleting the extension).
 #'
 #' @return A list with two elements:
@@ -13,8 +17,8 @@
 #' - `fam`: A tibble with two columns, `fam` and `id`, which are the first two columns of the parsed file.
 #'
 #' @examples
-#' # read an existing *.eigenvec file
-#' file <- system.file("extdata", 'sample.eigenvec', package = "genio", mustWork = TRUE)
+#' # read an existing *.eigenvec file created by GCTA
+#' file <- system.file("extdata", 'sample-gcta.eigenvec', package = "genio", mustWork = TRUE)
 #' data <- read_eigenvec(file)
 #' # numeric eigenvector matrix
 #' data$eigenvec
@@ -26,6 +30,14 @@
 #' file # verify .eigenvec is missing
 #' data <- read_eigenvec(file) # load it anyway!
 #' data$eigenvec
+#'
+#' # read an existing *.eigenvec file created by plink2
+#' file <- system.file("extdata", 'sample-plink2.eigenvec', package = "genio", mustWork = TRUE)
+#' data <- read_eigenvec(file)
+#' # numeric eigenvector matrix
+#' data$eigenvec
+#' # fam/id tibble
+#' data$fam
 #'
 #' @seealso
 #' \code{\link{write_eigenvec}} for writing an eigenvec file.
@@ -40,7 +52,12 @@
 #' \url{https://cnsgenomics.com/software/gcta/#PCA}
 #' 
 #' @export
-read_eigenvec <- function( file, ext = 'eigenvec', verbose = TRUE ) {
+read_eigenvec <- function(
+                          file,
+                          ext = 'eigenvec',
+                          comment = '#',
+                          verbose = TRUE
+                          ) {
     if ( missing( file ) )
         stop('`file` is required!')
     
@@ -62,7 +79,8 @@ read_eigenvec <- function( file, ext = 'eigenvec', verbose = TRUE ) {
     eigenvec <- readr::read_table2(
         file,
         col_names = FALSE,
-        col_types = col_types
+        col_types = col_types,
+        comment = comment
     )
     # first two columns (FAM/ID) should be separated
     fam <- eigenvec[ , 1:2 ]

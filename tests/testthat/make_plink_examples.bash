@@ -42,3 +42,15 @@ cd ../../inst/extdata/
 $gcta --bfile sample --make-grm --out sample
 # cleanup
 rm sample.log
+# make PCs using GCTA
+$gcta --grm sample --pca 3 --out sample-gcta
+# cleanup
+rm sample-gcta.log
+
+# make PCs using plink2 (diff example with header; GCTA's has no header)
+#$plink2 --bfile sample --pca 3 --out sample-plink2
+# stupid thing complains about small sample size, this is a workaround
+$plink2 --bfile sample --freq --out sample-plink2
+$plink2 --bfile sample --read-freq sample-plink2.afreq --pca 3 --out sample-plink2
+# cleanup
+rm sample-plink2.{afreq,log}

@@ -54,6 +54,10 @@ test_that("write_bed and read_bed work", {
     expect_error( read_bed(fo, m_loci = m-1, n_ind = n) )
     expect_error( read_bed(fo, m_loci = m,   n_ind = n-1) )
     expect_error( read_bed(fo, m_loci = m,   n_ind = n+4) ) # have to be off by a whole byte to notice some of these errors
+    # file path that doesn't exist
+    expect_error( read_bed( 'doesnt-exist', m_loci = m, n_ind = n ) )
+    # very long non-existent file path
+    expect_error( read_bed( '/made/up/long/path/doesnt-exist_doesnt-exist_doesnt-exist_doesnt-exist_doesnt-exist', m_loci = m, n_ind = n ) )
     
     # delete output when done
     invisible(file.remove(fo_bed))

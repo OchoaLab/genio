@@ -115,5 +115,8 @@
 
 # 2020-12-22 - genio 1.0.19.9000
 
+* Function `read_bed` added a missing file check in R code.
+  * A check in the underlying C++ code already existed, but it could suffer from a buffer overflow if the eroneous file path was very long.
+    Such buffer overflows are now completely avoided.
 * Vignette: Removed `lfa` comparison. 
   * My latest `lfa` fork doesn't have function `read.bed` anymore, previously the slowest and most memory-hungry competitor, which `genio::read_plink` was being compared to.

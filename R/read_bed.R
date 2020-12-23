@@ -87,6 +87,11 @@ read_bed <- function(file, names_loci = NULL, names_ind = NULL, m_loci = NA, n_i
 
     # C++ doesn't work with tildes in names, so let's expand path before we pass to C++
     file <- path.expand(file)
+
+    # before passing it to c++ function, make sure it exists
+    # C++ does its own check, but on very long paths the buffer overflows
+    if ( !file.exists( file ) )
+        stop( 'File does not exist: ', file )
     
     # read in Rcpp!
     X <- read_bed_cpp(file, m_loci, n_ind)

@@ -4,7 +4,7 @@ author: "Alejandro Ochoa"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Read and write BED files with genio}
+  %\VignetteIndexEntry{Read and write BED files with `genio`}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -20,7 +20,7 @@ knitr::opts_chunk$set(
 ## copied from examples from the "simmer" R package
 ## after: https://www.enchufa2.es/archives/suggests-and-vignettes.html
 ## by Iñaki Úcar
-required <- c("lfa", "BEDMatrix", "snpStats", "pryr") # first is not a CRAN package, only suggested since popkin doesn't need it to run... might as well do the same for other dependencies
+required <- c("BEDMatrix", "snpStats", "pryr")
 
 if (!all(sapply(required, requireNamespace, quietly = TRUE)))
   knitr::opts_chunk$set(eval = FALSE)
@@ -208,7 +208,7 @@ Several common matrix operations for genotypes consume even more memory, so more
 # Comparison to other packages
 
 There are several R packages that provide BED readers, and to a lesser extent some of the other functionality of `genio`.
-Here we compare directly to `BEDMatrix`, `snpStats`, and `lfa`.
+Here we compare directly to `BEDMatrix` and `snpStats`.
 Each of these packages has different goals so they are optimized for their use cases.
 The `genio` parser is optimized to read the entire genotype data into a native R matrix, so that it is easy to inspect and manipulate for R beginners.
 Here we demonstrate that `genio` is not only the fastest at this task, but also the easiest to obtain in terms of requiring the least amount of coding.
@@ -303,7 +303,7 @@ time_read_snpStats_2
 
 # Now we can visualize the matrix.
 # First 10 loci and individuals, as before.
-# Note that, compared to (genio, BEDMatrix, lfa), alleles are encoded in reverse,
+# Note that, compared to (genio, BEDMatrix), alleles are encoded in reverse,
 # so 0s and 2s are flipped in this matrix.
 X_snpStats[1:10, 1:10]
 
@@ -366,27 +366,6 @@ time_write_snpStats <- system.time({
 delete_files_plink(file_plink_copy)
 ```
 
-## LFA
-
-The `lfa` package also provides a minimal BED parser, ignoring the BIM and FAM files except to count loci and individuals.
-Its genotype matrix is exactly like `genio`'s: same class (R matrix) and orientation (loci along rows).
-The package does not provide file writers or other such utilities.
-```{R}
-library(lfa)
-# Parse the genotype matrix
-time_read_lfa <- system.time(
-    X_lfa <- read.bed(file_plink)
-)
-time_read_lfa
-
-# This genotype matrix does not have column or row names:
-X_lfa[1:10, 1:10]
-
-# Again verify that the matrices are identical
-stopifnot( all( X == X_lfa, na.rm = TRUE) )
-```
-
-
 ## Overall time comparisons
 
 Note that reading performance varies on different machines depending on the balance between hard drive access and processor speeds (where the relative bottleneck is).
@@ -403,9 +382,6 @@ The `snpStats` reader is written in `C`, so it is also very fast for its initial
 The annotation tables are read with the base function `read.table`, which is also the slowest.
 In terms of completeness of output (full genotypes and annotations tables), only this package matches `genio`, which makes it the fairest comparison.
 
-The `lfa` reader is written in pure `R`, which explains why it is the slowest in this comparison.
-The annotation tables are read with `read.table`, as in `snpStats`, but are not returned at all.
-
 ```{R, fig.width = 6, fig.height = 4, fig.align = 'center'}
 # Extract component 3 of each time object,
 # which is is total time elapsed.
@@ -413,14 +389,12 @@ The annotation tables are read with `read.table`, as in `snpStats`, but are not 
 times_read <- c(
     time_read_genio[3],
     time_read_bedmatrix_1[3] + time_read_bedmatrix_2[3],
-    time_read_snpStats_1[3] + time_read_snpStats_2[3],
-    time_read_lfa[3]
+    time_read_snpStats_1[3] + time_read_snpStats_2[3]
 )
 names_read <- c(
     'genio',
     'BEDMatrix',
-    'snpStats',
-    'lfa'
+    'snpStats'
 )
 # Create barplot
 barplot(
@@ -457,7 +431,7 @@ barplot(
 
 ## Memory comparison
 
-High memory consumption is the main sacrifice for the ease of use of native R matrices, and in this respect `genio` consumes the most memory (second only to `lfa`).
+High memory consumption is the main sacrifice for the ease of use of native R matrices, and in this respect `genio` consumes the most memory.
 
 We use the `pryr` package to compare the memory usage of each native genotype object.
 
@@ -468,15 +442,13 @@ sizes <- c(
     object_size( X ),
     object_size( data_genio$X ),
     object_size( X_BEDMatrix ),
-    object_size( data_snpStats$genotypes ),
-    object_size( X_lfa )
+    object_size( data_snpStats$genotypes )
 )
 names_sizes <- c(
     'original',
     'genio',
     'BEDMatrix',
-    'snpStats',
-    'lfa'
+    'snpStats'
 )
 # Create barplot
 barplot(
@@ -495,8 +467,6 @@ It is up to the user to decide how much data to access at once to trade-off spee
 `snpStats` manages memory better than `genio`, but strictly by a factor of 4.
 Each genotype is encoded as an integer in `R` (in general) and `genio` (in particular), which uses 4 bytes (this is actually platform dependent).
 On the other hand, `snpStats` uses strictly one byte per genotype.
-
-`lfa` uses 8 bytes per genotype because its genotype matrix treats is elements as doubles rather than integers, so it uses twice as much memory as `genio`.
 
 Overall, there is a narrow window in data sizes in which a genotype matrix is too large for a native R matrix but small enough for a `snpStats` object.
 That, and the much more complex interface of `snpStats`, makes it not very worthwhile in my opinion, unless there is need for functions provided only by that package.

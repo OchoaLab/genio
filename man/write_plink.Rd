@@ -2,7 +2,7 @@
 % Please edit documentation in R/write_plink.R
 \name{write_plink}
 \alias{write_plink}
-\title{Write genotype and sample data into a plink BED/BIM/FAM file set.}
+\title{Write genotype and sample data into a Plink BED/BIM/FAM file set.}
 \usage{
 write_plink(
   file,
@@ -17,44 +17,53 @@ write_plink(
 \arguments{
 \item{file}{Output file path, without extensions (each of .bed, .bim, .fam extensions will be added automatically as needed).}
 
-\item{X}{The \eqn{m \times n}{m-by-n} genotype matrix.}
+\item{X}{The \code{m}-by-\code{n} genotype matrix.}
 
 \item{bim}{The tibble or data.frame containing locus information.
-It must contain \eqn{m} rows and these columns: chr, id, posg, pos, ref, alt.
-If NULL (default), it will be quietly auto-generated.}
+It must contain \code{m} rows and these columns: \code{chr}, \code{id}, \code{posg}, \code{pos}, \code{ref}, \code{alt}.
+If \code{NULL} (default), it will be quietly auto-generated.}
 
 \item{fam}{The tibble or data.frame containing individual information.
-It must contain \eqn{n} rows and these columns: fam, id, pat, mat, sex, pheno.
-If NULL (default), it will be quietly auto-generated.}
+It must contain \code{n} rows and these columns: \code{fam}, \code{id}, \code{pat}, \code{mat}, \code{sex}, \code{pheno}.
+If \code{NULL} (default), it will be quietly auto-generated.}
 
-\item{pheno}{The phenotype to write into the FAM file assuming \code{fam=NULL}.
-This must be a length-\eqn{n} vector.
+\item{pheno}{The phenotype to write into the FAM file assuming \code{fam = NULL}.
+This must be a length-\code{n} vector.
 This will be ignored (with a warning) if \code{fam} is provided.}
 
-\item{verbose}{If TRUE (default) function reports the paths of the files being written (after autocompleting the extensions).}
+\item{verbose}{If \code{TRUE} (default) function reports the paths of the files being written (after autocompleting the extensions).}
 
-\item{append}{If \code{TRUE}, appends loci onto the BED and BIM files (default \code{FALSE}).  In this mode, all individuals must be present in each write (only loci are appended); the FAM file is not overwritten if present, but is required at every write for internal validations.  If the FAM file already exists, it is not checked to agree with the FAM table provided.}
+\item{append}{If \code{TRUE}, appends loci onto the BED and BIM files (default \code{FALSE}).
+In this mode, all individuals must be present in each write (only loci are appended); the FAM file is not overwritten if present, but is required at every write for internal validations.
+If the FAM file already exists, it is not checked to agree with the FAM table provided.}
 }
 \value{
-Invisibly, a named list with items in this order: X (genotype matrix), bim (tibble), fam (tibble).
+Invisibly, a named list with items in this order: \code{X} (genotype matrix), \code{bim} (tibble), \code{fam} (tibble).
 This is most useful when either BIM or FAM tables were auto-generated.
 }
 \description{
-This function writes a genotype matrix (X) and its associated locus (bim) and individual (fam) data tables into three plink files in BED, BIM, and FAM formats, respectively.
+This function writes a genotype matrix (\code{X}) and its associated locus (\code{bim}) and individual (\code{fam}) data tables into three Plink files in BED, BIM, and FAM formats, respectively.
 This function is a wrapper around the more basic functions
-\code{\link{write_bed}},
-\code{\link{write_bim}},
-\code{\link{write_fam}},
+\code{\link[=write_bed]{write_bed()}},
+\code{\link[=write_bim]{write_bim()}},
+\code{\link[=write_fam]{write_fam()}},
 but additionally tests that the data dimensions agree (or stops with an error).
 Also checks that the genotype row and column names agree with the bim and fam tables if they are all present.
 In addition, if \code{bim = NULL} or \code{fam = NULL}, these are auto-generated using
-\code{\link{make_bim}} and
-\code{\link{make_fam}},
+\code{\link[=make_bim]{make_bim()}} and
+\code{\link[=make_fam]{make_fam()}},
 which is useful behavior for simulated data.
-Lastly, the phenotype can be provided as a separate argument and incorporated automatically if \code{fam=NULL} (a common scenario for simulated genotypes and traits).
-Below suppose there are \eqn{m} loci and \eqn{n} individuals.
+Lastly, the phenotype can be provided as a separate argument and incorporated automatically if \code{fam = NULL} (a common scenario for simulated genotypes and traits).
+Below suppose there are \code{m} loci and \code{n} individuals.
 }
 \examples{
+# to write existing data `X`, `bim`, `fam` into files "data.bed", "data.bim", and "data.fam",
+# run like this:
+# write_plink("data", X, bim = bim, fam = fam)
+
+# The following example is more detailed but also more awkward
+# because (only for these examples) the package must create the file in a *temporary* location
+
 # here is an example for a simulation
 
 # create 10 random genotypes
@@ -78,11 +87,11 @@ delete_files_plink( file_out )
 
 }
 \seealso{
-\code{\link{write_bed}},
-\code{\link{write_bim}},
-\code{\link{write_fam}},
-\code{\link{make_bim}},
-\code{\link{make_fam}}.
+\code{\link[=write_bed]{write_bed()}},
+\code{\link[=write_bim]{write_bim()}},
+\code{\link[=write_fam]{write_fam()}},
+\code{\link[=make_bim]{make_bim()}},
+\code{\link[=make_fam]{make_fam()}}.
 
 Plink BED/BIM/FAM format reference:
 \url{https://www.cog-genomics.org/plink/1.9/formats}

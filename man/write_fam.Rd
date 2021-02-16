@@ -2,30 +2,38 @@
 % Please edit documentation in R/write_fam.R
 \name{write_fam}
 \alias{write_fam}
-\title{Write plink *.fam files}
+\title{Write Plink *.fam files}
 \usage{
 write_fam(file, tib, verbose = TRUE)
 }
 \arguments{
-\item{file}{Output file (whatever is accepted by readr::write_tsv).
+\item{file}{Output file (whatever is accepted by \code{\link[readr:write_delim]{readr::write_tsv()}}).
 If file is missing the expected *.fam extension, the function adds it.}
 
 \item{tib}{The tibble or data.frame to write.
-It must contain these columns: fam, id, pat, mat, sex, pheno.
+It must contain these columns: \code{fam}, \code{id}, \code{pat}, \code{mat}, \code{sex}, \code{pheno}.
 Throws an error if any of these columns are missing.
 Additional columns are ignored.
 Columns are automatically reordered in output as expected in format.}
 
-\item{verbose}{If TRUE (default) function reports the path of the file being written (after autocompleting the extension).}
+\item{verbose}{If \code{TRUE} (default), function reports the path of the file being written (after autocompleting the extension).}
 }
 \value{
-The output \code{tib} invisibly (what readr::write_tsv returns).
+The output \code{tib} invisibly (what \code{\link[readr:write_delim]{readr::write_tsv()}} returns).
 }
 \description{
-This function writes a tibble with the right columns into a standard plink *.fam file.
-It uses readr::write_tsv to do it efficiently.
+This function writes a tibble with the right columns into a standard Plink *.fam file.
+It uses \code{\link[readr:write_delim]{readr::write_tsv()}} to do it efficiently.
 }
 \examples{
+# to write an existing table `fam` into file "data.fam", run like this:
+# write_fam("data", fam)
+# this also works
+# write_fam("data.fam", fam)
+
+# The following example is more detailed but also more awkward
+# because (only for these examples) the package must create the file in a *temporary* location
+
 # create a dummy tibble with the right columns
 library(tibble)
 tib <- tibble(
@@ -45,7 +53,7 @@ file.remove(file_out)
 
 }
 \seealso{
-\code{\link{write_plink}} for writing a set of BED/BIM/FAM files.
+\code{\link[=write_plink]{write_plink()}} for writing a set of BED/BIM/FAM files.
 
 Plink FAM format reference:
 \url{https://www.cog-genomics.org/plink/1.9/formats#fam}

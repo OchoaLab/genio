@@ -2,7 +2,7 @@
 % Please edit documentation in R/write_eigenvec.R
 \name{write_eigenvec}
 \alias{write_eigenvec}
-\title{Write eigenvectors table into a plink-format file}
+\title{Write eigenvectors table into a Plink-format file}
 \usage{
 write_eigenvec(file, eigenvec, fam = NULL, ext = "eigenvec", verbose = TRUE)
 }
@@ -16,20 +16,29 @@ Column names other than \code{fam} and \code{id} can be anything and are all tre
 Individuals in \code{fam} and \code{eigenvec} are assumed to be the same and in the same order.}
 
 \item{ext}{Output file extension.
-Since the general "covariates" file format in GCTA and plink are the same as this, this function may be used to write more general covariates files if desired, in which case users may wish to change this extension for clarity.}
+Since the general "covariates" file format in GCTA and Plink are the same as this, this function may be used to write more general covariates files if desired, in which case users may wish to change this extension for clarity.}
 
-\item{verbose}{If TRUE (default) function reports the path of the file being written (after autocompleting the extension).}
+\item{verbose}{If \code{TRUE} (default), function reports the path of the file being written (after autocompleting the extension).}
 }
 \value{
 Invisibly, the final \code{eigenvec} data.frame or tibble written to file, starting with columns \code{fam} and \code{id} (merged from the \code{fam} input, if it was passed) followed by the rest of columns in the input \code{eigenvec}.
 }
 \description{
-This function writes eigenvectors in plink1 (same as GCTA) format (table with no header, with first two columns being \code{fam} and \code{id}), which is a subset of plink2 format (which optionally allows column names and does not require fam column).
+This function writes eigenvectors in Plink 1 (same as GCTA) format (table with no header, with first two columns being \code{fam} and \code{id}), which is a subset of Plink 2 format (which optionally allows column names and does not require fam column).
 Main expected case is \code{eigenvec} passed as a numeric matrix and \code{fam} provided to complete first two missing columns.
 However, input \code{eigenvec} may also be a data.frame already containing the \code{fam} and \code{id} columns, and other reasonable intermediate cases are also handled.
 If both \code{eigenvec} and \code{fam} are provided and contain overlapping columns, those in \code{eigenvec} get overwritten with a warning.
 }
 \examples{
+# to write an existing matrix `eigenvec` and optional `fam` tibble into file "data.eigenvec",
+# run like this:
+# write_eigenvec("data", eigenvec, fam = fam)
+# this also works
+# write_eigenvec("data.eigenvec", eigenvec, fam = fam)
+
+# The following example is more detailed but also more awkward
+# because (only for these examples) the package must create the file in a *temporary* location
+
 # create dummy eigenvectors matrix, in this case from a small identity matrix
 # number of individuals
 n <- 10
@@ -52,7 +61,7 @@ file.remove( paste0( file, '.eigenvec' ) )
 
 }
 \seealso{
-\code{\link{read_eigenvec}} for reading an eigenvec file.
+\code{\link[=read_eigenvec]{read_eigenvec()}} for reading an eigenvec file.
 
 Plink 1 eigenvec format reference:
 \url{https://www.cog-genomics.org/plink/1.9/formats#eigenvec}

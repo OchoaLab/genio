@@ -2,25 +2,33 @@
 #' @importFrom Rcpp sourceCpp
 NULL
 
-#' Write a genotype matrix into plink BED format
+#' Write a genotype matrix into Plink BED format
 #'
-#' This function accepts a standard R matrix containing genotypes (values in \code{c(0,1,2,NA)}) and writes it into a plink-formatted BED (binary) file.
-#' Each genotype per locus (m loci) and individual (n total) counts the number of alternative alleles or \code{NA} for missing data.
+#' This function accepts a standard R matrix containing genotypes (values in `c( 0, 1, 2, NA )`) and writes it into a Plink-formatted BED (binary) file.
+#' Each genotype per locus (`m` loci) and individual (`n` total) counts the number of alternative alleles or `NA` for missing data.
 #' No *.fam or *.bim files are created by this basic function.
 #'
-#' Genotypes with values outside of \eqn{[0,2]} cause an error, in which case the partial output is deleted.
+#' Genotypes with values outside of \[0, 2\] cause an error, in which case the partial output is deleted.
 #' However, beware that decimals get truncated internally, so values that truncate to 0, 1, or 2 will not raise errors.
 #' The BED format does not accept fractional dosages, so such data will not be written as expected.
 #' 
 #' @param file Output file path.  .bed extension may be omitted (will be added automatically if it is missing).
-#' @param X The \eqn{m \times n}{m-by-n} genotype matrix.
+#' @param X The `m`-by-`n` genotype matrix.
 #' Row and column names, if present, are ignored.
-#' @param verbose If `TRUE` (default) function reports the path of the file being written (after autocompleting the extension).
+#' @param verbose If `TRUE` (default), function reports the path of the file being written (after autocompleting the extension).
 #' @param append If `TRUE`, appends variants onto the file. (Default is `FALSE`).
 #'
 #' @return Nothing
 #'
 #' @examples
+#' # to write an existing matrix `X` into file "data.bed", run like this:
+#' # write_bed("data", X)
+#' # this also works
+#' # write_bed("data.bed", X)
+#' 
+#' # The following example is more detailed but also more awkward
+#' # because (only for these examples) the package must create the file in a *temporary* location
+#' 
 #' file_out <- tempfile('delete-me-example', fileext = '.bed') # will also work without extension
 #' # create 10 random genotypes
 #' X <- rbinom(10, 2, 0.5)
@@ -35,10 +43,10 @@ NULL
 #' file.remove(file_out)
 #'
 #' @seealso
-#' \code{\link{write_plink}} for writing a set of BED/BIM/FAM files.
+#' [write_plink()] for writing a set of BED/BIM/FAM files.
 #' 
 #' Plink BED format reference:
-#' \url{https://www.cog-genomics.org/plink/1.9/formats#bed}
+#' <https://www.cog-genomics.org/plink/1.9/formats#bed>
 #'
 #' @export
 write_bed <- function(file, X, verbose = TRUE, append = FALSE) {

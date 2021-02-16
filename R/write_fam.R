@@ -1,20 +1,28 @@
-#' Write plink *.fam files
+#' Write Plink *.fam files
 #' 
-#' This function writes a tibble with the right columns into a standard plink *.fam file.
-#' It uses readr::write_tsv to do it efficiently.
+#' This function writes a tibble with the right columns into a standard Plink *.fam file.
+#' It uses [readr::write_tsv()] to do it efficiently.
 #' 
-#' @param file Output file (whatever is accepted by readr::write_tsv).
+#' @param file Output file (whatever is accepted by [readr::write_tsv()]).
 #' If file is missing the expected *.fam extension, the function adds it.
 #' @param tib The tibble or data.frame to write.
-#' It must contain these columns: fam, id, pat, mat, sex, pheno.
+#' It must contain these columns: `fam`, `id`, `pat`, `mat`, `sex`, `pheno`.
 #' Throws an error if any of these columns are missing.
 #' Additional columns are ignored.
 #' Columns are automatically reordered in output as expected in format.
-#' @param verbose If TRUE (default) function reports the path of the file being written (after autocompleting the extension).
+#' @param verbose If `TRUE` (default), function reports the path of the file being written (after autocompleting the extension).
 #'
-#' @return The output `tib` invisibly (what readr::write_tsv returns).
+#' @return The output `tib` invisibly (what [readr::write_tsv()] returns).
 #'
 #' @examples
+#' # to write an existing table `fam` into file "data.fam", run like this:
+#' # write_fam("data", fam)
+#' # this also works
+#' # write_fam("data.fam", fam)
+#' 
+#' # The following example is more detailed but also more awkward
+#' # because (only for these examples) the package must create the file in a *temporary* location
+#' 
 #' # create a dummy tibble with the right columns
 #' library(tibble)
 #' tib <- tibble(
@@ -33,10 +41,10 @@
 #' file.remove(file_out)
 #' 
 #' @seealso
-#' \code{\link{write_plink}} for writing a set of BED/BIM/FAM files.
+#' [write_plink()] for writing a set of BED/BIM/FAM files.
 #' 
 #' Plink FAM format reference:
-#' \url{https://www.cog-genomics.org/plink/1.9/formats#fam}
+#' <https://www.cog-genomics.org/plink/1.9/formats#fam>
 #'
 #' @export
 write_fam <- function(file, tib, verbose = TRUE) {

@@ -1,18 +1,16 @@
 #' Convert character sex codes to integer codes
 #'
-#' This function accepts the character sex codes accepted by eigenstrat and turns them into the integer codes accepted by plink.
+#' This function accepts the character sex codes accepted by Eigenstrat and turns them into the integer codes accepted by Plink.
 #' Matching is case insensitive.
+#' Cases outside the table below are mapped to `0` (unknown) with a warning.
 #' The correspondence is:
-#' \describe{
-#'   \item{U:}{ 0 (unknown) }
-#'   \item{M:}{ 1 (male) }
-#'   \item{F:}{ 2 (female) }
-#' }
-#' Any other characters will also be mapped to 0 (unknown) but with a warning (U does not generate warnings).
-#'
+#' - `U`: `0` (unknown)
+#' - `M`: `1` (male)
+#' - `F`: `2` (female)
+#' 
 #' @param sex Character vector of sex codes
 #'
-#' @return The converged numeric vector of sex codes
+#' @return The converted numeric vector of sex codes
 #'
 #' @examples
 #' # verify the mapping above
@@ -25,20 +23,20 @@
 #' )
 #'
 #' @seealso
-#' \code{\link{sex_to_char}}
+#' [sex_to_char()]
 #' 
 #' Eigenstrat IND format reference:
-#' \url{https://github.com/DReichLab/EIG/tree/master/CONVERTF}
+#' <https://github.com/DReichLab/EIG/tree/master/CONVERTF>
 #' 
 #' Plink FAM format reference:
-#' \url{https://www.cog-genomics.org/plink/1.9/formats#fam}
+#' <https://www.cog-genomics.org/plink/1.9/formats#fam>
 #'
 #' @export
 sex_to_int <- function(sex) {
     if (missing(sex))
         stop('Required `sex` is missing!')
     
-    # converts character sex codes (used by eigenstrat) into integers (used by plink)
+    # converts character sex codes (used by Eigenstrat) into integers (used by Plink)
     # this is super quick, but returns characters
     sex <- chartr('UuMmFf', '001122', sex)
     

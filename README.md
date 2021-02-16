@@ -1,9 +1,9 @@
 # genio <img src="man/figures/logo.png" alt="Gen I/O" align="right" />
 
 The `genio` (GENetics I/O) package provides easy-to-use and efficient readers and writers for formats in genetics research.
-Currently targets plink and eigenstrat formats (more to come).
-Plink BED/BIM/FAM formats are fully supported.
-Lightning fast `read_bed` and `write_bed` (written in Rcpp) reads and writes genotypes between native R matrices and plink BED format.
+Currently targets Plink, Eigenstrat, and GCTA formats (more to come).
+Plink BED/BIM/FAM and GCTA GRM formats are fully supported.
+Lightning fast `read_bed` and `write_bed` (written in Rcpp) reads and writes genotypes between native R matrices and Plink BED format.
 `make_*` functions create default FAM and BIM files to go with simulated genotype data.
 Otherwise, the package consists of wrappers for `readr` functions that add missing extensions and column names (often absent in these files).
 
@@ -80,12 +80,12 @@ X   <- data$X
 bim <- data$bim
 fam <- data$fam
 
-# plink files read individually
+# Plink files read individually
 bim <- read_bim('sample.bim')
 fam <- read_fam('sample.fam')
 X   <- read_bed('sample.bed', nrow(bim), nrow(fam))
 
-# eigenstrat formats
+# Eigenstrat formats
 snp <- read_snp('sample.snp')
 ind <- read_ind('sample.ind')
 
@@ -103,7 +103,27 @@ write_plink('new', X, bim, fam)
 write_fam('new', fam)
 write_bim('new', bim)
 write_bed('new', X)
-# eigenstrat files
+# Eigenstrat files
 write_ind('new', ind)
 write_snp('new', snp)
+```
+
+### Reading and writing GCTA GRM files
+
+```R
+# read data from GRM files:
+# - sample.grm.bin (kinship matrix),
+# - sample.grm.N.bin (sample sizes matrix), and
+# - sample.grm.id (family and ID table for individuals in this data)
+obj <- read_grm( 'sample' )
+# the kinship matrix
+kinship <- obj$kinship
+# the pair sample sizes matrix
+M <- obj$M
+# the fam and ID tibble
+fam <- obj$fam
+
+# write data into new GRM files
+# writes: new.grm.bin, new.grm.N.bin, new.grm.id
+write_grm( 'new', kinship, M = M, fam = fam )
 ```

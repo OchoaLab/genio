@@ -10,18 +10,18 @@ sex_to_int(sex)
 \item{sex}{Character vector of sex codes}
 }
 \value{
-The converged numeric vector of sex codes
+The converted numeric vector of sex codes
 }
 \description{
-This function accepts the character sex codes accepted by eigenstrat and turns them into the integer codes accepted by plink.
+This function accepts the character sex codes accepted by Eigenstrat and turns them into the integer codes accepted by Plink.
 Matching is case insensitive.
+Cases outside the table below are mapped to \code{0} (unknown) with a warning.
 The correspondence is:
-\describe{
-\item{U:}{ 0 (unknown) }
-\item{M:}{ 1 (male) }
-\item{F:}{ 2 (female) }
+\itemize{
+\item \code{U}: \code{0} (unknown)
+\item \code{M}: \code{1} (male)
+\item \code{F}: \code{2} (female)
 }
-Any other characters will also be mapped to 0 (unknown) but with a warning (U does not generate warnings).
 }
 \examples{
 # verify the mapping above
@@ -35,7 +35,7 @@ stopifnot(
 
 }
 \seealso{
-\code{\link{sex_to_char}}
+\code{\link[=sex_to_char]{sex_to_char()}}
 
 Eigenstrat IND format reference:
 \url{https://github.com/DReichLab/EIG/tree/master/CONVERTF}

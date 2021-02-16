@@ -2,32 +2,40 @@
 % Please edit documentation in R/write_bim.R
 \name{write_bim}
 \alias{write_bim}
-\title{Write plink *.bim files}
+\title{Write Plink *.bim files}
 \usage{
 write_bim(file, tib, verbose = TRUE, append = FALSE)
 }
 \arguments{
-\item{file}{Output file (whatever is accepted by readr::write_tsv).
+\item{file}{Output file (whatever is accepted by \code{\link[readr:write_delim]{readr::write_tsv()}}).
 If file is missing the expected *.bim extension, the function adds it.}
 
 \item{tib}{The tibble or data.frame to write.
-It must contain these columns: chr, id, posg, pos, ref, alt.
+It must contain these columns: \code{chr}, \code{id}, \code{posg}, \code{pos}, \code{ref}, \code{alt}.
 Throws an error if any of these columns are missing.
 Additional columns are ignored.
 Columns are automatically reordered in output as expected in format.}
 
-\item{verbose}{If \code{TRUE} (default) function reports the path of the file being written (after autocompleting the extension).}
+\item{verbose}{If \code{TRUE} (default), function reports the path of the file being written (after autocompleting the extension).}
 
 \item{append}{If \code{TRUE}, appends rows onto the file. (Default is \code{FALSE}).}
 }
 \value{
-The output \code{tib} invisibly (what readr::write_tsv returns).
+The output \code{tib} invisibly (what \code{\link[readr:write_delim]{readr::write_tsv()}} returns).
 }
 \description{
-This function writes a tibble with the right columns into a standard plink *.bim file.
-It uses readr::write_tsv to do it efficiently.
+This function writes a tibble with the right columns into a standard Plink *.bim file.
+It uses \code{\link[readr:write_delim]{readr::write_tsv()}} to do it efficiently.
 }
 \examples{
+# to write an existing table `bim` into file "data.bim", run like this:
+# write_bim("data", bim)
+# this also works
+# write_bim("data.bim", bim)
+
+# The following example is more detailed but also more awkward
+# because (only for these examples) the package must create the file in a *temporary* location
+
 # create a dummy tibble with the right columns
 library(tibble)
 tib <- tibble(
@@ -47,7 +55,7 @@ file.remove(file_out)
 
 }
 \seealso{
-\code{\link{write_plink}} for writing a set of BED/BIM/FAM files.
+\code{\link[=write_plink]{write_plink()}} for writing a set of BED/BIM/FAM files.
 
 Plink BIM format reference:
 \url{https://www.cog-genomics.org/plink/1.9/formats#bim}

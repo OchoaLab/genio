@@ -4,17 +4,25 @@ phen_names <- c('fam', 'id', 'pheno')
 #' Read *.phen files
 #'
 #' This function reads a standard *.phen file into a tibble.
-#' It uses readr::read_table2 to do it efficiently.
+#' It uses [readr::read_table2()] to do it efficiently.
 #' GCTA and EMMAX use this format.
 #'
-#' @param file Input file (whatever is accepted by readr::read_table2).
+#' @param file Input file (whatever is accepted by [readr::read_table2()]).
 #' If file as given does not exist and is missing the expected *.phen extension, the function adds the .phen extension and uses that path if that file exists.
 #' Additionally, the .gz extension is added automatically if the file (after *.phen extension is added as needed) is still not found and did not already contained the .gz extension and adding it points to an existing file.
-#' @param verbose If TRUE (default) function reports the path of the file being loaded (after autocompleting the extensions).
+#' @param verbose If `TRUE` (default), function reports the path of the file being loaded (after autocompleting the extensions).
 #'
-#' @return A tibble with columns: fam, id, pheno.
+#' @return A tibble with columns: `fam`, `id`, `pheno`.
 #'
 #' @examples
+#' # to read "data.phen", run like this:
+#' # phen <- read_phen("data")
+#' # this also works
+#' # phen <- read_phen("data.phen")
+#' 
+#' # The following example is more awkward
+#' # because package sample data has to be specified in this weird way:
+#' 
 #' # read an existing plink *.phen file
 #' file <- system.file("extdata", 'sample.phen', package = "genio", mustWork = TRUE)
 #' phen <- read_phen(file)
@@ -28,7 +36,7 @@ phen_names <- c('fam', 'id', 'pheno')
 #' 
 #' @seealso
 #' GCTA PHEN format reference:
-#' \url{https://cnsgenomics.com/software/gcta/#GREMLanalysis}
+#' <https://cnsgenomics.com/software/gcta/#GREMLanalysis>
 #'
 #' @export
 read_phen <- function(file, verbose = TRUE) {

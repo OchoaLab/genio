@@ -1,23 +1,23 @@
-#' Create a plink BIM tibble
+#' Create a Plink BIM tibble
 #'
-#' This function simplifies the creation of plink BIM-formatted tibbles, which autocompletes missing information if a partial tibble is provided, or generates a completely made up tibble if the number of individuals is provided.
+#' This function simplifies the creation of Plink BIM-formatted tibbles, which autocompletes missing information if a partial tibble is provided, or generates a completely made up tibble if the number of individuals is provided.
 #' The default values are most useful for simulated genotypes, where IDs can be made up but must be unique, and there are no chromosomes, positions, or particular reference or alternative alleles.
 #'
 #' Autocompleted column values:
-#' \describe{
-#'   \item{chr:}{ \code{1} (all data is on a single chromosome) }
-#'   \item{id:}{ \code{1:n} }
-#'   \item{posg:}{ \code{0} (missing) }
-#'   \item{pos:}{ \code{1:n} }
-#'   \item{ref:}{ \code{1} }
-#'   \item{alt:}{ \code{2} }
-#' }
-#' Note that \eqn{n} is either given directly or obtained from the input tibble.
+#' - `chr`: `1` (all data is on a single chromosome)
+#' - `id`: `1:n`
+#' - `posg`: `0` (missing)
+#' - `pos`: `1:n`
+#' - `ref`: `1`
+#' - `alt`: `2`
+#' 
+#' Note that `n` is either given directly or obtained from the input tibble.
 #'
 #' @param tib The input tibble (optional).
-#' Missing columns will be autocompleted with reasonable values that are accepted by plink and other external software.
+#' Missing columns will be autocompleted with reasonable values that are accepted by Plink and other external software.
+#' If missing, all will be autocompleted, but `n` is required.
 #' @param n The desired number of loci (rows).
-#' Required if \code{tib} is missing; otherwise it is ignored.
+#' Required if `tib` is missing; otherwise it is ignored.
 #'
 #' @return The input tibble with autocompleted columns and columns in default order, or the made up tibble if only the number of individuals was provided.
 #' The output begins with the standard columns in standard order: chr, id, posg, pos, ref, alt.
@@ -36,7 +36,7 @@
 #' 
 #' @seealso
 #' Plink BIM format reference:
-#' \url{https://www.cog-genomics.org/plink/1.9/formats#bim}
+#' <https://www.cog-genomics.org/plink/1.9/formats#bim>
 #'
 #' @export
 make_bim <- function(tib, n = NA) {

@@ -13,7 +13,7 @@ tidy_kinship(kinship, sort = TRUE)
 Otherwise, order is moving along the upper triangle row-by-row}
 }
 \value{
-A tibble with \code{n*(n+1)/2} rows (the upper triangle, including the diagonal), and 3 columns with names \code{c('id1', 'id2', 'kinship')}.
+A tibble with \code{n * ( n + 1 ) / 2} rows (the upper triangle, including the diagonal), and 3 columns with names: \code{id1}, \code{id2}, \code{kinship}.
 }
 \description{
 A square symmetric kinship matrix is transformed into a tibble, with a row per unique element in the kinship matrix, and three columns: ID of row, ID of column, and the kinship value.

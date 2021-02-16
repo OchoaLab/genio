@@ -2,28 +2,28 @@
 % Please edit documentation in R/ind_to_fam.R
 \name{ind_to_fam}
 \alias{ind_to_fam}
-\title{Convert an eigenstrat IND tibble into a plink FAM tibble}
+\title{Convert an Eigenstrat IND tibble into a Plink FAM tibble}
 \usage{
 ind_to_fam(ind)
 }
 \arguments{
-\item{ind}{The input eigenstrat IND tibble to convert.}
+\item{ind}{The input Eigenstrat IND tibble to convert.}
 }
 \value{
-A plink FAM tibble.
+A Plink FAM tibble.
 }
 \description{
 This function takes an existing IND tibble and creates a FAM tibble with the same information and dummy values for missing data.
-In particular, the output FAM tibble will contain these columns with these contents:
-\describe{
-\item{fam:}{ IND label }
-\item{id:}{ IND id }
-\item{pat:}{ \code{0} (missing paternal ID) }
-\item{mat:}{ \code{0} (missing maternal ID) }
-\item{sex:}{ IND sex converted to plink integer codes via \code{\link{sex_to_int}} }
-\item{peno:}{ \code{0} (missing phenotype) }
+In particular, the output FAM tibble will contain these columns with these contents
+(IND only contain \code{id}, \code{sex}, and \code{label}, so there is no loss of information):
+\itemize{
+\item \code{fam}: IND \code{label}
+\item \code{id}: IND \code{id}
+\item \code{pat}: \code{0} (missing paternal ID)
+\item \code{mat}: \code{0} (missing maternal ID)
+\item \code{sex}: IND \code{sex} converted to Plink integer codes via \code{\link[=sex_to_int]{sex_to_int()}}
+\item \code{peno}: \code{0} (missing phenotype)
 }
-As IND tibbles only contain the three columns listed above, there is no loss of information.
 }
 \examples{
 # create a sample IND tibble
@@ -40,7 +40,7 @@ fam
 
 }
 \seealso{
-\code{\link{sex_to_int}}
+\code{\link[=sex_to_int]{sex_to_int()}}
 
 Eigenstrat IND format reference:
 \url{https://github.com/DReichLab/EIG/tree/master/CONVERTF}

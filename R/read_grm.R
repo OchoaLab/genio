@@ -2,17 +2,28 @@
 #'
 #' This function reads a GCTA Genetic Relatedness Matrix (GRM, i.e. kinship) set of files in their binary format, returning the kinship matrix and, if available, the corresponding matrix of pair sample sizes (non-trivial under missingness) and individuals table.
 #'
-#' @param name The base name of the input files.  Files with that base and extensions `.grm.bin`, `.grm.N.bin`, and `.grm.id` are read if they exist.  Only `.grm.bin` is absolutely required; `.grm.id` can be substituted by the number of individuals (see below); `.grm.N.bin` is entirely optional.
-#' @param n_ind The number of individuals, required if the file with the extension `.grm.id` is missing.  If the file with the `.grm.id` extension is present, then this `n_ind` is ignored.
-#' @param verbose If TRUE (default) function reports the path of the files being loaded.
+#' @param name The base name of the input files.
+#' Files with that base and extensions `.grm.bin`, `.grm.N.bin`, and `.grm.id` are read if they exist.
+#' Only `.grm.bin` is absolutely required; `.grm.id` can be substituted by the number of individuals (see below); `.grm.N.bin` is entirely optional.
+#' @param n_ind The number of individuals, required if the file with the extension `.grm.id` is missing.
+#' If the file with the `.grm.id` extension is present, then this `n_ind` is ignored.
+#' @param verbose If `TRUE` (default), function reports the path of the files being loaded.
 #'
 #' @return A list with named elements:
-#' 
 #' - `kinship`: The symmetric `n`-times-`n` kinship matrix (GRM).  Has IDs as row and column names if the file with extension `.grm.id` was available.
 #' - `M`: The symmetric `n`-times-`n` matrix of pair sample sizes (number of non-missing loci pairs), if the file with extension `.grm.N.bin` was available.  Has IDs as row and column names if the file with extension `.grm.id` was available.
-#' - `fam`: A tibble with two columns: `fam` and `id`, same as in plink FAM files.  Returned if the file with extension `.grm.id` was available.
+#' - `fam`: A tibble with two columns: `fam` and `id`, same as in Plink FAM files.  Returned if the file with extension `.grm.id` was available.
 #'
 #' @examples
+#' # to read "data.grm.bin" and etc, run like this:
+#' # obj <- read_grm("data")
+#' # obj$kinship # the kinship matrix
+#' # obj$M       # the pair sample sizes matrix
+#' # obj$fam     # the fam and ID tibble
+#' 
+#' # The following example is more awkward
+#' # because package sample data has to be specified in this weird way:
+#' 
 #' # read an existing set of GRM files
 #' file <- system.file("extdata", 'sample.grm.bin', package = "genio", mustWork = TRUE)
 #' file <- sub('\\.grm\\.bin$', '', file) # remove extension from this path on purpose
@@ -23,7 +34,7 @@
 #' 
 #' @seealso
 #' Greatly adapted from sample code from GCTA:
-#' \url{https://cnsgenomics.com/software/gcta/#MakingaGRM}
+#' <https://cnsgenomics.com/software/gcta/#MakingaGRM>
 #' 
 #' @export
 read_grm <- function( name, n_ind = NA, verbose = TRUE ) {

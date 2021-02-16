@@ -2,30 +2,38 @@
 % Please edit documentation in R/write_ind.R
 \name{write_ind}
 \alias{write_ind}
-\title{Write eigenstrat *.ind files}
+\title{Write Eigenstrat *.ind files}
 \usage{
 write_ind(file, tib, verbose = TRUE)
 }
 \arguments{
-\item{file}{Output file (whatever is accepted by readr::write_tsv).
+\item{file}{Output file (whatever is accepted by \code{\link[readr:write_delim]{readr::write_tsv()}}).
 If file is missing the expected *.ind extension, the function adds it.}
 
 \item{tib}{The tibble or data.frame to write.
-It must contain these columns: id, sex, label.
+It must contain these columns: \code{id}, \code{sex}, \code{label}.
 Throws an error if any of these columns are missing.
 Additional columns are ignored.
 Columns are automatically reordered in output as expected in format.}
 
-\item{verbose}{If TRUE (default) function reports the path of the file being written (after autocompleting the extension).}
+\item{verbose}{If \code{TRUE} (default), function reports the path of the file being written (after autocompleting the extension).}
 }
 \value{
-The output \code{tib} invisibly (what readr::write_tsv returns).
+The output \code{tib} invisibly (what \code{\link[readr:write_delim]{readr::write_tsv()}} returns).
 }
 \description{
-This function writes a tibble with the right columns into a standard eigenstrat *.ind file.
-It uses readr::write_tsv to do it efficiently.
+This function writes a tibble with the right columns into a standard Eigenstrat *.ind file.
+It uses \code{\link[readr:write_delim]{readr::write_tsv()}} to do it efficiently.
 }
 \examples{
+# to write an existing table `ind` into file "data.ind", run like this:
+# write_ind("data", ind)
+# this also works
+# write_ind("data.ind", ind)
+
+# The following example is more detailed but also more awkward
+# because (only for these examples) the package must create the file in a *temporary* location
+
 # create a dummy tibble with the right columns
 library(tibble)
 tib <- tibble(

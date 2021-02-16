@@ -29,7 +29,7 @@ if (!all(sapply(required, requireNamespace, quietly = TRUE)))
 # Introduction
 
 The `genio` (GenIO = Genetics I/O) package aims to facilitate reading and writing genetics data.
-The focus of this vignette is processing plink BED/BIM/FAM files.
+The focus of this vignette is processing Plink BED/BIM/FAM files.
 
 There are some limited alternatives for reading and/or writing BED files in R, which are slower and harder to use, which motivated me to write this package.
 Here we make direct comparisons to those packages, to illustrate the advantages of `genio`.
@@ -128,7 +128,7 @@ X[1:10, 1:10]
 ```
 
 
-# Write genotypes to plink files
+# Write genotypes to Plink files
 
 Let's write this random data to a file.
 This mode is intended for simulated data, generating dummy BIM and FAM files in the process and writing out all three.

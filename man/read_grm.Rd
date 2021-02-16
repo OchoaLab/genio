@@ -7,24 +7,36 @@
 read_grm(name, n_ind = NA, verbose = TRUE)
 }
 \arguments{
-\item{name}{The base name of the input files.  Files with that base and extensions \code{.grm.bin}, \code{.grm.N.bin}, and \code{.grm.id} are read if they exist.  Only \code{.grm.bin} is absolutely required; \code{.grm.id} can be substituted by the number of individuals (see below); \code{.grm.N.bin} is entirely optional.}
+\item{name}{The base name of the input files.
+Files with that base and extensions \code{.grm.bin}, \code{.grm.N.bin}, and \code{.grm.id} are read if they exist.
+Only \code{.grm.bin} is absolutely required; \code{.grm.id} can be substituted by the number of individuals (see below); \code{.grm.N.bin} is entirely optional.}
 
-\item{n_ind}{The number of individuals, required if the file with the extension \code{.grm.id} is missing.  If the file with the \code{.grm.id} extension is present, then this \code{n_ind} is ignored.}
+\item{n_ind}{The number of individuals, required if the file with the extension \code{.grm.id} is missing.
+If the file with the \code{.grm.id} extension is present, then this \code{n_ind} is ignored.}
 
-\item{verbose}{If TRUE (default) function reports the path of the files being loaded.}
+\item{verbose}{If \code{TRUE} (default), function reports the path of the files being loaded.}
 }
 \value{
 A list with named elements:
 \itemize{
 \item \code{kinship}: The symmetric \code{n}-times-\code{n} kinship matrix (GRM).  Has IDs as row and column names if the file with extension \code{.grm.id} was available.
 \item \code{M}: The symmetric \code{n}-times-\code{n} matrix of pair sample sizes (number of non-missing loci pairs), if the file with extension \code{.grm.N.bin} was available.  Has IDs as row and column names if the file with extension \code{.grm.id} was available.
-\item \code{fam}: A tibble with two columns: \code{fam} and \code{id}, same as in plink FAM files.  Returned if the file with extension \code{.grm.id} was available.
+\item \code{fam}: A tibble with two columns: \code{fam} and \code{id}, same as in Plink FAM files.  Returned if the file with extension \code{.grm.id} was available.
 }
 }
 \description{
 This function reads a GCTA Genetic Relatedness Matrix (GRM, i.e. kinship) set of files in their binary format, returning the kinship matrix and, if available, the corresponding matrix of pair sample sizes (non-trivial under missingness) and individuals table.
 }
 \examples{
+# to read "data.grm.bin" and etc, run like this:
+# obj <- read_grm("data")
+# obj$kinship # the kinship matrix
+# obj$M       # the pair sample sizes matrix
+# obj$fam     # the fam and ID tibble
+
+# The following example is more awkward
+# because package sample data has to be specified in this weird way:
+
 # read an existing set of GRM files
 file <- system.file("extdata", 'sample.grm.bin', package = "genio", mustWork = TRUE)
 file <- sub('\\\\.grm\\\\.bin$', '', file) # remove extension from this path on purpose

@@ -1,20 +1,28 @@
 # internal constant
 ind_names <- c('id', 'sex', 'label')
 
-#' Read eigenstrat *.ind files
+#' Read Eigenstrat *.ind files
 #'
-#' This function reads a standard eigenstrat *.ind file into a tibble.
-#' It uses readr::read_table2 to do it efficiently.
+#' This function reads a standard Eigenstrat *.ind file into a tibble.
+#' It uses [readr::read_table2()] to do it efficiently.
 #'
-#' @param file Input file (whatever is accepted by readr::read_table2).
+#' @param file Input file (whatever is accepted by [readr::read_table2()]).
 #' If file as given does not exist and is missing the expected *.ind extension, the function adds the .ind extension and uses that path if that file exists.
 #' Additionally, the .gz extension is added automatically if the file (after *.ind extension is added as needed) is still not found and did not already contained the .gz extension and adding it points to an existing file.
-#' @param verbose If TRUE (default) function reports the path of the file being loaded (after autocompleting the extensions).
+#' @param verbose If `TRUE` (default), function reports the path of the file being loaded (after autocompleting the extensions).
 #'
-#' @return A tibble with columns: id, sex, label.
+#' @return A tibble with columns: `id`, `sex`, `label`.
 #'
 #' @examples
-#' # read an existing eigenstrat *.ind file
+#' # to read "data.ind", run like this:
+#' # ind <- read_ind("data")
+#' # this also works
+#' # ind <- read_ind("data.ind")
+#' 
+#' # The following example is more awkward
+#' # because package sample data has to be specified in this weird way:
+#' 
+#' # read an existing Eigenstrat *.ind file
 #' file <- system.file("extdata", 'sample.ind', package = "genio", mustWork = TRUE)
 #' ind <- read_ind(file)
 #' ind
@@ -27,7 +35,7 @@ ind_names <- c('id', 'sex', 'label')
 #' 
 #' @seealso
 #' Eigenstrat IND format reference:
-#' \url{https://github.com/DReichLab/EIG/tree/master/CONVERTF}
+#' <https://github.com/DReichLab/EIG/tree/master/CONVERTF>
 #'
 #' @export
 read_ind <- function(file, verbose = TRUE) {

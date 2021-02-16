@@ -7,16 +7,23 @@
 require_files_grm(file)
 }
 \arguments{
-\item{file}{The shared file path (excluding extensions: grm.bin, grm.N.bin, or grm.id).}
+\item{file}{The shared file path (excluding extensions: \code{grm.bin}, \code{grm.N.bin}, or \code{grm.id}).}
 }
 \value{
 Nothing
 }
 \description{
-This function checks that each of the GCTA binary GRM files (grm.bin, grm.N.bin, and grm.id extensions) are present, given the shared base file path, stopping with an informative message if any of the files is missing.
+This function checks that each of the GCTA binary GRM files (\code{grm.bin}, \code{grm.N.bin}, and \code{grm.id} extensions) are present, given the shared base file path, stopping with an informative message if any of the files is missing.
 This function aids troubleshooting, as various downstream external software report missing files differently and sometimes using confusing or obscure messages.
 }
 \examples{
+# to require all of "data.grm.bin", "data.grm.N.bin", and "data.grm.id", run like this:
+# (stops if any of the three files is missing)
+# require_files_grm("data")
+
+# The following example is more awkward
+# because package sample data has to be specified in this weird way:
+
 # check that the samples we want exist
 # start with bed file
 file <- system.file("extdata", 'sample.grm.bin', package = "genio", mustWork = TRUE)

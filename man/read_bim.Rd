@@ -2,26 +2,34 @@
 % Please edit documentation in R/read_bim.R
 \name{read_bim}
 \alias{read_bim}
-\title{Read plink *.bim files}
+\title{Read Plink *.bim files}
 \usage{
 read_bim(file, verbose = TRUE)
 }
 \arguments{
-\item{file}{Input file (whatever is accepted by readr::read_table2).
+\item{file}{Input file (whatever is accepted by \code{\link[readr:read_table]{readr::read_table2()}}).
 If file as given does not exist and is missing the expected *.bim extension, the function adds the .bim extension and uses that path if that file exists.
 Additionally, the .gz extension is added automatically if the file (after *.bim extension is added as needed) is still not found and did not already contained the .gz extension and adding it points to an existing file.}
 
-\item{verbose}{If TRUE (default) function reports the path of the file being loaded (after autocompleting the extensions).}
+\item{verbose}{If \code{TRUE} (default) function reports the path of the file being loaded (after autocompleting the extensions).}
 }
 \value{
-A tibble with columns: chr, id, posg, pos, ref, alt
+A tibble with columns: \code{chr}, \code{id}, \code{posg}, \code{pos}, \code{ref}, \code{alt}
 }
 \description{
-This function reads a standard plink *.bim file into a tibble.
-It uses readr::read_table2 to do it efficiently.
+This function reads a standard Plink *.bim file into a tibble with named columns.
+It uses \code{\link[readr:read_table]{readr::read_table2()}} to do it efficiently.
 }
 \examples{
-# read an existing plink *.bim file
+# to read "data.bim", run like this:
+# bim <- read_bim("data")
+# this also works
+# bim <- read_bim("data.bim")
+
+# The following example is more awkward
+# because package sample data has to be specified in this weird way:
+
+# read an existing Plink *.bim file
 file <- system.file("extdata", 'sample.bim', package = "genio", mustWork = TRUE)
 bim <- read_bim(file)
 bim
@@ -34,7 +42,7 @@ bim
 
 }
 \seealso{
-\code{\link{read_plink}} for reading a set of BED/BIM/FAM files.
+\code{\link[=read_plink]{read_plink()}} for reading a set of BED/BIM/FAM files.
 
 Plink BIM format reference:
 \url{https://www.cog-genomics.org/plink/1.9/formats#bim}

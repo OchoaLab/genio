@@ -1,21 +1,29 @@
 #' Write *.phen files
 #' 
 #' This function writes a tibble with the right columns into a standard *.phen file.
-#' It uses readr::write_tsv to do it efficiently.
+#' It uses [readr::write_tsv()] to do it efficiently.
 #' GCTA and EMMAX use this format.
 #' 
-#' @param file Output file (whatever is accepted by readr::write_tsv).
+#' @param file Output file (whatever is accepted by [readr::write_tsv()]).
 #' If file is missing the expected *.phen extension, the function adds it.
 #' @param tib The tibble or data.frame to write.
-#' It must contain these columns: fam, id, pheno.
+#' It must contain these columns: `fam`, `id`, `pheno`.
 #' Throws an error if any of these columns are missing.
 #' Additional columns are ignored.
 #' Columns are automatically reordered in output as expected in format.
-#' @param verbose If TRUE (default) function reports the path of the file being written (after autocompleting the extension).
+#' @param verbose If `TRUE` (default), function reports the path of the file being written (after autocompleting the extension).
 #'
-#' @return The output `tib` invisibly (what readr::write_tsv returns).
+#' @return The output `tib` invisibly (what [readr::write_tsv()] returns).
 #'
 #' @examples
+#' # to write an existing table `phen` into file "data.phen", run like this:
+#' # write_phen("data", phen)
+#' # this also works
+#' # write_phen("data.phen", phen)
+#' 
+#' # The following example is more detailed but also more awkward
+#' # because (only for these examples) the package must create the file in a *temporary* location
+#' 
 #' # create a dummy tibble with the right columns
 #' library(tibble)
 #' tib <- tibble(
@@ -32,7 +40,7 @@
 #' 
 #' @seealso
 #' GCTA PHEN format reference:
-#' \url{https://cnsgenomics.com/software/gcta/#GREMLanalysis}
+#' <https://cnsgenomics.com/software/gcta/#GREMLanalysis>
 #'
 #' @export
 write_phen <- function(file, tib, verbose = TRUE) {

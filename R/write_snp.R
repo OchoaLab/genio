@@ -1,20 +1,28 @@
-#' Write eigenstrat *.snp files
+#' Write Eigenstrat *.snp files
 #' 
-#' This function writes a tibble with the right columns into a standard eigenstrat *.snp file.
-#' It uses readr::write_tsv to do it efficiently.
+#' This function writes a tibble with the right columns into a standard Eigenstrat *.snp file.
+#' It uses [readr::write_tsv()] to do it efficiently.
 #' 
-#' @param file Output file (whatever is accepted by readr::write_tsv).
+#' @param file Output file (whatever is accepted by [readr::write_tsv()]).
 #' If file is missing the expected *.snp extension, the function adds it.
 #' @param tib The tibble or data.frame to write.
-#' It must contain these columns: id, chr, posg, pos, ref, alt
+#' It must contain these columns: `id`, `chr`, `posg`, `pos`, `ref`, `alt`.
 #' Throws an error if any of these columns are missing.
 #' Additional columns are ignored.
 #' Columns are automatically reordered in output as expected in format.
-#' @param verbose If TRUE (default) function reports the path of the file being written (after autocompleting the extension).
+#' @param verbose If `TRUE` (default), function reports the path of the file being written (after autocompleting the extension).
 #'
-#' @return The output `tib` invisibly (what readr::write_tsv returns).
+#' @return The output `tib` invisibly (what [readr::write_tsv()] returns).
 #'
 #' @examples
+#' # to write an existing table `snp` into file "data.snp", run like this:
+#' # write_snp("data", snp)
+#' # this also works
+#' # write_snp("data.snp", snp)
+#' 
+#' # The following example is more detailed but also more awkward
+#' # because (only for these examples) the package must create the file in a *temporary* location
+#' 
 #' # create a dummy tibble with the right columns
 #' library(tibble)
 #' tib <- tibble(
@@ -34,7 +42,7 @@
 #' 
 #' @seealso
 #' Eigenstrat SNP format reference:
-#' \url{https://github.com/DReichLab/EIG/tree/master/CONVERTF}
+#' <https://github.com/DReichLab/EIG/tree/master/CONVERTF>
 #'
 #' @export
 write_snp <- function(file, tib, verbose = TRUE) {

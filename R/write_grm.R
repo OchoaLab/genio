@@ -5,10 +5,17 @@
 #' @param name The base name of the output files.  Files with that base and extensions `.grm.bin`, `.grm.N.bin`, and `.grm.id` may be created depending on the data provided.
 #' @param kinship The symmetric `n`-times-`n` kinship matrix to write into file with extension `.grm.bin`.
 #' @param M The optional symmetric `n`-times-`n` matrix of pair sample sizes to write into file with extension `.grm.N.bin`.
-#' @param fam The optional data.frame or tibble with individual annotations (columns with names `fam` and `id`, subset of columns of plink FAM) to write into file with extension `.grm.id`.  If `fam` is `NULL` but `kinship` has non-`NULL` column or row names, these are used as the second (`id`) value in the output table (the first (`fam`) column is set to the missing value in this case).
-#' @param verbose If `TRUE` (default) function reports the path of the files being written.
+#' @param fam The optional data.frame or tibble with individual annotations (columns with names `fam` and `id`, subset of columns of Plink FAM) to write into file with extension `.grm.id`.
+#' If `fam` is `NULL` but `kinship` has non-`NULL` column or row names, these are used as the second (`id`) value in the output table (the first (`fam`) column is set to the missing value in this case).
+#' @param verbose If `TRUE` (default), function reports the path of the files being written.
 #'
 #' @examples
+#' # to write existing data `kinship`, `M`, and `fam` into files "data.grm.bin" etc, run like this:
+#' # write_grm("data", kinship, M = M, fam = fam )
+#' 
+#' # The following example is more detailed but also more awkward
+#' # because (only for these examples) the package must create the file in a *temporary* location
+#' 
 #' # create dummy data to write
 #' # kinship for 3 individuals
 #' kinship <- matrix(
@@ -36,18 +43,13 @@
 #' )
 #' # dummy files to write and delete
 #' name <- tempfile('delete-me-example') # no extension
-#' file_bin <- paste0( name, ".grm.bin" )
-#' file_sizes <- paste0( name, ".grm.N.bin" )
-#' file_ids <- paste0( name, ".grm.id" )
 #' # write the data now!
 #' write_grm( name, kinship, M = M, fam = fam )
 #' # delete outputs when done
-#' file.remove( file_bin )
-#' file.remove( file_sizes )
-#' file.remove( file_ids )
+#' delete_files_grm( name )
 #' 
 #' @seealso
-#' `\link{read_grm}`
+#' [read_grm()]
 #' 
 #' @export
 write_grm <- function( name, kinship, M = NULL, fam = NULL, verbose = TRUE ) {

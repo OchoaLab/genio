@@ -2,7 +2,7 @@
 % Please edit documentation in R/read_plink.R
 \name{read_plink}
 \alias{read_plink}
-\title{Read genotype and sample data in a plink BED/BIM/FAM file set.}
+\title{Read genotype and sample data in a Plink BED/BIM/FAM file set.}
 \usage{
 read_plink(file, verbose = TRUE)
 }
@@ -10,22 +10,38 @@ read_plink(file, verbose = TRUE)
 \item{file}{Input file path, without extensions (each of .bed, .bim, .fam extensions will be added automatically as needed).
 Alternatively, input file path may have .bed extension (but not .bim, .fam, or other extensions).}
 
-\item{verbose}{If TRUE (default) function reports the paths of the files being read (after autocompleting the extensions).}
+\item{verbose}{If \code{TRUE} (default), function reports the paths of the files being read (after autocompleting the extensions).}
 }
 \value{
-A named list with items in this order: X (genotype matrix), bim (tibble), fam (tibble).
-X has row and column names corresponding to the \code{id} values of the bim and fam tibbles.
+A named list with items in this order: \code{X} (genotype matrix), \code{bim} (tibble), \code{fam} (tibble).
+\code{X} has row and column names corresponding to the \code{id} values of the \code{bim} and \code{fam} tibbles.
 }
 \description{
-This function reads a genotype matrix (X) and its associated locus (bim) and individual (fam) data tables in the three plink files in BED, BIM, and FAM formats, respectively.
+This function reads a genotype matrix (\code{X}) and its associated locus (\code{bim}) and individual (\code{fam}) data tables in the three Plink files in BED, BIM, and FAM formats, respectively.
 All inputs must exist or an error is thrown.
 This function is a wrapper around the more basic functions
-\code{\link{read_bed}},
-\code{\link{read_bim}},
-\code{\link{read_fam}}.
-Below suppose there are \eqn{m} loci and \eqn{n} individuals.
+\code{\link[=read_bed]{read_bed()}},
+\code{\link[=read_bim]{read_bim()}},
+\code{\link[=read_fam]{read_fam()}}.
+Below suppose there are \code{m} loci and \code{n} individuals.
 }
 \examples{
+# to read "data.bed" etc, run like this:
+# obj <- read_plink("data")
+# this also works
+# obj <- read_plink("data.bed")
+#
+# you get a list with these three items:
+# genotypes
+# obj$X
+# locus annotations
+# obj$bim
+# individual annotations
+# obj$fam
+
+# The following example is more awkward
+# because package sample data has to be specified in this weird way:
+
 # first get path to BED file
 file <- system.file("extdata", 'sample.bed', package = "genio", mustWork = TRUE)
 
@@ -45,9 +61,9 @@ plink_data <- read_plink(file)
 
 }
 \seealso{
-\code{\link{read_bed}},
-\code{\link{read_bim}},
-\code{\link{read_fam}}.
+\code{\link[=read_bed]{read_bed()}},
+\code{\link[=read_bim]{read_bim()}},
+\code{\link[=read_fam]{read_fam()}}.
 
 Plink BED/BIM/FAM format reference:
 \url{https://www.cog-genomics.org/plink/1.9/formats}

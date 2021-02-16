@@ -2,13 +2,14 @@
 % Please edit documentation in R/make_bim.R
 \name{make_bim}
 \alias{make_bim}
-\title{Create a plink BIM tibble}
+\title{Create a Plink BIM tibble}
 \usage{
 make_bim(tib, n = NA)
 }
 \arguments{
 \item{tib}{The input tibble (optional).
-Missing columns will be autocompleted with reasonable values that are accepted by plink and other external software.}
+Missing columns will be autocompleted with reasonable values that are accepted by Plink and other external software.
+If missing, all will be autocompleted, but \code{n} is required.}
 
 \item{n}{The desired number of loci (rows).
 Required if \code{tib} is missing; otherwise it is ignored.}
@@ -19,20 +20,21 @@ The output begins with the standard columns in standard order: chr, id, posg, po
 Additional columns in the input tibble are preserved but placed after the standard columns.
 }
 \description{
-This function simplifies the creation of plink BIM-formatted tibbles, which autocompletes missing information if a partial tibble is provided, or generates a completely made up tibble if the number of individuals is provided.
+This function simplifies the creation of Plink BIM-formatted tibbles, which autocompletes missing information if a partial tibble is provided, or generates a completely made up tibble if the number of individuals is provided.
 The default values are most useful for simulated genotypes, where IDs can be made up but must be unique, and there are no chromosomes, positions, or particular reference or alternative alleles.
 }
 \details{
 Autocompleted column values:
-\describe{
-\item{chr:}{ \code{1} (all data is on a single chromosome) }
-\item{id:}{ \code{1:n} }
-\item{posg:}{ \code{0} (missing) }
-\item{pos:}{ \code{1:n} }
-\item{ref:}{ \code{1} }
-\item{alt:}{ \code{2} }
+\itemize{
+\item \code{chr}: \code{1} (all data is on a single chromosome)
+\item \code{id}: \code{1:n}
+\item \code{posg}: \code{0} (missing)
+\item \code{pos}: \code{1:n}
+\item \code{ref}: \code{1}
+\item \code{alt}: \code{2}
 }
-Note that \eqn{n} is either given directly or obtained from the input tibble.
+
+Note that \code{n} is either given directly or obtained from the input tibble.
 }
 \examples{
 # create a synthetic tibble for 10 loci

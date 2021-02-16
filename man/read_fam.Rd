@@ -2,26 +2,34 @@
 % Please edit documentation in R/read_fam.R
 \name{read_fam}
 \alias{read_fam}
-\title{Read plink *.fam files}
+\title{Read Plink *.fam files}
 \usage{
 read_fam(file, verbose = TRUE)
 }
 \arguments{
-\item{file}{Input file (whatever is accepted by readr::read_table2).
+\item{file}{Input file (whatever is accepted by \code{\link[readr:read_table]{readr::read_table2()}}).
 If file as given does not exist and is missing the expected *.fam extension, the function adds the .fam extension and uses that path if that file exists.
 Additionally, the .gz extension is added automatically if the file (after *.fam extension is added as needed) is still not found and did not already contained the .gz extension and adding it points to an existing file.}
 
-\item{verbose}{If TRUE (default) function reports the path of the file being loaded (after autocompleting the extensions).}
+\item{verbose}{If \code{TRUE} (default) function reports the path of the file being loaded (after autocompleting the extensions).}
 }
 \value{
-A tibble with columns: fam, id, pat, mat, sex, pheno.
+A tibble with columns: \code{fam}, \code{id}, \code{pat}, \code{mat}, \code{sex}, \code{pheno}.
 }
 \description{
-This function reads a standard plink *.fam file into a tibble.
-It uses readr::read_table2 to do it efficiently.
+This function reads a standard Plink *.fam file into a tibble with named columns.
+It uses \code{\link[readr:read_table]{readr::read_table2()}} to do it efficiently.
 }
 \examples{
-# read an existing plink *.fam file
+# to read "data.fam", run like this:
+# fam <- read_fam("data")
+# this also works
+# fam <- read_fam("data.fam")
+
+# The following example is more awkward
+# because package sample data has to be specified in this weird way:
+
+# read an existing Plink *.fam file
 file <- system.file("extdata", 'sample.fam', package = "genio", mustWork = TRUE)
 fam <- read_fam(file)
 fam
@@ -34,7 +42,7 @@ fam
 
 }
 \seealso{
-\code{\link{read_plink}} for reading a set of BED/BIM/FAM files.
+\code{\link[=read_plink]{read_plink()}} for reading a set of BED/BIM/FAM files.
 
 Plink FAM format reference:
 \url{https://www.cog-genomics.org/plink/1.9/formats#fam}

@@ -1,12 +1,18 @@
 #' Delete all GCTA binary GRM files
 #'
-#' This function deletes each of the GCTA binary BRM files (grm.bin, grm.N.bin, and grm.id extensions) given the shared base file path, warning with an informative message if any of the files did not exist.
+#' This function deletes each of the GCTA binary GRM files (`grm.bin`, `grm.N.bin`, and `grm.id` extensions) given the shared base file path, warning if any of the files did not exist or if any were not successfully deleted.
 #'
-#' @param file The shared file path (excluding extensions: grm.bin, grm.N.bin, or grm.id).
+#' @param file The shared file path (excluding extensions: `grm.bin`, `grm.N.bin`, or `grm.id`).
 #'
 #' @return Nothing
 #'
 #' @examples
+#' # if you want to delete "data.grm.bin", "data.grm.N.bin" and "data.grm.id", run like this:
+#' # delete_files_grm("data")
+#' 
+#' # The following example is more awkward
+#' # because (only for these examples) the package must create *temporary* files to actually delete
+#' 
 #' # create dummy GRM files
 #' file <- tempfile('delete-me-test') # no extension
 #' # add each extension and create empty files

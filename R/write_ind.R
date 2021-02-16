@@ -1,20 +1,28 @@
-#' Write eigenstrat *.ind files
+#' Write Eigenstrat *.ind files
 #' 
-#' This function writes a tibble with the right columns into a standard eigenstrat *.ind file.
-#' It uses readr::write_tsv to do it efficiently.
+#' This function writes a tibble with the right columns into a standard Eigenstrat *.ind file.
+#' It uses [readr::write_tsv()] to do it efficiently.
 #' 
-#' @param file Output file (whatever is accepted by readr::write_tsv).
+#' @param file Output file (whatever is accepted by [readr::write_tsv()]).
 #' If file is missing the expected *.ind extension, the function adds it.
 #' @param tib The tibble or data.frame to write.
-#' It must contain these columns: id, sex, label.
+#' It must contain these columns: `id`, `sex`, `label`.
 #' Throws an error if any of these columns are missing.
 #' Additional columns are ignored.
 #' Columns are automatically reordered in output as expected in format.
-#' @param verbose If TRUE (default) function reports the path of the file being written (after autocompleting the extension).
+#' @param verbose If `TRUE` (default), function reports the path of the file being written (after autocompleting the extension).
 #'
-#' @return The output `tib` invisibly (what readr::write_tsv returns).
+#' @return The output `tib` invisibly (what [readr::write_tsv()] returns).
 #'
 #' @examples
+#' # to write an existing table `ind` into file "data.ind", run like this:
+#' # write_ind("data", ind)
+#' # this also works
+#' # write_ind("data.ind", ind)
+#' 
+#' # The following example is more detailed but also more awkward
+#' # because (only for these examples) the package must create the file in a *temporary* location
+#' 
 #' # create a dummy tibble with the right columns
 #' library(tibble)
 #' tib <- tibble(
@@ -31,7 +39,7 @@
 #' 
 #' @seealso
 #' Eigenstrat IND format reference:
-#' \url{https://github.com/DReichLab/EIG/tree/master/CONVERTF}
+#' <https://github.com/DReichLab/EIG/tree/master/CONVERTF>
 #'
 #' @export
 write_ind <- function(file, tib, verbose = TRUE) {

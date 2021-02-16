@@ -11,7 +11,7 @@ count_lines(file, ext = NA, verbose = TRUE)
 
 \item{ext}{An optional extension.
 If \code{NA} (default), \code{file} is expected to contain its extension already.
-Otherwise, this extension is added, but only if this extension was not already there (so if inputs were \verb{file = 'file.bim', ext = 'bim'}, file is not altered and read without errors).}
+Otherwise, this extension is added, but only if this extension was not already there (so if inputs were \verb{file = 'file.bim', ext = 'bim'}, file is read correctly).}
 
 \item{verbose}{If \code{TRUE} (default), writes a message reporting the file whose lines are being counted (after adding extensions if it was needed).}
 }
@@ -24,7 +24,7 @@ It is intended to result in fast retrieval of numbers of individuals (from FAM o
 This code uses C++ to quickly counts lines (like linux's \code{wc -l} but this one is cross-platform).
 }
 \details{
-Note: this function does not work correctly with compressed files (they are not uncompressed prior to conting newlines).
+Note: this function does not work correctly with compressed files (they are not uncompressed prior to counting newlines).
 }
 \examples{
 # count number of individuals from an existing plink *.fam file

@@ -2,26 +2,34 @@
 % Please edit documentation in R/read_ind.R
 \name{read_ind}
 \alias{read_ind}
-\title{Read eigenstrat *.ind files}
+\title{Read Eigenstrat *.ind files}
 \usage{
 read_ind(file, verbose = TRUE)
 }
 \arguments{
-\item{file}{Input file (whatever is accepted by readr::read_table2).
+\item{file}{Input file (whatever is accepted by \code{\link[readr:read_table]{readr::read_table2()}}).
 If file as given does not exist and is missing the expected *.ind extension, the function adds the .ind extension and uses that path if that file exists.
 Additionally, the .gz extension is added automatically if the file (after *.ind extension is added as needed) is still not found and did not already contained the .gz extension and adding it points to an existing file.}
 
-\item{verbose}{If TRUE (default) function reports the path of the file being loaded (after autocompleting the extensions).}
+\item{verbose}{If \code{TRUE} (default), function reports the path of the file being loaded (after autocompleting the extensions).}
 }
 \value{
-A tibble with columns: id, sex, label.
+A tibble with columns: \code{id}, \code{sex}, \code{label}.
 }
 \description{
-This function reads a standard eigenstrat *.ind file into a tibble.
-It uses readr::read_table2 to do it efficiently.
+This function reads a standard Eigenstrat *.ind file into a tibble.
+It uses \code{\link[readr:read_table]{readr::read_table2()}} to do it efficiently.
 }
 \examples{
-# read an existing eigenstrat *.ind file
+# to read "data.ind", run like this:
+# ind <- read_ind("data")
+# this also works
+# ind <- read_ind("data.ind")
+
+# The following example is more awkward
+# because package sample data has to be specified in this weird way:
+
+# read an existing Eigenstrat *.ind file
 file <- system.file("extdata", 'sample.ind', package = "genio", mustWork = TRUE)
 ind <- read_ind(file)
 ind

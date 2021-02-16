@@ -4,12 +4,12 @@
 #' It is intended to result in fast retrieval of numbers of individuals (from FAM or equivalent files) or loci (BIM or equivalent files) when the input files are extremely large and no other information is required from these files.
 #' This code uses C++ to quickly counts lines (like linux's `wc -l` but this one is cross-platform).
 #'
-#' Note: this function does not work correctly with compressed files (they are not uncompressed prior to conting newlines).
+#' Note: this function does not work correctly with compressed files (they are not uncompressed prior to counting newlines).
 #'
 #' @param file The input file path to read (a string).
 #' @param ext An optional extension.
 #' If `NA` (default), `file` is expected to contain its extension already.
-#' Otherwise, this extension is added, but only if this extension was not already there (so if inputs were `file = 'file.bim', ext = 'bim'`, file is not altered and read without errors).
+#' Otherwise, this extension is added, but only if this extension was not already there (so if inputs were `file = 'file.bim', ext = 'bim'`, file is read correctly).
 #' @param verbose If `TRUE` (default), writes a message reporting the file whose lines are being counted (after adding extensions if it was needed).
 #'
 #' @return The number of lines in the file.

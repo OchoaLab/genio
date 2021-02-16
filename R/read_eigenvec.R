@@ -1,22 +1,35 @@
-#' Read plink eigenvec file
+#' Read Plink eigenvec file
 #'
-#' This function reads a plink eigenvec file, parsing columns strictly.
+#' This function reads a Plink eigenvec file, parsing columns strictly.
 #' First two must be 'fam' and 'id', which are strings, and all remaining columns (eigenvectors) must be numeric.
 #'
 #' @param file The input file path, potentially excluding extension.
 #' @param ext File extension (default "eigenvec") can be changed if desired.
 #' @param comment A string used to identify comments.
 #' Any text after the comment characters will be silently ignored.
-#' Passed to `\link[readr]{read_table2}`.
-#' '#' (default) works for plink2 eigenvec files, which have a header lines that starts with this character (the header is therefore ignored).
-#' @param verbose If TRUE (default) function reports the path of the file being written (after autocompleting the extension).
+#' Passed to [readr::read_table2()].
+#' '#' (default) works for Plink 2 eigenvec files, which have a header lines that starts with this character (the header is therefore ignored).
+#' @param verbose If `TRUE` (default) function reports the path of the file being written (after autocompleting the extension).
 #'
 #' @return A list with two elements:
-#'
 #' - `eigenvec`: A numeric R matrix containing the parsed eigenvectors
 #' - `fam`: A tibble with two columns, `fam` and `id`, which are the first two columns of the parsed file.
 #'
 #' @examples
+#' # to read "data.eigenvec", run like this:
+#' # data <- read_eigenvec("data")
+#' # this also works
+#' # data <- read_eigenvec("data.eigenvec")
+#' #
+#' # either way you get a list with these two items:
+#' # numeric eigenvector matrix
+#' # data$eigenvec
+#' # fam/id tibble
+#' # data$fam
+#' 
+#' # The following example is more awkward
+#' # because package sample data has to be specified in this weird way:
+#' 
 #' # read an existing *.eigenvec file created by GCTA
 #' file <- system.file("extdata", 'sample-gcta.eigenvec', package = "genio", mustWork = TRUE)
 #' data <- read_eigenvec(file)
@@ -31,7 +44,7 @@
 #' data <- read_eigenvec(file) # load it anyway!
 #' data$eigenvec
 #'
-#' # read an existing *.eigenvec file created by plink2
+#' # read an existing *.eigenvec file created by Plink 2
 #' file <- system.file("extdata", 'sample-plink2.eigenvec', package = "genio", mustWork = TRUE)
 #' data <- read_eigenvec(file)
 #' # numeric eigenvector matrix
@@ -40,16 +53,16 @@
 #' data$fam
 #'
 #' @seealso
-#' \code{\link{write_eigenvec}} for writing an eigenvec file.
+#' [write_eigenvec()] for writing an eigenvec file.
 #' 
 #' Plink 1 eigenvec format reference:
-#' \url{https://www.cog-genomics.org/plink/1.9/formats#eigenvec}
+#' <https://www.cog-genomics.org/plink/1.9/formats#eigenvec>
 #' 
 #' Plink 2 eigenvec format reference:
-#' \url{https://www.cog-genomics.org/plink/2.0/formats#eigenvec}
+#' <https://www.cog-genomics.org/plink/2.0/formats#eigenvec>
 #'
 #' GCTA eigenvec format reference:
-#' \url{https://cnsgenomics.com/software/gcta/#PCA}
+#' <https://cnsgenomics.com/software/gcta/#PCA>
 #' 
 #' @export
 read_eigenvec <- function(

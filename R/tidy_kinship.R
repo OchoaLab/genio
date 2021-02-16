@@ -6,7 +6,7 @@
 #' @param sort If `TRUE` (default), rows are sorted ascending by kinship value.
 #' Otherwise, order is moving along the upper triangle row-by-row
 #'
-#' @return A tibble with `n*(n+1)/2` rows (the upper triangle, including the diagonal), and 3 columns with names `c('id1', 'id2', 'kinship')`.
+#' @return A tibble with `n * ( n + 1 ) / 2` rows (the upper triangle, including the diagonal), and 3 columns with names: `id1`, `id2`, `kinship`.
 #'
 #' @examples
 #' # create a symmetric matrix

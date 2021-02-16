@@ -7,26 +7,34 @@
 write_phen(file, tib, verbose = TRUE)
 }
 \arguments{
-\item{file}{Output file (whatever is accepted by readr::write_tsv).
+\item{file}{Output file (whatever is accepted by \code{\link[readr:write_delim]{readr::write_tsv()}}).
 If file is missing the expected *.phen extension, the function adds it.}
 
 \item{tib}{The tibble or data.frame to write.
-It must contain these columns: fam, id, pheno.
+It must contain these columns: \code{fam}, \code{id}, \code{pheno}.
 Throws an error if any of these columns are missing.
 Additional columns are ignored.
 Columns are automatically reordered in output as expected in format.}
 
-\item{verbose}{If TRUE (default) function reports the path of the file being written (after autocompleting the extension).}
+\item{verbose}{If \code{TRUE} (default), function reports the path of the file being written (after autocompleting the extension).}
 }
 \value{
-The output \code{tib} invisibly (what readr::write_tsv returns).
+The output \code{tib} invisibly (what \code{\link[readr:write_delim]{readr::write_tsv()}} returns).
 }
 \description{
 This function writes a tibble with the right columns into a standard *.phen file.
-It uses readr::write_tsv to do it efficiently.
+It uses \code{\link[readr:write_delim]{readr::write_tsv()}} to do it efficiently.
 GCTA and EMMAX use this format.
 }
 \examples{
+# to write an existing table `phen` into file "data.phen", run like this:
+# write_phen("data", phen)
+# this also works
+# write_phen("data.phen", phen)
+
+# The following example is more detailed but also more awkward
+# because (only for these examples) the package must create the file in a *temporary* location
+
 # create a dummy tibble with the right columns
 library(tibble)
 tib <- tibble(

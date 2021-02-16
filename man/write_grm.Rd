@@ -13,14 +13,21 @@ write_grm(name, kinship, M = NULL, fam = NULL, verbose = TRUE)
 
 \item{M}{The optional symmetric \code{n}-times-\code{n} matrix of pair sample sizes to write into file with extension \code{.grm.N.bin}.}
 
-\item{fam}{The optional data.frame or tibble with individual annotations (columns with names \code{fam} and \code{id}, subset of columns of plink FAM) to write into file with extension \code{.grm.id}.  If \code{fam} is \code{NULL} but \code{kinship} has non-\code{NULL} column or row names, these are used as the second (\code{id}) value in the output table (the first (\code{fam}) column is set to the missing value in this case).}
+\item{fam}{The optional data.frame or tibble with individual annotations (columns with names \code{fam} and \code{id}, subset of columns of Plink FAM) to write into file with extension \code{.grm.id}.
+If \code{fam} is \code{NULL} but \code{kinship} has non-\code{NULL} column or row names, these are used as the second (\code{id}) value in the output table (the first (\code{fam}) column is set to the missing value in this case).}
 
-\item{verbose}{If \code{TRUE} (default) function reports the path of the files being written.}
+\item{verbose}{If \code{TRUE} (default), function reports the path of the files being written.}
 }
 \description{
 This function writes a GCTA Genetic Relatedness Matrix (GRM, i.e. kinship) set of files in their binary format, given a kinship matrix and, if available, the corresponding matrix of pair sample sizes (non-trivial under missingness) and individuals table.
 }
 \examples{
+# to write existing data `kinship`, `M`, and `fam` into files "data.grm.bin" etc, run like this:
+# write_grm("data", kinship, M = M, fam = fam )
+
+# The following example is more detailed but also more awkward
+# because (only for these examples) the package must create the file in a *temporary* location
+
 # create dummy data to write
 # kinship for 3 individuals
 kinship <- matrix(
@@ -48,17 +55,12 @@ fam <- tibble(
 )
 # dummy files to write and delete
 name <- tempfile('delete-me-example') # no extension
-file_bin <- paste0( name, ".grm.bin" )
-file_sizes <- paste0( name, ".grm.N.bin" )
-file_ids <- paste0( name, ".grm.id" )
 # write the data now!
 write_grm( name, kinship, M = M, fam = fam )
 # delete outputs when done
-file.remove( file_bin )
-file.remove( file_sizes )
-file.remove( file_ids )
+delete_files_grm( name )
 
 }
 \seealso{
-\verb{\link{read_grm}}
+\code{\link[=read_grm]{read_grm()}}
 }

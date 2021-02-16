@@ -7,21 +7,29 @@
 read_phen(file, verbose = TRUE)
 }
 \arguments{
-\item{file}{Input file (whatever is accepted by readr::read_table2).
+\item{file}{Input file (whatever is accepted by \code{\link[readr:read_table]{readr::read_table2()}}).
 If file as given does not exist and is missing the expected *.phen extension, the function adds the .phen extension and uses that path if that file exists.
 Additionally, the .gz extension is added automatically if the file (after *.phen extension is added as needed) is still not found and did not already contained the .gz extension and adding it points to an existing file.}
 
-\item{verbose}{If TRUE (default) function reports the path of the file being loaded (after autocompleting the extensions).}
+\item{verbose}{If \code{TRUE} (default), function reports the path of the file being loaded (after autocompleting the extensions).}
 }
 \value{
-A tibble with columns: fam, id, pheno.
+A tibble with columns: \code{fam}, \code{id}, \code{pheno}.
 }
 \description{
 This function reads a standard *.phen file into a tibble.
-It uses readr::read_table2 to do it efficiently.
+It uses \code{\link[readr:read_table]{readr::read_table2()}} to do it efficiently.
 GCTA and EMMAX use this format.
 }
 \examples{
+# to read "data.phen", run like this:
+# phen <- read_phen("data")
+# this also works
+# phen <- read_phen("data.phen")
+
+# The following example is more awkward
+# because package sample data has to be specified in this weird way:
+
 # read an existing plink *.phen file
 file <- system.file("extdata", 'sample.phen', package = "genio", mustWork = TRUE)
 phen <- read_phen(file)

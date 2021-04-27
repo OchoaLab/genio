@@ -9,7 +9,7 @@ read_snp(file, verbose = TRUE)
 \arguments{
 \item{file}{Input file (whatever is accepted by \code{\link[readr:read_table]{readr::read_table2()}}).
 If file as given does not exist and is missing the expected *.snp extension, the function adds the .snp extension and uses that path if that file exists.
-Additionally, the .gz extension is added automatically if the file (after *.snp extension is added as needed) is still not found and did not already contained the .gz extension and adding it points to an existing file.}
+Additionally, the .gz extension is added automatically if the file (after *.snp extension is added as needed) is still not found and did not already contain the .gz extension and adding it points to an existing file.}
 
 \item{verbose}{If \code{TRUE} (default), function reports the path of the file being loaded (after autocompleting the extensions).}
 }

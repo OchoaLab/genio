@@ -21,6 +21,8 @@ test_that("add_ext works", {
     expect_equal(foExtY, add_ext(foExtN, ext))
     # test that present extension doesn't get added again
     expect_equal(foExtY, add_ext(foExtY, ext))
+    # test that an NA extension doesn't add anything
+    expect_equal(foExtN, add_ext(foExtN, NA))
 })
 
 test_that("real_path works", {
@@ -1200,4 +1202,126 @@ test_that("count_lines works", {
     # this is our only expectation
     expect_equal( n_lines, 1 )
 
+})
+
+test_that("read_matrix works", {
+    # test that there are errors when crucial data is missing
+    expect_error(read_matrix()) # file is missing
+    expect_error(read_matrix('bogus-file')) # file is non-existent (read_table2 will complain)
+    
+    # load sample file
+    fi <- system.file("extdata", 'sample-Q3.txt', package = "genio", mustWork = TRUE)
+    # main test
+    expect_silent(
+        mat <- read_matrix( fi, verbose = FALSE )
+    )
+    # basic validations
+    expect_true( is.matrix( mat ) )
+    expect_true( is.numeric( mat ) )
+    # dimensions known ahead of time
+    expect_equal( nrow( mat ), 10 )
+    expect_equal( ncol( mat ), 3 )
+    # this happens to be an admixture file, so rows sum to 1
+    u <- rep.int( 1, 10 )
+    expect_equal( rowSums( mat ), u )
+    # demand no dimnames (file contains no such data, anything present must be junk)
+    expect_null( dimnames( mat ) )
+
+    # repeat with missing extension
+    fiNoExt <- sub('\\.txt$', '', fi)
+    expect_silent(
+        mat <- read_matrix( fiNoExt, verbose = FALSE )
+    )
+    expect_true( is.matrix( mat ) )
+    expect_true( is.numeric( mat ) )
+    expect_equal( nrow( mat ), 10 )
+    expect_equal( ncol( mat ), 3 )
+    expect_equal( rowSums( mat ), u )
+    expect_null( dimnames( mat ) )
+
+    # repeat with compressed file (and true full path)
+    fi <- system.file("extdata", 'sample-Q3.txt.gz', package = "genio", mustWork = TRUE)
+    expect_silent(
+        mat <- read_matrix( fi, verbose = FALSE )
+    )
+    expect_true( is.matrix( mat ) )
+    expect_true( is.numeric( mat ) )
+    expect_equal( nrow( mat ), 10 )
+    expect_equal( ncol( mat ), 3 )
+    expect_equal( rowSums( mat ), u )
+    expect_null( dimnames( mat ) )
+    
+    # repeat with missing .gz extension
+    fiNoGz <- sub('\\.gz$', '', fi)
+    expect_silent(
+        mat <- read_matrix( fiNoGz, verbose = FALSE )
+    )
+    expect_true( is.matrix( mat ) )
+    expect_true( is.numeric( mat ) )
+    expect_equal( nrow( mat ), 10 )
+    expect_equal( ncol( mat ), 3 )
+    expect_equal( rowSums( mat ), u )
+    expect_null( dimnames( mat ) )
+
+    # repeat with missing .txt.gz double extension
+    fiNoGzNoExt <- sub('\\.txt$', '', fiNoGz)
+    expect_silent(
+        mat <- read_matrix( fiNoGzNoExt, verbose = FALSE )
+    )
+    expect_true( is.matrix( mat ) )
+    expect_true( is.numeric( mat ) )
+    expect_equal( nrow( mat ), 10 )
+    expect_equal( ncol( mat ), 3 )
+    expect_equal( rowSums( mat ), u )
+    expect_null( dimnames( mat ) )
+})
+
+test_that("write_matrix works", {
+    # test that there are errors when crucial data is missing
+    expect_error( write_matrix( ) ) # all is missing
+    expect_error( write_matrix( 'file' ) ) # tibble is missing
+    expect_error( write_matrix( x = cbind( 1 ) ) ) # file is missing
+
+    # create a small matrix to write
+    # square matrix in this case
+    x <- matrix(
+        rnorm( n_rows^2 ),
+        nrow = n_rows,
+        ncol = n_rows
+    )
+    
+    # create a dummy output we'll delete later
+    fo <- tempfile('delete-me_test-write', fileext = '.txt')
+    # write data
+    expect_silent(
+        write_matrix( fo, x, verbose = FALSE )
+    )
+    # read it back
+    expect_silent(
+        x2 <- read_matrix( fo, verbose = FALSE )
+    )
+    # should be the same!
+    expect_equal( x, x2 )
+    # delete output when done
+    invisible( file.remove( fo ) )
+
+    # test append feature!
+    # write first half now
+    expect_silent(
+        write_matrix( fo, x[ 1:5, ], verbose = FALSE )
+    )
+    # write second half, appending!
+    expect_silent(
+        write_matrix( fo, x[ 6:n_rows, ], append = TRUE, verbose = FALSE )
+    )
+    # read it all back
+    expect_silent(
+        x2 <- read_matrix( fo, verbose = FALSE )
+    )
+    # should be the same!
+    expect_equal( x, x2 )
+    # delete output when done
+    invisible( file.remove( fo ) )
+    
+    
 })

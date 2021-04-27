@@ -8,6 +8,10 @@ add_ext <- function(fo, ext) {
         stop('Output file (fo) is required!')
     if (missing(ext))
         stop('Expected file extension (ext) is required!')
+
+    # if we actually didn't want an extension, don't do anything!
+    if ( is.na( ext ) )
+        return( fo )
     
     # test presence of expected extension (must be at the end)
     if ( ! grepl( paste0('\\.', ext, '$'), fo) ) {

@@ -39,8 +39,8 @@ Ignored if \code{names_ind} is provided.}
 The \code{m}-by-\code{n} genotype matrix.
 }
 \description{
-This function reads genotypes encoded in a Plink-formatted BED (binary) file, returning them in a standard R matrix containing genotypes (values in \code{c( 0, 1, 2, NA )}).
-Each genotype per locus (\code{m} loci) and individual (\code{n} total) counts the number of alternative alleles or \code{NA} for missing data.
+This function reads genotypes encoded in a Plink-formatted BED (binary) file, returning them in a standard R matrix containing genotypes encoded numerically as dosages (values in \code{c( 0, 1, 2, NA )}).
+Each genotype per locus (\code{m} loci) and individual (\code{n} total) counts the number of reference alleles, or \code{NA} for missing data.
 No *.fam or *.bim files are read by this basic function.
 Since BED does not encode the data dimensions internally, these values must be provided by the user.
 }
@@ -77,6 +77,8 @@ X
 }
 \seealso{
 \code{\link[=read_plink]{read_plink()}} for reading a set of BED/BIM/FAM files.
+
+\code{\link[=geno_to_char]{geno_to_char()}} for translating numerical genotypes into more human-readable character encodings.
 
 Plink BED format reference:
 \url{https://www.cog-genomics.org/plink/1.9/formats#bed}

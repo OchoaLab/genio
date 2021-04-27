@@ -1,4 +1,5 @@
 # set path of executable to make examples
+plink1=$HOME'/bin/plink1/plink' # for one conversion to output text format
 plink2=$HOME'/bin/plink2'
 gcta=$HOME'/bin/gcta_1.93.2beta/gcta64'
 
@@ -21,6 +22,12 @@ for n in {4..7}; do
     # remove log when things are ok
     rm dummy-$n-$m-$miss.log
 done
+
+# for making sure text version of alleles in my converter function agrees with plink
+# NOTE: plink2 doesn't support this format yet/anymore, must use plink1!
+# makes *.ped and *.map
+$plink1 --bfile dummy-4-10-0.1 --recode --out dummy-4-10-0.1
+rm dummy-4-10-0.1.log
 
 # create GRM for tests
 $gcta --bfile dummy-7-10-0.1 --make-grm --out dummy-7-10-0.1
@@ -54,3 +61,4 @@ $plink2 --bfile sample --freq --out sample-plink2
 $plink2 --bfile sample --read-freq sample-plink2.afreq --pca 3 --out sample-plink2
 # cleanup
 rm sample-plink2.{afreq,log}
+

@@ -1,7 +1,7 @@
 #' Read a genotype matrix in Plink BED format
 #'
-#' This function reads genotypes encoded in a Plink-formatted BED (binary) file, returning them in a standard R matrix containing genotypes (values in `c( 0, 1, 2, NA )`).
-#' Each genotype per locus (`m` loci) and individual (`n` total) counts the number of alternative alleles or `NA` for missing data.
+#' This function reads genotypes encoded in a Plink-formatted BED (binary) file, returning them in a standard R matrix containing genotypes encoded numerically as dosages (values in `c( 0, 1, 2, NA )`).
+#' Each genotype per locus (`m` loci) and individual (`n` total) counts the number of reference alleles, or `NA` for missing data.
 #' No *.fam or *.bim files are read by this basic function.
 #' Since BED does not encode the data dimensions internally, these values must be provided by the user.
 #'
@@ -54,6 +54,8 @@
 #' 
 #' @seealso
 #' [read_plink()] for reading a set of BED/BIM/FAM files.
+#'
+#' [geno_to_char()] for translating numerical genotypes into more human-readable character encodings.
 #' 
 #' Plink BED format reference:
 #' <https://www.cog-genomics.org/plink/1.9/formats#bed>

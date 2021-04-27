@@ -13,16 +13,17 @@ Alternatively, input file path may have .bed extension (but not .bim, .fam, or o
 \item{verbose}{If \code{TRUE} (default), function reports the paths of the files being read (after autocompleting the extensions).}
 }
 \value{
-A named list with items in this order: \code{X} (genotype matrix), \code{bim} (tibble), \code{fam} (tibble).
+A named list with items in this order: \code{X} (genotype matrix, see description in return value of \code{\link[=read_bed]{read_bed()}}), \code{bim} (tibble, see \code{\link[=read_bim]{read_bim()}}), \code{fam} (tibble, see \code{\link[=read_fam]{read_fam()}}).
 \code{X} has row and column names corresponding to the \code{id} values of the \code{bim} and \code{fam} tibbles.
 }
 \description{
-This function reads a genotype matrix (\code{X}) and its associated locus (\code{bim}) and individual (\code{fam}) data tables in the three Plink files in BED, BIM, and FAM formats, respectively.
+This function reads a genotype matrix (\code{X}, encoded as reference allele dosages) and its associated locus (\code{bim}) and individual (\code{fam}) data tables in the three Plink files in BED, BIM, and FAM formats, respectively.
 All inputs must exist or an error is thrown.
 This function is a wrapper around the more basic functions
 \code{\link[=read_bed]{read_bed()}},
 \code{\link[=read_bim]{read_bim()}},
-\code{\link[=read_fam]{read_fam()}}.
+\code{\link[=read_fam]{read_fam()}},
+which simplifies data parsing and additionally better guarantees data integrity.
 Below suppose there are \code{m} loci and \code{n} individuals.
 }
 \examples{
@@ -62,8 +63,11 @@ plink_data <- read_plink(file)
 }
 \seealso{
 \code{\link[=read_bed]{read_bed()}},
-\code{\link[=read_bim]{read_bim()}},
-\code{\link[=read_fam]{read_fam()}}.
+\code{\link[=read_bim]{read_bim()}}, and
+\code{\link[=read_fam]{read_fam()}}
+for individual parsers of each input table, including a description of each object returned.
+
+\code{\link[=geno_to_char]{geno_to_char()}} for translating numerical genotypes into more human-readable character encodings.
 
 Plink BED/BIM/FAM format reference:
 \url{https://www.cog-genomics.org/plink/1.9/formats}

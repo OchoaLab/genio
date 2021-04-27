@@ -127,3 +127,8 @@
   - Added GRM examples to README and `genio` package doc
   - Clarified language and code examples throughout, normalized style (full conversion to roxygen markdown, including fixing some cases where old non-markdown notation did not work anymore)
   - Spellchecked package
+
+# 2021-04-26 - genio 1.0.21.9000
+
+- Added function `geno_to_char` to convert genotype numeric codes (allele dosages such as 0, 1, 2) into character codes such as 'A/A', 'A/G', 'G/G' (depending on locus).
+- Fixed documentation for `read_bed`, which previously incorrectly stated that the numerical genotypes (allele dosages) counted alternative alleles (allele 2 in BIM table), whereas the truth is that they count reference alleles (allele 1).

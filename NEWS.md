@@ -133,3 +133,7 @@
 - Added function `geno_to_char` to convert genotype numeric codes (allele dosages such as 0, 1, 2) into character codes such as 'A/A', 'A/G', 'G/G' (depending on locus).
 - Added functions `read_matrix` and `write_matrix`, intended for admixture inference data.
 - Fixed documentation for `read_bed`, which previously incorrectly stated that the numerical genotypes (allele dosages) counted alternative alleles (allele 2 in BIM table), whereas the truth is that they count reference alleles (allele 1).
+
+# 2021-05-21 - genio 1.0.22.9000
+
+- Function `count_lines` now returns value as integer instead of double (a very minor bug/annoyance fix).

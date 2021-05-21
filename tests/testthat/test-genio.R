@@ -1177,8 +1177,8 @@ test_that("count_lines works", {
     expect_silent(
         n_ind_lines <- count_lines( fi, verbose = FALSE )
     )
-    # this is our only expectation
     expect_equal( n_ind_lines, n_rows )
+    expect_true( is.integer( n_ind_lines ) )
     
     # repeat with missing extension
     fi_no_ext <- sub('\\.fam$', '', fi)
@@ -1190,8 +1190,8 @@ test_that("count_lines works", {
     expect_silent(
         n_ind_lines <- count_lines( fi_no_ext, ext = 'fam', verbose = FALSE )
     )
-    # this is our only expectation
     expect_equal( n_ind_lines, n_rows )
+    expect_true( is.integer( n_ind_lines ) )
 
     # test on a file with a single line but missing its newline (a potential trouble case for C++ iterators solution)
     fi <- 'no-newline.txt'
@@ -1199,9 +1199,8 @@ test_that("count_lines works", {
     expect_silent(
         n_lines <- count_lines( fi, verbose = FALSE )
     )
-    # this is our only expectation
     expect_equal( n_lines, 1 )
-
+    expect_true( is.integer( n_lines ) )
 })
 
 test_that("read_matrix works", {

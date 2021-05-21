@@ -42,6 +42,11 @@ count_lines <- function( file, ext = NA, verbose = TRUE ) {
     if ( verbose )
         message( 'Counting lines: ', file )
 
-    # count lines using C++, return that value
-    return( count_lines_cpp( file ) )
+    # count lines using C++
+    n <- count_lines_cpp( file )
+    # though the return value is clearly an integer in C++, R fudges it and returns a double unless we force it to integer!
+    # however, retain as double to prevent overflows if needed (not sure if that can happen since C++ would overflow as well, right?  meh)
+    if ( n <= .Machine$integer.max )
+        n <- as.integer( n )
+    return( n )
 }

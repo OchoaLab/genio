@@ -374,7 +374,7 @@ Genotypes are read very efficiently using `Rcpp` code, and stored directly into 
 The annotation tables are also read most efficiently, using the `readr` package internally.
 
 The `BEDMatrix` reader is also written in `Rcpp`, but its main goal is to provide efficient random access to genotypes stored in a file, which makes obtaining an `R` matrix more awkward, though surprisingly without paying a time penalty for it.
-The annotation tables are read with `data.table`, which is [actually the fastest](https://csgillespie.github.io/efficientR/5-3-importing-data.html), though the difference in performance is small compared to `readr` for reasonably-sized files.
+The annotation tables are read with `data.table`, which is [actually the fastest](https://csgillespie.github.io/efficientR/input-output.html), though the difference in performance is small compared to `readr` for reasonably-sized files.
 However, `BEDMatrix` does not process or return full annotation tables, which gives it an unfair advantage compared to `genio`, as `BEDMatrix` takes shortcuts to only read the columns it needs.
 If the annotation tables are needed, reading them will incur an additional (and in some cases considerable) time penalty.
 

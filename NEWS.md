@@ -137,3 +137,11 @@
 # 2021-05-21 - genio 1.0.22.9000
 
 - Function `count_lines` now returns value as integer instead of double (a very minor bug/annoyance fix).
+
+# 2021-06-11 - genio 1.0.23
+
+- 3rd CRAN submission
+- Removed `lfa` from suggested packages (no connection anymore since `lfa` comparison was removed from vignette in version 1.0.19.9000).
+- Fixed a dead link in the vignette.
+- Removed "LazyData: true" from DESCRIPTION (to avoid a new "note" on R-devel).
+

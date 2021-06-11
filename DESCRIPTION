@@ -1,6 +1,6 @@
 Package: genio
 Title: Genetics Input/Output Functions
-Version: 1.0.22.9000
+Version: 1.0.23
 Authors@R: 
     person(given = "Alejandro",
 	   family = "Ochoa",
@@ -10,7 +10,6 @@ Authors@R:
 Description: Implements readers and writers for file formats associated with genetics data.  Reading and writing Plink BED/BIM/FAM and GCTA binary GRM formats is fully supported, including a lightning-fast BED reader and writer implementations.  Other functions are 'readr' wrappers that are more constrained, user-friendly, and efficient for these particular applications; handles Plink and Eigenstrat tables (FAM, BIM, IND, and SNP files).  There are also make functions for FAM and BIM tables with default values to go with simulated genotype data.
 License: GPL-3
 Encoding: UTF-8
-LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 Imports:
@@ -24,7 +23,6 @@ Suggests:
     testthat,
     knitr,
     rmarkdown,
-    lfa,
     BEDMatrix,
     snpStats,
     pryr

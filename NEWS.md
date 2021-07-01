@@ -156,3 +156,10 @@
   - Verified that all `read_*` functions use `add_ext_read` while all `write_*` functions use `add_ext`.
     Only function `count_lines` switched from `add_ext` to `add_ext_read` (in addition to `read_bed`, which led to the earlier change), but `count_lines` didn't have a default extension so this change is less likely to matter.
 - Reformatted this `NEWS.md` slightly to improve its automatic parsing.
+
+# genio 1.0.24.9000 (2021-07-01)
+
+- Functions `read_bed` and `read_plink` no longer stop with an error if the input BED file has non-zero padding bits.
+  - A real-life example (link below, also part of tests now) reported by Richel Bilderbeek (Thanks!) caused the error.
+  - https://github.com/kausmees/GenoCAE/tree/master/example_tiny
+  - I verified that both the `plink2` binary and the `BEDMatrix` R package load this file without complaining about the non-zero pads, so I decided to agree in that behavior.  I verified that `genio`'s data agrees with `BEDMatrix` after the fix.	

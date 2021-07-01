@@ -136,20 +136,21 @@ IntegerMatrix read_bed_cpp(const char* file, int m_loci, int n_ind) {
 	  
 	  // shift packed data, throwing away genotype we just processed
 	  buf_k = buf_k >> 2;
-	} else {
-	  // when j is out of range, we're in the padding data now
-	  // as an extra sanity check, the remaining data should be all zero (that's how the encoding is supposed to work)
-	  // non-zero values would strongly suggest that n_ind was not set correctly
-	  if (buf_k != 0) {
-	    // wrap up everything properly
-	    free( buffer ); // free buffer memory
-	    fclose( file_stream ); // close file
-	    // now send error message to R
-	    char msg[200];
-	    sprintf(msg, "Row %d padding was non-zero.  Either the specified number of individuals is incorrect or the input file is corrupt!", i+1); // convert to 1-based coordinates
-	    stop(msg);
-	  }
 	}
+	// } else {
+	//   // when j is out of range, we're in the padding data now
+	//   // as an extra sanity check, the remaining data should be all zero (that's how the encoding is supposed to work)
+	//   // non-zero values would strongly suggest that n_ind was not set correctly
+	//   if (buf_k != 0) {
+	//     // wrap up everything properly
+	//     free( buffer ); // free buffer memory
+	//     fclose( file_stream ); // close file
+	//     // now send error message to R
+	//     char msg[200];
+	//     sprintf(msg, "Row %d padding was non-zero.  Either the specified number of individuals is incorrect or the input file is corrupt!", i+1); // convert to 1-based coordinates
+	//     stop(msg);
+	//   }
+	// }
       }
       // finished byte
       

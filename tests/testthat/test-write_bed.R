@@ -49,7 +49,11 @@ test_that("write_bed and read_bed work", {
     file.copy( fo_bed, fo_not_bed )
     X3 <- read_bed(fo_not_bed, m_loci = m, n_ind = n)
     expect_equal(X, X3)
+    # cleanup
     rm( X3 )
+    invisible( file.remove( fo_not_bed ) )
+    if ( file.exists( fo_not_bed ) )
+        stop( 'Could not delete: ', fo_not_bed )
     
     # errors for missing params
     expect_error( read_bed() ) # missing all
@@ -175,7 +179,8 @@ testOneInput <- function(nameIn, m_loci, n_ind) {
     expect_error( read_bed(nameIn, m_loci = n_ind,   n_ind = m_loci) ) # reverse dimensions, get caught because of padding checks (non-commutative unless both are factors of 4)
     expect_error( read_bed(nameIn, m_loci = m_loci+1, n_ind = n_ind) )
     expect_error( read_bed(nameIn, m_loci = m_loci-1, n_ind = n_ind) )
-    expect_error( read_bed(nameIn, m_loci = m_loci,   n_ind = n_ind-1) )
+    # NOTE: this used to cause an error when we required that paddings be zero, but now, given some real files (in the wild) with non-zero pads, and seeing that other software just ignores the pads, decided to ignore them too (now these don't trigger errors)
+    #expect_error( read_bed(nameIn, m_loci = m_loci,   n_ind = n_ind-1) )
     # sadly many +1 individual cases don't cause error because they just look like zeroes (in all loci) if there is enough padding.
     # do expect an error if we're off by a whole byte (4 individuals)
     expect_error( read_bed(nameIn, m_loci = m_loci,   n_ind = n_ind+4) )
@@ -317,6 +322,23 @@ test_that("write_plink with `append = TRUE` works", {
     # delete all three outputs when done
     # this also tests that all three files existed!
     expect_silent( delete_files_plink(fo) )
+})
+
+# this is a case reported by richelbilderbeek
+test_that( "read_plink works with file without zero pads", {
+    name <- 'HumanOrigins249_tiny'
+    expect_silent(
+        data <- read_plink( name, verbose = FALSE )
+    )
+    if (test_BEDMatrix) {
+        # load using BEDMatrix
+        X2 <- read_bed_hack( name )
+        # for comparison, clean up genio version (read_plink returns row/col names)
+        X <- data$X
+        dimnames(X) <- NULL
+        # compare now
+        expect_equal( X, X2 )
+    }
 })
 
 test_that( "geno_to_char works", {

@@ -1,5 +1,5 @@
 # This script add desired extension if it's missing
-# Unlike real_path, this does not assume file exists (it can be a file to be written later)
+# Unlike add_ext_read, this does not assume file exists (it can be a file to be written later)
 #
 # Internal function    
 add_ext <- function(fo, ext) {

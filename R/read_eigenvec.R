@@ -5,6 +5,7 @@
 #'
 #' @param file The input file path, potentially excluding extension.
 #' @param ext File extension (default "eigenvec") can be changed if desired.
+#' Set to `NA` to force `file` to exist as-is.
 #' @param comment A string used to identify comments.
 #' Any text after the comment characters will be silently ignored.
 #' Passed to [readr::read_table2()].
@@ -75,7 +76,7 @@ read_eigenvec <- function(
         stop('`file` is required!')
     
     # add .ext and/or .gz if missing and needed
-    file <- real_path(file, ext)
+    file <- add_ext_read(file, ext)
     
     # announce what we ended up loading, nice to know
     if (verbose)

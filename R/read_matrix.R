@@ -9,6 +9,7 @@
 #' Additionally, the .gz extension is added automatically if the file (after the extension is added as needed) is still not found and did not already contain the .gz extension and adding it points to an existing file.
 #' @param ext The desired file extension.
 #' Ignored if `file` points to an existing file.
+#' Set to `NA` to force `file` to exist as-is.
 #' @param verbose If `TRUE` (default) function reports the path of the file being loaded (after autocompleting the extensions).
 #'
 #' @return A numeric matrix without row or column names.
@@ -42,7 +43,7 @@ read_matrix <- function( file, ext = 'txt', verbose = TRUE ) {
         stop('Input file path `file` is required!')
 
     # add .ext and/or .gz if missing and needed
-    file <- real_path(file, ext)
+    file <- add_ext_read(file, ext)
     
     # announce what we ended up loading, nice to know
     if (verbose)

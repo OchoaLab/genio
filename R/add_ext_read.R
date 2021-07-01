@@ -2,7 +2,7 @@
 # This function simply returns the input path when its guesses don't result in files that exist, doesn't die unless arguments are missing.
 #
 # Internal function    
-real_path <- function(file, ext) {
+add_ext_read <- function(file, ext) {
     # both inputs are mandatory
     if (missing(file))
         stop('Input file is required!')
@@ -15,6 +15,9 @@ real_path <- function(file, ext) {
     # ditto if file already exists, we're set!
     if (file.exists(file))
         return(file)
+    # and if ext is NA
+    if ( is.na( ext ) )
+        return( file )
     # now assume file as specified is not found
 
     # if the file already ends in .gz, don't do anything!

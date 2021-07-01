@@ -10,8 +10,8 @@ count_lines(file, ext = NA, verbose = TRUE)
 \item{file}{The input file path to read (a string).}
 
 \item{ext}{An optional extension.
-If \code{NA} (default), \code{file} is expected to contain its extension already.
-Otherwise, this extension is added, but only if this extension was not already there (so if inputs were \verb{file = 'file.bim', ext = 'bim'}, file is read correctly).}
+If \code{NA} (default), \code{file} is expected to exist as-is.
+Otherwise, if \code{file} doesn't exist and the extension was missing, then this extension is added.}
 
 \item{verbose}{If \code{TRUE} (default), writes a message reporting the file whose lines are being counted (after adding extensions if it was needed).}
 }

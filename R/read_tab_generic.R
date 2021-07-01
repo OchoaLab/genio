@@ -11,7 +11,7 @@ read_tab_generic <- function(file, ext, tib_names, col_types, verbose = TRUE) {
         stop('Table column types (col_types) is required!')
     
     # add .ext and/or .gz if missing and needed
-    file <- real_path(file, ext)
+    file <- add_ext_read(file, ext)
     
     # announce what we ended up loading, nice to know
     if (verbose)

@@ -43,6 +43,14 @@ test_that("write_bed and read_bed work", {
     # parse data back, verify agreement!
     X2 <- read_bed(fo, m_loci = m, n_ind = n)
     expect_equal(X, X2)
+    
+    # test that we can read same file when extension is not BED
+    fo_not_bed <- add_ext(fo, 'not') # output with wrong extension
+    file.copy( fo_bed, fo_not_bed )
+    X3 <- read_bed(fo_not_bed, m_loci = m, n_ind = n)
+    expect_equal(X, X3)
+    rm( X3 )
+    
     # errors for missing params
     expect_error( read_bed() ) # missing all
     expect_error( read_bed(m_loci = m, n_ind = n) ) # missing file

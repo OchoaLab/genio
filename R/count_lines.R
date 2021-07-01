@@ -8,8 +8,8 @@
 #'
 #' @param file The input file path to read (a string).
 #' @param ext An optional extension.
-#' If `NA` (default), `file` is expected to contain its extension already.
-#' Otherwise, this extension is added, but only if this extension was not already there (so if inputs were `file = 'file.bim', ext = 'bim'`, file is read correctly).
+#' If `NA` (default), `file` is expected to exist as-is.
+#' Otherwise, if `file` doesn't exist and the extension was missing, then this extension is added.
 #' @param verbose If `TRUE` (default), writes a message reporting the file whose lines are being counted (after adding extensions if it was needed).
 #'
 #' @return The number of lines in the file.
@@ -31,8 +31,7 @@ count_lines <- function( file, ext = NA, verbose = TRUE ) {
     # the C++ portion is extremely bare, a poor man's `wc -l`
 
     # add extension if necessary
-    if ( !is.na( ext ) )
-        file <- add_ext( file, ext )
+    file <- add_ext_read( file, ext )
     
     # make sure file exists
     if ( !file.exists( file ) )

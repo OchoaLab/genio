@@ -25,36 +25,36 @@ test_that("add_ext works", {
     expect_equal(foExtN, add_ext(foExtN, NA))
 })
 
-test_that("real_path works", {
+test_that("add_ext_read works", {
     # test that there are errors when crucial data is missing
-    expect_error(real_path()) # all is missing
-    expect_error(real_path('file')) # ext is missing
-    expect_error(real_path(ext='txt')) # file is missing
+    expect_error(add_ext_read()) # all is missing
+    expect_error(add_ext_read('file')) # ext is missing
+    expect_error(add_ext_read(ext='txt')) # file is missing
     
     # function returns input when file does not exist
     fi <- 'file-that-does-not-exist'
-    expect_equal(fi, real_path(fi, 'fam'))
+    expect_equal(fi, add_ext_read(fi, 'fam'))
 
     # test with real file (uncompressed)
     # file path of interest
     fi <- system.file("extdata", 'sample.fam', package = "genio", mustWork = TRUE)
-    # when its correctly specified, real_path does not change it!
-    expect_equal(fi, real_path(fi, 'fam'))
+    # when its correctly specified, add_ext_read does not change it!
+    expect_equal(fi, add_ext_read(fi, 'fam'))
     # now we omit the extension, will still work
     fiNoExt <- sub('\\.fam$', '', fi)
-    expect_equal(fi, real_path(fiNoExt, 'fam'))
+    expect_equal(fi, add_ext_read(fiNoExt, 'fam'))
     
     # repeat with a compressed file
     # file path of interest
     fi <- system.file("extdata", 'sample2.fam.gz', package = "genio", mustWork = TRUE)
-    # when its correctly specified, real_path does not change it!
-    expect_equal(fi, real_path(fi, 'fam'))
+    # when its correctly specified, add_ext_read does not change it!
+    expect_equal(fi, add_ext_read(fi, 'fam'))
     # now we omit the .gz extension, will still work
     fiNoGz <- sub('\\.gz$', '', fi)
-    expect_equal(fi, real_path(fiNoGz, 'fam'))
+    expect_equal(fi, add_ext_read(fiNoGz, 'fam'))
     # now we omit the .fam extension too, will still work
     fiNoGzNoExt <- sub('\\.fam$', '', fiNoGz)
-    expect_equal(fi, real_path(fiNoGzNoExt, 'fam'))
+    expect_equal(fi, add_ext_read(fiNoGzNoExt, 'fam'))
     
 })
 

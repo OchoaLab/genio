@@ -10,12 +10,14 @@ read_bed(
   names_ind = NULL,
   m_loci = NA,
   n_ind = NA,
+  ext = "bed",
   verbose = TRUE
 )
 }
 \arguments{
 \item{file}{Input file path.
-*.bed extension may be omitted (will be added automatically if it is missing).}
+*.bed extension may be omitted (will be added automatically if \code{file} doesn't exist but \code{file}.bed does).
+See \code{ext} option below.}
 
 \item{names_loci}{Vector of loci names, to become the row names of the genotype matrix.
 If provided, its length sets \code{m_loci} below.
@@ -32,6 +34,10 @@ Ignored if \code{names_loci} is provided.}
 \item{n_ind}{Number of individuals in the input genotype table.
 Required if \code{names_ind = NULL}, as its value is not deducible from the BED file itself.
 Ignored if \code{names_ind} is provided.}
+
+\item{ext}{The desired file extension (default "bed").
+Ignored if \code{file} points to an existing file.
+Set to \code{NA} to force \code{file} to exist as-is.}
 
 \item{verbose}{If \code{TRUE} (default) function reports the path of the file being read (after autocompleting the extension).}
 }

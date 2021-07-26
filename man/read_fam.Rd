@@ -7,7 +7,7 @@
 read_fam(file, verbose = TRUE)
 }
 \arguments{
-\item{file}{Input file (whatever is accepted by \code{\link[readr:read_table]{readr::read_table2()}}).
+\item{file}{Input file (whatever is accepted by \code{\link[readr:read_table]{readr::read_table()}}).
 If file as given does not exist and is missing the expected *.fam extension, the function adds the .fam extension and uses that path if that file exists.
 Additionally, the .gz extension is added automatically if the file (after *.fam extension is added as needed) is still not found and did not already contain the .gz extension and adding it points to an existing file.}
 
@@ -18,7 +18,7 @@ A tibble with columns: \code{fam}, \code{id}, \code{pat}, \code{mat}, \code{sex}
 }
 \description{
 This function reads a standard Plink *.fam file into a tibble with named columns.
-It uses \code{\link[readr:read_table]{readr::read_table2()}} to do it efficiently.
+It uses \code{\link[readr:read_table]{readr::read_table()}} to do it efficiently.
 }
 \examples{
 # to read "data.fam", run like this:

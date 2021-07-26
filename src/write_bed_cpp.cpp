@@ -16,7 +16,7 @@ void write_bed_cpp(const char* file, IntegerMatrix X, bool append) {
   unsigned char *buffer = (unsigned char *) malloc( n_buf );
 
   // append changes mode
-  const char *mode = ( append ) ? "a" : "wb";
+  const char *mode = ( append ) ? "ab" : "wb";
   // open output file
   FILE *file_stream = fopen( file, mode );
   if ( file_stream == NULL ) {

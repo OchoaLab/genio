@@ -18,7 +18,7 @@ read_tab_generic <- function(file, ext, tib_names, col_types, verbose = TRUE) {
         message('Reading: ', file)
     
     # read input
-    ind <- readr::read_table2(
+    ind <- readr::read_table(
                       file,
                       col_names = tib_names,
                       col_types = col_types

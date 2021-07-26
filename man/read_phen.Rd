@@ -7,7 +7,7 @@
 read_phen(file, verbose = TRUE)
 }
 \arguments{
-\item{file}{Input file (whatever is accepted by \code{\link[readr:read_table]{readr::read_table2()}}).
+\item{file}{Input file (whatever is accepted by \code{\link[readr:read_table]{readr::read_table()}}).
 If file as given does not exist and is missing the expected *.phen extension, the function adds the .phen extension and uses that path if that file exists.
 Additionally, the .gz extension is added automatically if the file (after *.phen extension is added as needed) is still not found and did not already contain the .gz extension and adding it points to an existing file.}
 
@@ -18,7 +18,7 @@ A tibble with columns: \code{fam}, \code{id}, \code{pheno}.
 }
 \description{
 This function reads a standard *.phen file into a tibble.
-It uses \code{\link[readr:read_table]{readr::read_table2()}} to do it efficiently.
+It uses \code{\link[readr:read_table]{readr::read_table()}} to do it efficiently.
 GCTA and EMMAX use this format.
 }
 \examples{

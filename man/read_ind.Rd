@@ -7,7 +7,7 @@
 read_ind(file, verbose = TRUE)
 }
 \arguments{
-\item{file}{Input file (whatever is accepted by \code{\link[readr:read_table]{readr::read_table2()}}).
+\item{file}{Input file (whatever is accepted by \code{\link[readr:read_table]{readr::read_table()}}).
 If file as given does not exist and is missing the expected *.ind extension, the function adds the .ind extension and uses that path if that file exists.
 Additionally, the .gz extension is added automatically if the file (after *.ind extension is added as needed) is still not found and did not already contain the .gz extension and adding it points to an existing file.}
 
@@ -18,7 +18,7 @@ A tibble with columns: \code{id}, \code{sex}, \code{label}.
 }
 \description{
 This function reads a standard Eigenstrat *.ind file into a tibble.
-It uses \code{\link[readr:read_table]{readr::read_table2()}} to do it efficiently.
+It uses \code{\link[readr:read_table]{readr::read_table()}} to do it efficiently.
 }
 \examples{
 # to read "data.ind", run like this:

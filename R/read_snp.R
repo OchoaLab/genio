@@ -4,9 +4,9 @@ snp_names <- c('id', 'chr', 'posg', 'pos', 'ref', 'alt')
 #' Read Eigenstrat *.snp files
 #'
 #' This function reads a standard Eigenstrat *.snp file into a tibble.
-#' It uses [readr::read_table2()] to do it efficiently.
+#' It uses [readr::read_table()] to do it efficiently.
 #'
-#' @param file Input file (whatever is accepted by [readr::read_table2()]).
+#' @param file Input file (whatever is accepted by [readr::read_table()]).
 #' If file as given does not exist and is missing the expected *.snp extension, the function adds the .snp extension and uses that path if that file exists.
 #' Additionally, the .gz extension is added automatically if the file (after *.snp extension is added as needed) is still not found and did not already contain the .gz extension and adding it points to an existing file.
 #' @param verbose If `TRUE` (default), function reports the path of the file being loaded (after autocompleting the extensions).

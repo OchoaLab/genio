@@ -65,8 +65,9 @@ test_that("read_fam works", {
     
     # load sample file
     fi <- system.file("extdata", 'sample.fam', package = "genio", mustWork = TRUE)
-    # this should just work (no "expect" test)
-    fam <- read_fam(fi)
+    expect_silent(
+        fam <- read_fam(fi, verbose = FALSE)
+    )
     # test that number of columns is as expected
     expect_equal(ncol(fam), length(fam_names))
     # test that names are in right order too
@@ -76,8 +77,9 @@ test_that("read_fam works", {
 
     # repeat with missing extension
     fiNoExt <- sub('\\.fam$', '', fi)
-    # this should just work (no "expect" test)
-    fam <- read_fam(fiNoExt)
+    expect_silent(
+        fam <- read_fam(fiNoExt, verbose = FALSE)
+    )
     # test that number of columns is as expected
     expect_equal(ncol(fam), length(fam_names))
     # test that names are in right order too
@@ -87,8 +89,9 @@ test_that("read_fam works", {
 
     # repeat with compressed file (and true full path)
     fi <- system.file("extdata", 'sample2.fam.gz', package = "genio", mustWork = TRUE)
-    # this should just work (no "expect" test)
-    fam <- read_fam(fi)
+    expect_silent(
+        fam <- read_fam(fi, verbose = FALSE)
+    )
     # test that number of columns is as expected
     expect_equal(ncol(fam), length(fam_names))
     # test that names are in right order too
@@ -98,8 +101,9 @@ test_that("read_fam works", {
     
     # repeat with missing .gz extension
     fiNoGz <- sub('\\.gz$', '', fi)
-    # this should just work (no "expect" test)
-    fam <- read_fam(fiNoGz)
+    expect_silent(
+        fam <- read_fam(fiNoGz, verbose = FALSE)
+    )
     # test that number of columns is as expected
     expect_equal(ncol(fam), length(fam_names))
     # test that names are in right order too
@@ -109,8 +113,9 @@ test_that("read_fam works", {
 
     # repeat with missing .fam.gz double extension
     fiNoGzNoExt <- sub('\\.fam$', '', fiNoGz)
-    # this should just work (no "expect" test)
-    fam <- read_fam(fiNoGzNoExt)
+    expect_silent(
+        fam <- read_fam(fiNoGzNoExt, verbose = FALSE)
+    )
     # test that number of columns is as expected
     expect_equal(ncol(fam), length(fam_names))
     # test that names are in right order too
@@ -127,8 +132,9 @@ test_that("read_phen works", {
     
     # load sample file
     fi <- system.file("extdata", 'sample.phen', package = "genio", mustWork = TRUE)
-    # this should just work (no "expect" test)
-    phen <- read_phen(fi)
+    expect_silent(
+        phen <- read_phen(fi, verbose = FALSE)
+    )
     # test that number of columns is as expected
     expect_equal(ncol(phen), length(phen_names))
     # test that names are in right order too
@@ -138,8 +144,9 @@ test_that("read_phen works", {
 
     # repeat with missing extension
     fiNoExt <- sub('\\.phen$', '', fi)
-    # this should just work (no "expect" test)
-    phen <- read_phen(fiNoExt)
+    expect_silent(
+        phen <- read_phen(fiNoExt, verbose = FALSE)
+    )
     # test that number of columns is as expected
     expect_equal(ncol(phen), length(phen_names))
     # test that names are in right order too
@@ -149,8 +156,9 @@ test_that("read_phen works", {
 
     # repeat with compressed file (and true full path)
     fi <- system.file("extdata", 'sample2.phen.gz', package = "genio", mustWork = TRUE)
-    # this should just work (no "expect" test)
-    phen <- read_phen(fi)
+    expect_silent(
+        phen <- read_phen(fi, verbose = FALSE)
+    )
     # test that number of columns is as expected
     expect_equal(ncol(phen), length(phen_names))
     # test that names are in right order too
@@ -160,8 +168,9 @@ test_that("read_phen works", {
     
     # repeat with missing .gz extension
     fiNoGz <- sub('\\.gz$', '', fi)
-    # this should just work (no "expect" test)
-    phen <- read_phen(fiNoGz)
+    expect_silent(
+        phen <- read_phen(fiNoGz, verbose = FALSE)
+    )
     # test that number of columns is as expected
     expect_equal(ncol(phen), length(phen_names))
     # test that names are in right order too
@@ -171,8 +180,9 @@ test_that("read_phen works", {
 
     # repeat with missing .phen.gz double extension
     fiNoGzNoExt <- sub('\\.phen$', '', fiNoGz)
-    # this should just work (no "expect" test)
-    phen <- read_phen(fiNoGzNoExt)
+    expect_silent(
+        phen <- read_phen(fiNoGzNoExt, verbose = FALSE)
+    )
     # test that number of columns is as expected
     expect_equal(ncol(phen), length(phen_names))
     # test that names are in right order too
@@ -189,8 +199,9 @@ test_that("read_bim works", {
     
     # load sample file
     fi <- system.file("extdata", 'sample.bim', package = "genio", mustWork = TRUE)
-    # this should just work (no "expect" test)
-    bim <- read_bim(fi)
+    expect_silent(
+        bim <- read_bim(fi, verbose = FALSE)
+    )
     # test that number of columns is as expected
     expect_equal(ncol(bim), length(bim_names))
     # test that names are in right order too
@@ -200,8 +211,9 @@ test_that("read_bim works", {
 
     # repeat with missing extension
     fiNoExt <- sub('\\.bim$', '', fi)
-    # this should just work (no "expect" test)
-    bim <- read_bim(fiNoExt)
+    expect_silent(
+        bim <- read_bim(fiNoExt, verbose = FALSE)
+    )
     # test that number of columns is as expected
     expect_equal(ncol(bim), length(bim_names))
     # test that names are in right order too
@@ -211,8 +223,9 @@ test_that("read_bim works", {
 
     # repeat with compressed file (and true full path)
     fi <- system.file("extdata", 'sample2.bim.gz', package = "genio", mustWork = TRUE)
-    # this should just work (no "expect" test)
-    bim <- read_bim(fi)
+    expect_silent(
+        bim <- read_bim(fi, verbose = FALSE)
+    )
     # test that number of columns is as expected
     expect_equal(ncol(bim), length(bim_names))
     # test that names are in right order too
@@ -222,8 +235,9 @@ test_that("read_bim works", {
     
     # repeat with missing .gz extension
     fiNoGz <- sub('\\.gz$', '', fi)
-    # this should just work (no "expect" test)
-    bim <- read_bim(fiNoGz)
+    expect_silent(
+        bim <- read_bim(fiNoGz, verbose = FALSE)
+    )
     # test that number of columns is as expected
     expect_equal(ncol(bim), length(bim_names))
     # test that names are in right order too
@@ -233,8 +247,9 @@ test_that("read_bim works", {
 
     # repeat with missing .bim.gz double extension
     fiNoGzNoExt <- sub('\\.bim$', '', fiNoGz)
-    # this should just work (no "expect" test)
-    bim <- read_bim(fiNoGzNoExt)
+    expect_silent(
+        bim <- read_bim(fiNoGzNoExt, verbose = FALSE)
+    )
     # test that number of columns is as expected
     expect_equal(ncol(bim), length(bim_names))
     # test that names are in right order too
@@ -251,8 +266,9 @@ test_that("read_ind works", {
     
     # load sample file
     fi <- system.file("extdata", 'sample.ind', package = "genio", mustWork = TRUE)
-    # this should just work (no "expect" test)
-    ind <- read_ind(fi)
+    expect_silent(
+        ind <- read_ind(fi, verbose = FALSE)
+    )
     # test that number of columns is as expected
     expect_equal(ncol(ind), length(ind_names))
     # test that names are in right order too
@@ -262,8 +278,9 @@ test_that("read_ind works", {
 
     # repeat with missing extension
     fiNoExt <- sub('\\.ind$', '', fi)
-    # this should just work (no "expect" test)
-    ind <- read_ind(fiNoExt)
+    expect_silent(
+        ind <- read_ind(fiNoExt, verbose = FALSE)
+    )
     # test that number of columns is as expected
     expect_equal(ncol(ind), length(ind_names))
     # test that names are in right order too
@@ -273,8 +290,9 @@ test_that("read_ind works", {
 
     # repeat with compressed file (and true full path)
     fi <- system.file("extdata", 'sample2.ind.gz', package = "genio", mustWork = TRUE)
-    # this should just work (no "expect" test)
-    ind <- read_ind(fi)
+    expect_silent(
+        ind <- read_ind(fi, verbose = FALSE)
+    )
     # test that number of columns is as expected
     expect_equal(ncol(ind), length(ind_names))
     # test that names are in right order too
@@ -284,8 +302,9 @@ test_that("read_ind works", {
     
     # repeat with missing .gz extension
     fiNoGz <- sub('\\.gz$', '', fi)
-    # this should just work (no "expect" test)
-    ind <- read_ind(fiNoGz)
+    expect_silent(
+        ind <- read_ind(fiNoGz, verbose = FALSE)
+    )
     # test that number of columns is as expected
     expect_equal(ncol(ind), length(ind_names))
     # test that names are in right order too
@@ -295,8 +314,9 @@ test_that("read_ind works", {
 
     # repeat with missing .ind.gz double extension
     fiNoGzNoExt <- sub('\\.ind$', '', fiNoGz)
-    # this should just work (no "expect" test)
-    ind <- read_ind(fiNoGzNoExt)
+    expect_silent(
+        ind <- read_ind(fiNoGzNoExt, verbose = FALSE)
+    )
     # test that number of columns is as expected
     expect_equal(ncol(ind), length(ind_names))
     # test that names are in right order too
@@ -313,8 +333,9 @@ test_that("read_snp works", {
     
     # load sample file
     fi <- system.file("extdata", 'sample.snp', package = "genio", mustWork = TRUE)
-    # this should just work (no "expect" test)
-    snp <- read_snp(fi)
+    expect_silent(
+        snp <- read_snp(fi, verbose = FALSE)
+    )
     # test that number of columns is as expected
     expect_equal(ncol(snp), length(snp_names))
     # test that names are in right order too
@@ -324,8 +345,9 @@ test_that("read_snp works", {
 
     # repeat with missing extension
     fiNoExt <- sub('\\.snp$', '', fi)
-    # this should just work (no "expect" test)
-    snp <- read_snp(fiNoExt)
+    expect_silent(
+        snp <- read_snp(fiNoExt, verbose = FALSE)
+    )
     # test that number of columns is as expected
     expect_equal(ncol(snp), length(snp_names))
     # test that names are in right order too
@@ -335,8 +357,9 @@ test_that("read_snp works", {
 
     # repeat with compressed file (and true full path)
     fi <- system.file("extdata", 'sample2.snp.gz', package = "genio", mustWork = TRUE)
-    # this should just work (no "expect" test)
-    snp <- read_snp(fi)
+    expect_silent(
+        snp <- read_snp(fi, verbose = FALSE)
+    )
     # test that number of columns is as expected
     expect_equal(ncol(snp), length(snp_names))
     # test that names are in right order too
@@ -346,8 +369,9 @@ test_that("read_snp works", {
     
     # repeat with missing .gz extension
     fiNoGz <- sub('\\.gz$', '', fi)
-    # this should just work (no "expect" test)
-    snp <- read_snp(fiNoGz)
+    expect_silent(
+        snp <- read_snp(fiNoGz, verbose = FALSE)
+    )
     # test that number of columns is as expected
     expect_equal(ncol(snp), length(snp_names))
     # test that names are in right order too
@@ -357,8 +381,9 @@ test_that("read_snp works", {
 
     # repeat with missing .snp.gz double extension
     fiNoGzNoExt <- sub('\\.snp$', '', fiNoGz)
-    # this should just work (no "expect" test)
-    snp <- read_snp(fiNoGzNoExt)
+    expect_silent(
+        snp <- read_snp(fiNoGzNoExt, verbose = FALSE)
+    )
     # test that number of columns is as expected
     expect_equal(ncol(snp), length(snp_names))
     # test that names are in right order too
@@ -378,12 +403,17 @@ test_that("write_fam works", {
     fi <- system.file("extdata", 'sample.fam', package = "genio", mustWork = TRUE)
     # create a dummy output we'll delete later
     fo <- tempfile('delete-me_test-write', fileext = '.fam')
-    # this should just work (tested earlier)
-    fam1 <- read_fam(fi)
+    expect_silent(
+        fam1 <- read_fam(fi, verbose = FALSE)
+    )
     # try writing it back elsewhere
-    write_fam(fo, fam1)
-    # and read it back again to comare
-    fam2 <- read_fam(fo)
+    expect_silent(
+        write_fam(fo, fam1, verbose = FALSE)
+    )
+    # and read it back again to compare
+    expect_silent(
+        fam2 <- read_fam(fo, verbose = FALSE)
+    )
     # compare
     expect_equal(fam1, fam2)
     # delete output when done
@@ -392,9 +422,13 @@ test_that("write_fam works", {
     # repeat by randomly reordering data, should automatically reorder too
     fam1_r <- fam1[, sample.int(ncol(fam1))]
     # try writing it back elsewhere
-    write_fam(fo, fam1_r)
+    expect_silent(
+        write_fam(fo, fam1_r, verbose = FALSE)
+    )
     # and read it back again to compare
-    fam2 <- read_fam(fo)
+    expect_silent(
+        fam2 <- read_fam(fo, verbose = FALSE)
+    )
     # compare
     expect_equal(fam1, fam2)
     # delete output when done
@@ -404,9 +438,13 @@ test_that("write_fam works", {
     fam1_r <- fam1 # copy first
     fam1_r$junk <- 1 # add a junk column
     # try writing it back elsewhere
-    write_fam(fo, fam1_r)
+    expect_silent(
+        write_fam(fo, fam1_r, verbose = FALSE)
+    )
     # and read it back again to compare
-    fam2 <- read_fam(fo)
+    expect_silent(
+        fam2 <- read_fam(fo, verbose = FALSE)
+    )
     # compare
     expect_equal(fam1, fam2)
     # delete output when done
@@ -429,11 +467,17 @@ test_that("write_phen works", {
     # create a dummy output we'll delete later
     fo <- tempfile('delete-me_test-write', fileext = '.phen')
     # this should just work (tested earlier)
-    phen1 <- read_phen(fi)
+    expect_silent(
+        phen1 <- read_phen(fi, verbose = FALSE)
+    )
     # try writing it back elsewhere
-    write_phen(fo, phen1)
+    expect_silent(
+        write_phen(fo, phen1, verbose = FALSE)
+    )
     # and read it back again to compare
-    phen2 <- read_phen(fo)
+    expect_silent(
+        phen2 <- read_phen(fo, verbose = FALSE)
+    )
     # compare
     expect_equal(phen1, phen2)
     # delete output when done
@@ -442,9 +486,13 @@ test_that("write_phen works", {
     # repeat by randomly reordering data, should automatically reorder too
     phen1_r <- phen1[, sample.int(ncol(phen1))]
     # try writing it back elsewhere
-    write_phen(fo, phen1_r)
+    expect_silent(
+        write_phen(fo, phen1_r, verbose = FALSE)
+    )
     # and read it back again to compare
-    phen2 <- read_phen(fo)
+    expect_silent(
+        phen2 <- read_phen(fo, verbose = FALSE)
+    )
     # compare
     expect_equal(phen1, phen2)
     # delete output when done
@@ -454,9 +502,13 @@ test_that("write_phen works", {
     phen1_r <- phen1 # copy first
     phen1_r$junk <- 1 # add a junk column
     # try writing it back elsewhere
-    write_phen(fo, phen1_r)
+    expect_silent(
+        write_phen(fo, phen1_r, verbose = FALSE)
+    )
     # and read it back again to compare
-    phen2 <- read_phen(fo)
+    expect_silent(
+        phen2 <- read_phen(fo, verbose = FALSE)
+    )
     # compare
     expect_equal(phen1, phen2)
     # delete output when done
@@ -473,9 +525,13 @@ test_that("write_phen works", {
     # introduce NAs too!
     phen1$pheno[7:8] <- NA
     # try writing it back elsewhere
-    write_phen(fo, phen1)
+    expect_silent( 
+        write_phen(fo, phen1, verbose = FALSE)
+    )
     # and read it back again to compare
-    phen2 <- read_phen(fo)
+    expect_silent(
+        phen2 <- read_phen(fo, verbose = FALSE)
+    )
     # compare
     expect_equal(phen1, phen2)
     # delete output when done
@@ -493,11 +549,17 @@ test_that("write_bim works", {
     # create a dummy output we'll delete later
     fo <- tempfile('delete-me_test-write', fileext = '.bim')
     # this should just work (tested earlier)
-    bim1 <- read_bim(fi)
+    expect_silent(
+        bim1 <- read_bim(fi, verbose = FALSE)
+    )
     # try writing it back elsewhere
-    write_bim(fo, bim1)
+    expect_silent(
+        write_bim(fo, bim1, verbose = FALSE)
+    )
     # and read it back again to comare
-    bim2 <- read_bim(fo)
+    expect_silent(
+        bim2 <- read_bim(fo, verbose = FALSE)
+    )
     # compare
     expect_equal(bim1, bim2)
     # delete output when done
@@ -506,9 +568,13 @@ test_that("write_bim works", {
     # repeat by randomly reordering data, should automatically reorder too
     bim1_r <- bim1[, sample.int(ncol(bim1))]
     # try writing it back elsewhere
-    write_bim(fo, bim1_r)
+    expect_silent(
+        write_bim(fo, bim1_r, verbose = FALSE)
+    )
     # and read it back again to comare
-    bim2 <- read_bim(fo)
+    expect_silent(
+        bim2 <- read_bim(fo, verbose = FALSE)
+    )
     # compare
     expect_equal(bim1, bim2)
     # delete output when done
@@ -518,9 +584,13 @@ test_that("write_bim works", {
     bim1_r <- bim1 # copy first
     bim1_r$junk <- 1 # add a junk column
     # try writing it back elsewhere
-    write_bim(fo, bim1_r)
+    expect_silent(
+        write_bim(fo, bim1_r, verbose = FALSE)
+    )
     # and read it back again to comare
-    bim2 <- read_bim(fo)
+    expect_silent(
+        bim2 <- read_bim(fo, verbose = FALSE)
+    )
     # compare
     expect_equal(bim1, bim2)
     # delete output when done
@@ -539,21 +609,28 @@ test_that("write_bim with `append = TRUE` works", {
     fo <- tempfile('delete-me_test-write', fileext = '.bim')
     
     # this should just work (tested earlier)
-    bim1 <- read_bim(fi)
+    expect_silent(
+        bim1 <- read_bim(fi, verbose = FALSE)
+    )
 
     # here's the awkward part, where we write it back in parts
     # write every two lines
     for ( i in 1 : ( nrow( bim1 ) / 2 ) ) {
         # try writing it back elsewhere
-        write_bim(
-            fo,
-            bim1[ (2*i-1):(2*i), ],
-            append = TRUE
+        expect_silent(
+            write_bim(
+                fo,
+                bim1[ (2*i-1):(2*i), ],
+                append = TRUE,
+                verbose = FALSE
+            )
         )
     }
     
     # and read it back again to comare
-    bim2 <- read_bim(fo)
+    expect_silent(
+        bim2 <- read_bim(fo, verbose = FALSE)
+    )
     # compare
     expect_equal(bim1, bim2)
     # delete output when done
@@ -562,15 +639,20 @@ test_that("write_bim with `append = TRUE` works", {
     # repeat writing one line at the time
     for ( i in 1 : nrow( bim1 ) ) {
         # try writing it back elsewhere
-        write_bim(
-            fo,
-            bim1[ i, ],
-            append = TRUE
+        expect_silent(
+            write_bim(
+                fo,
+                bim1[ i, ],
+                append = TRUE,
+                verbose = FALSE
+            )
         )
     }
     
     # and read it back again to comare
-    bim2 <- read_bim(fo)
+    expect_silent(
+        bim2 <- read_bim(fo, verbose = FALSE)
+    )
     # compare
     expect_equal(bim1, bim2)
     # delete output when done
@@ -588,11 +670,17 @@ test_that("write_ind works", {
     # create a dummy output we'll delete later
     fo <- tempfile('delete-me_test-write', fileext = '.ind')
     # this should just work (tested earlier)
-    ind1 <- read_ind(fi)
+    expect_silent(
+        ind1 <- read_ind(fi, verbose = FALSE)
+    )
     # try writing it back elsewhere
-    write_ind(fo, ind1)
+    expect_silent(
+        write_ind(fo, ind1, verbose = FALSE)
+    )
     # and read it back again to comare
-    ind2 <- read_ind(fo)
+    expect_silent(
+        ind2 <- read_ind(fo, verbose = FALSE)
+    )
     # compare
     expect_equal(ind1, ind2)
     # delete output when done
@@ -601,9 +689,13 @@ test_that("write_ind works", {
     # repeat by randomly reordering data, should automatically reorder too
     ind1_r <- ind1[, sample.int(ncol(ind1))]
     # try writing it back elsewhere
-    write_ind(fo, ind1_r)
+    expect_silent(
+        write_ind(fo, ind1_r, verbose = FALSE)
+    )
     # and read it back again to comare
-    ind2 <- read_ind(fo)
+    expect_silent(
+        ind2 <- read_ind(fo, verbose = FALSE)
+    )
     # compare
     expect_equal(ind1, ind2)
     # delete output when done
@@ -613,9 +705,13 @@ test_that("write_ind works", {
     ind1_r <- ind1 # copy first
     ind1_r$junk <- 1 # add a junk column
     # try writing it back elsewhere
-    write_ind(fo, ind1_r)
+    expect_silent(
+        write_ind(fo, ind1_r, verbose = FALSE)
+    )
     # and read it back again to comare
-    ind2 <- read_ind(fo)
+    expect_silent(
+        ind2 <- read_ind(fo, verbose = FALSE)
+    )
     # compare
     expect_equal(ind1, ind2)
     # delete output when done
@@ -638,11 +734,17 @@ test_that("write_snp works", {
     # create a dummy output we'll delete later
     fo <- tempfile('delete-me_test-write', fileext = '.snp')
     # this should just work (tested earlier)
-    snp1 <- read_snp(fi)
+    expect_silent(
+        snp1 <- read_snp(fi, verbose = FALSE)
+    )
     # try writing it back elsewhere
-    write_snp(fo, snp1)
+    expect_silent(
+        write_snp(fo, snp1, verbose = FALSE)
+    )
     # and read it back again to comare
-    snp2 <- read_snp(fo)
+    expect_silent(
+        snp2 <- read_snp(fo, verbose = FALSE)
+    )
     # compare
     expect_equal(snp1, snp2)
     # delete output when done
@@ -651,9 +753,13 @@ test_that("write_snp works", {
     # repeat by randomly reordering data, should automatically reorder too
     snp1_r <- snp1[, sample.int(ncol(snp1))]
     # try writing it back elsewhere
-    write_snp(fo, snp1_r)
+    expect_silent(
+        write_snp(fo, snp1_r, verbose = FALSE)
+    )
     # and read it back again to comare
-    snp2 <- read_snp(fo)
+    expect_silent(
+        snp2 <- read_snp(fo, verbose = FALSE)
+    )
     # compare
     expect_equal(snp1, snp2)
     # delete output when done
@@ -663,9 +769,13 @@ test_that("write_snp works", {
     snp1_r <- snp1 # copy first
     snp1_r$junk <- 1 # add a junk column
     # try writing it back elsewhere
-    write_snp(fo, snp1_r)
+    expect_silent(
+        write_snp(fo, snp1_r, verbose = FALSE)
+    )
     # and read it back again to comare
-    snp2 <- read_snp(fo)
+    expect_silent(
+        snp2 <- read_snp(fo, verbose = FALSE)
+    )
     # compare
     expect_equal(snp1, snp2)
     # delete output when done
@@ -696,9 +806,13 @@ test_that("make_fam works", {
     fam$pat <- as.character(fam$pat)
     fam$mat <- as.character(fam$mat)
     # write it
-    write_fam(fo, fam)
+    expect_silent(
+        write_fam(fo, fam, verbose = FALSE)
+    )
     # read it
-    fam2 <- read_fam(fo)
+    expect_silent(
+        fam2 <- read_fam(fo, verbose = FALSE)
+    )
     # compare
     # NOTE: there's a weird issue with class() here that makes this not work unless it's "fam2[]" specifically
     # https://www.tidyverse.org/articles/2018/12/readr-1-3-1/#tibble-subclass
@@ -738,9 +852,13 @@ test_that("make_bim works", {
     bim$ref <- as.character(bim$ref)
     bim$alt <- as.character(bim$alt)
     # write it
-    write_bim(fo, bim)
+    expect_silent(
+        write_bim(fo, bim, verbose = FALSE)
+    )
     # read it
-    bim2 <- read_bim(fo)
+    expect_silent(
+        bim2 <- read_bim(fo, verbose = FALSE)
+    )
     # compare
     # NOTE: there's a weird issue with class() here that makes this not work unless it's "bim2[]" specifically
     # https://www.tidyverse.org/articles/2018/12/readr-1-3-1/#tibble-subclass
@@ -863,8 +981,9 @@ test_that("sex_to_char works", {
 test_that("validate_tab_generic works", {
     # load sample file
     fi <- system.file("extdata", 'sample.fam', package = "genio", mustWork = TRUE)
-    # this should just work (no "expect" test)
-    fam <- read_fam(fi)
+    expect_silent(
+        fam <- read_fam(fi, verbose = FALSE)
+    )
 
     # test that there are errors when crucial data is missing
     expect_error(validate_tab_generic()) # all is missing
@@ -890,10 +1009,14 @@ test_that("ind_to_fam works", {
     # load sample files
     # FAM (negative control)
     fi <- system.file("extdata", 'sample.fam', package = "genio", mustWork = TRUE)
-    fam <- read_fam(fi)
+    expect_silent(
+        fam <- read_fam(fi, verbose = FALSE)
+    )
     # IND (positive control)
     fi <- system.file("extdata", 'sample.ind', package = "genio", mustWork = TRUE)
-    ind <- read_ind(fi)
+    expect_silent(
+        ind <- read_ind(fi, verbose = FALSE)
+    )
     
     # die if input is missing
     expect_error( ind_to_fam() )
@@ -1099,7 +1222,9 @@ test_that("write_eigenvec works", {
     # compare
     expect_equal( eigenvec_final, eigenvec_final_expected )
     # now parse it with our read_eigenvec, this should also agree!
-    data <- read_eigenvec( name, verbose = FALSE )
+    expect_silent(
+        data <- read_eigenvec( name, verbose = FALSE )
+    )
     expect_equal( data$eigenvec, eigenvec_with_names )
     expect_equal( data$fam, fam )
     # delete output when done

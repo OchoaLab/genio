@@ -143,7 +143,9 @@ test_that("read_grm works on small random sample", {
     }
     
     # this reads real example, with everything present
-    obj <- read_grm( name )
+    expect_silent(
+        obj <- read_grm( name, verbose = FALSE )
+    )
     # check overall object
     expect_equal( length( obj ), 3 )
     expect_equal( names( obj ), c('kinship', 'M', 'fam') )
@@ -176,7 +178,9 @@ test_that("read_grm works on small random sample", {
     # all should work but there's no Fam
     # must provide n in this case!
     expect_error( read_grm( name ) )
-    obj <- read_grm( name, n_ind = n_ind )
+    expect_silent(
+        obj <- read_grm( name, n_ind = n_ind, verbose = FALSE )
+    )
     # check overall object
     expect_equal( length( obj ), 2 )
     expect_equal( names( obj ), c('kinship', 'M') )
@@ -205,7 +209,9 @@ test_that("read_grm works on small random sample", {
     # all should work but there's no Fam
     # must provide n in this case!
     expect_error( read_grm( name ) )
-    obj <- read_grm( name, n_ind = n_ind )
+    expect_silent(
+        obj <- read_grm( name, n_ind = n_ind, verbose = FALSE )
+    )
     # check overall object
     expect_equal( length( obj ), 1 )
     expect_equal( names( obj ), 'kinship' )
@@ -220,7 +226,9 @@ test_that("read_grm works on small random sample", {
 
     # move back Fam file, but keep pair sample sizes file missing
     expect_true( file.rename( file_fam_tmp, file_fam ) )
-    obj <- read_grm( name )
+    expect_silent(
+        obj <- read_grm( name, verbose = FALSE )
+    )
     # check overall object
     expect_equal( length( obj ), 2 )
     expect_equal( names( obj ), c('kinship', 'fam') )
@@ -250,15 +258,20 @@ test_that("write_grm works on small random sample", {
     miss <- 0.1
     name <- paste0('dummy-', n_ind, '-', m_loci, '-', miss)
     # reads case (everything present)
-    obj <- read_grm( name )
+    expect_silent(
+        obj <- read_grm( name, verbose = FALSE )
+    )
     
     # now write to a new location
     name_out <- tempfile('delete-me_test-write')
-    write_grm(
-        name_out,
-        kinship = obj$kinship,
-        M = obj$M,
-        fam = obj$fam
+    expect_silent(
+        write_grm(
+            name_out,
+            kinship = obj$kinship,
+            M = obj$M,
+            fam = obj$fam,
+            verbose = FALSE
+        )
     )
 
     # files should match!
@@ -311,14 +324,19 @@ test_that("write_grm and read_grm are inverses on randomly generated data", {
     
     # write all of this to a temporary file
     name <- tempfile('delete-me_test-write')
-    write_grm(
-        name,
-        kinship = kinship,
-        M = M,
-        fam = fam
+    expect_silent(
+        write_grm(
+            name,
+            kinship = kinship,
+            M = M,
+            fam = fam,
+            verbose = FALSE
+        )
     )
     # read it back
-    obj <- read_grm( name )
+    expect_silent(
+        obj <- read_grm( name, verbose = FALSE )
+    )
     # compare each element, we expect things to be identical!
     # there is expected loss of precision, this makes it all more lenient than usual
     expect_equal( kinship, obj$kinship, tolerance = 1e-7, scale = 1 )

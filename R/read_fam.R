@@ -4,9 +4,9 @@ fam_names <- c('fam', 'id', 'pat', 'mat', 'sex', 'pheno')
 #' Read Plink *.fam files
 #'
 #' This function reads a standard Plink *.fam file into a tibble with named columns.
-#' It uses [readr::read_table2()] to do it efficiently.
+#' It uses [readr::read_table()] to do it efficiently.
 #'
-#' @param file Input file (whatever is accepted by [readr::read_table2()]).
+#' @param file Input file (whatever is accepted by [readr::read_table()]).
 #' If file as given does not exist and is missing the expected *.fam extension, the function adds the .fam extension and uses that path if that file exists.
 #' Additionally, the .gz extension is added automatically if the file (after *.fam extension is added as needed) is still not found and did not already contain the .gz extension and adding it points to an existing file.
 #' @param verbose If `TRUE` (default) function reports the path of the file being loaded (after autocompleting the extensions).

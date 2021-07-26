@@ -4,9 +4,9 @@ bim_names <- c('chr', 'id', 'posg', 'pos', 'ref', 'alt')
 #' Read Plink *.bim files
 #'
 #' This function reads a standard Plink *.bim file into a tibble with named columns.
-#' It uses [readr::read_table2()] to do it efficiently.
+#' It uses [readr::read_table()] to do it efficiently.
 #'
-#' @param file Input file (whatever is accepted by [readr::read_table2()]).
+#' @param file Input file (whatever is accepted by [readr::read_table()]).
 #' If file as given does not exist and is missing the expected *.bim extension, the function adds the .bim extension and uses that path if that file exists.
 #' Additionally, the .gz extension is added automatically if the file (after *.bim extension is added as needed) is still not found and did not already contain the .gz extension and adding it points to an existing file.
 #' @param verbose If `TRUE` (default) function reports the path of the file being loaded (after autocompleting the extensions).

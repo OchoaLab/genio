@@ -7,7 +7,7 @@
 read_matrix(file, ext = "txt", verbose = TRUE)
 }
 \arguments{
-\item{file}{Input file (whatever is accepted by \code{\link[readr:read_table]{readr::read_table2()}}).
+\item{file}{Input file (whatever is accepted by \code{\link[readr:read_table]{readr::read_table()}}).
 If file as given does not exist and is missing the expected extension (see \code{ext} below), the function adds the extension and uses that path if that file exists.
 Additionally, the .gz extension is added automatically if the file (after the extension is added as needed) is still not found and did not already contain the .gz extension and adding it points to an existing file.}
 
@@ -22,7 +22,7 @@ A numeric matrix without row or column names.
 }
 \description{
 Reads a matrix file under strict assumptions that it is entirely numeric and there are no row or column names present in this file.
-It uses \code{\link[readr:read_table]{readr::read_table2()}} to do it efficiently.
+It uses \code{\link[readr:read_table]{readr::read_table()}} to do it efficiently.
 Intended for outputs such as those of admixture inference approaches.
 }
 \examples{

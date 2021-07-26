@@ -7,7 +7,7 @@
 read_snp(file, verbose = TRUE)
 }
 \arguments{
-\item{file}{Input file (whatever is accepted by \code{\link[readr:read_table]{readr::read_table2()}}).
+\item{file}{Input file (whatever is accepted by \code{\link[readr:read_table]{readr::read_table()}}).
 If file as given does not exist and is missing the expected *.snp extension, the function adds the .snp extension and uses that path if that file exists.
 Additionally, the .gz extension is added automatically if the file (after *.snp extension is added as needed) is still not found and did not already contain the .gz extension and adding it points to an existing file.}
 
@@ -18,7 +18,7 @@ A tibble with columns: \code{id}, \code{chr}, \code{posg}, \code{pos}, \code{ref
 }
 \description{
 This function reads a standard Eigenstrat *.snp file into a tibble.
-It uses \code{\link[readr:read_table]{readr::read_table2()}} to do it efficiently.
+It uses \code{\link[readr:read_table]{readr::read_table()}} to do it efficiently.
 }
 \examples{
 # to read "data.snp", run like this:

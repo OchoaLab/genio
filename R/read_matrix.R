@@ -1,10 +1,10 @@
 #' Read a numerical matrix file into an R matrix
 #'
 #' Reads a matrix file under strict assumptions that it is entirely numeric and there are no row or column names present in this file.
-#' It uses [readr::read_table2()] to do it efficiently.
+#' It uses [readr::read_table()] to do it efficiently.
 #' Intended for outputs such as those of admixture inference approaches.
 #'
-#' @param file Input file (whatever is accepted by [readr::read_table2()]).
+#' @param file Input file (whatever is accepted by [readr::read_table()]).
 #' If file as given does not exist and is missing the expected extension (see `ext` below), the function adds the extension and uses that path if that file exists.
 #' Additionally, the .gz extension is added automatically if the file (after the extension is added as needed) is still not found and did not already contain the .gz extension and adding it points to an existing file.
 #' @param ext The desired file extension.
@@ -50,7 +50,7 @@ read_matrix <- function( file, ext = 'txt', verbose = TRUE ) {
         message('Reading: ', file)
     
     # read matrices, assume there is no header
-    x <- readr::read_table2(
+    x <- readr::read_table(
         file,
         col_names = FALSE,
         # all columns will be doubles, do not pre-specify the number of columns
@@ -60,7 +60,7 @@ read_matrix <- function( file, ext = 'txt', verbose = TRUE ) {
     # convert to ordinary numerical matrices
     x <- data.matrix( x )
 
-    # column names were set by default to c("X1", "X2", ...) by read_table2 (no way to avoid it)
+    # column names were set by default to c("X1", "X2", ...) by read_table (no way to avoid it)
     # however, names are useless and misleading, let's remove them before returning
     # these files have no meaninful dimnames, just delete them all
     dimnames( x ) <- NULL

@@ -101,11 +101,10 @@ read_eigenvec <- function(
     # add usual column names
     colnames( fam ) <- c('fam', 'id')
     eigenvec <- eigenvec[ , -(1:2) ]
-    # change these column names too
-    colnames( eigenvec ) <- 1 : ncol( eigenvec )
     # turn to numeric matrix
     eigenvec <- as.matrix( eigenvec )
-
+    # change these column names too
+    colnames( eigenvec ) <- 1 : ncol( eigenvec )
     
     # return both bits of data
     return(

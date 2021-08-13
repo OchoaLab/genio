@@ -166,7 +166,7 @@
 
 # genio 1.0.25 (2021-07-26)
 
-- 4rd CRAN submission
+- 4th CRAN submission
 - `write_bed/plink` with `append = TRUE` debugged to write in "binary" mode.
   - Fixed rare error observed in Windows only, where "binary" mode makes a difference, and only when written bytes matched certain special characters (such as newlines).
   - Bug probably present since `append` option was introduced in 1.0.15.9000 (2020-07-03).
@@ -177,3 +177,9 @@
   - Added tests for verbosity
 - Replaced `pryr::object_size` with `lobstr::obj_size` (a suggested package used in vignette only; the former was recently superseded by the latter)
   - One-line vignette update for a change in former `pryr::object_size` output (now of class `lobstr_bytes`), which triggered a CRAN warning.
+
+# genio 1.0.26.9000 (2021-08-12)
+
+- Function `read_eigenvec` fixed this warning:
+  - "The `value` argument of `names<-` must be a character vector as of tibble 3.0.0."
+

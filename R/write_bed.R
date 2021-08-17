@@ -85,6 +85,9 @@ write_bed <- function(file, X, verbose = TRUE, append = FALSE) {
         }
     }
     
+    # C++ doesn't work with tildes in names, so let's expand path before we pass to C++
+    file <- path.expand( file )
+    
     # process and write in Rcpp!
     # at least an order of magnitude faster than my best pure R solution
     write_bed_cpp(file, X, append = append)

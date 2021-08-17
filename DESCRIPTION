@@ -1,6 +1,6 @@
 Package: genio
 Title: Genetics Input/Output Functions
-Version: 1.0.26.9000
+Version: 1.0.27.9000
 Authors@R: 
     person(given = "Alejandro",
 	   family = "Ochoa",

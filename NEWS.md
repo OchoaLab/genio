@@ -183,3 +183,16 @@
 - Function `read_eigenvec` fixed this warning:
   - "The `value` argument of `names<-` must be a character vector as of tibble 3.0.0."
 
+# genio 1.0.27.9000 (2021-08-12)
+
+- Functions `write_bed` and `write_plink` fixed a bug: write failed if output path started with "~/" on Unix systems.
+  Problem was the path wasn't expanded in C++ code.
+  - For example, `write_plink( '~/test', X )` failed with message:
+    ```
+    Writing: ~/test.bed
+    Error in write_bed_cpp(file, X, append = append) : 
+      Could not open BED file `~/test.bed` for writing: No such file or directory
+    Calls: write_plink -> write_bed -> write_bed_cpp
+    Execution halted
+    ```
+  - Thanks to Bingsong Zhang for reporting the bug!

@@ -41,6 +41,9 @@ count_lines <- function( file, ext = NA, verbose = TRUE ) {
     if ( verbose )
         message( 'Counting lines: ', file )
 
+    # C++ doesn't work with tildes in names, so let's expand path before we pass to C++
+    file <- path.expand( file )
+    
     # count lines using C++
     n <- count_lines_cpp( file )
     # though the return value is clearly an integer in C++, R fudges it and returns a double unless we force it to integer!

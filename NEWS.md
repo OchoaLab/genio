@@ -185,7 +185,7 @@
 
 # genio 1.0.27.9000 (2021-08-12)
 
-- Functions `write_bed` and `write_plink` fixed a bug: write failed if output path started with "~/" on Unix systems.
+- Functions `write_bed`, `write_plink`, and `count_lines` fixed a bug: write (or read) failed if output path started with "~/" on Unix systems.
   Problem was the path wasn't expanded in C++ code.
   - For example, `write_plink( '~/test', X )` failed with message:
     ```

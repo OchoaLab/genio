@@ -4,7 +4,14 @@
 \alias{write_eigenvec}
 \title{Write eigenvectors table into a Plink-format file}
 \usage{
-write_eigenvec(file, eigenvec, fam = NULL, ext = "eigenvec", verbose = TRUE)
+write_eigenvec(
+  file,
+  eigenvec,
+  fam = NULL,
+  ext = "eigenvec",
+  plink2 = FALSE,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{file}{The output file name (possibly without extension)}
@@ -18,10 +25,14 @@ Individuals in \code{fam} and \code{eigenvec} are assumed to be the same and in 
 \item{ext}{Output file extension.
 Since the general "covariates" file format in GCTA and Plink are the same as this, this function may be used to write more general covariates files if desired, in which case users may wish to change this extension for clarity.}
 
+\item{plink2}{If \code{TRUE}, prints a header in the style of plink2 (starts with hash, \code{fam} -> \code{FID}, \code{id} -> \code{IID}, and the default PCs are named \code{PC1}, \code{PC2}, etc.
+Returned data.frame will also have these names.}
+
 \item{verbose}{If \code{TRUE} (default), function reports the path of the file being written (after autocompleting the extension).}
 }
 \value{
 Invisibly, the final \code{eigenvec} data.frame or tibble written to file, starting with columns \code{fam} and \code{id} (merged from the \code{fam} input, if it was passed) followed by the rest of columns in the input \code{eigenvec}.
+Column names are instead \verb{#FID}, \code{IID}, etc if \code{plink2 = TRUE}.
 }
 \description{
 This function writes eigenvectors in Plink 1 (same as GCTA) format (table with no header, with first two columns being \code{fam} and \code{id}), which is a subset of Plink 2 format (which optionally allows column names and does not require fam column).

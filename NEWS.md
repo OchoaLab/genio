@@ -183,7 +183,7 @@
 - Function `read_eigenvec` fixed this warning:
   - "The `value` argument of `names<-` must be a character vector as of tibble 3.0.0."
 
-# genio 1.0.27.9000 (2021-08-12)
+# genio 1.0.27.9000 (2021-08-16)
 
 - Functions `write_bed`, `write_plink`, and `count_lines` fixed a bug: write (or read) failed if output path started with "~/" on Unix systems.
   Problem was the path wasn't expanded in C++ code.
@@ -196,3 +196,8 @@
     Execution halted
     ```
   - Thanks to Bingsong Zhang for reporting the bug!
+
+# genio 1.0.28.9000 (2021-08-17)
+
+- Functions `read_eigenvec` and `write_eigenvec` have new option `plink2` for better handling files with headers in the default style of plink2.
+

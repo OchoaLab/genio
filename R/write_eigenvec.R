@@ -12,9 +12,12 @@
 #' Individuals in `fam` and `eigenvec` are assumed to be the same and in the same order.
 #' @param ext Output file extension.
 #' Since the general "covariates" file format in GCTA and Plink are the same as this, this function may be used to write more general covariates files if desired, in which case users may wish to change this extension for clarity.
+#' @param plink2 If `TRUE`, prints a header in the style of plink2 (starts with hash, `fam` -> `FID`, `id` -> `IID`, and the default PCs are named `PC1`, `PC2`, etc.
+#' Returned data.frame will also have these names.
 #' @param verbose If `TRUE` (default), function reports the path of the file being written (after autocompleting the extension).
 #'
 #' @return Invisibly, the final `eigenvec` data.frame or tibble written to file, starting with columns `fam` and `id` (merged from the `fam` input, if it was passed) followed by the rest of columns in the input `eigenvec`.
+#' Column names are instead `#FID`, `IID`, etc if `plink2 = TRUE`.
 #'
 #' @examples
 #' # to write an existing matrix `eigenvec` and optional `fam` tibble into file "data.eigenvec",
@@ -59,7 +62,7 @@
 #' <https://cnsgenomics.com/software/gcta/#PCA>
 #' 
 #' @export
-write_eigenvec <- function( file, eigenvec, fam = NULL, ext = 'eigenvec', verbose = TRUE ) {
+write_eigenvec <- function( file, eigenvec, fam = NULL, ext = 'eigenvec', plink2 = FALSE, verbose = TRUE ) {
     # required parameters
     if ( missing( file ) )
         stop( '`file` is required!' )
@@ -70,8 +73,13 @@ write_eigenvec <- function( file, eigenvec, fam = NULL, ext = 'eigenvec', verbos
     if ( is.matrix( eigenvec ) ) {
         # eigenvalues are often a numeric matrix
         # eigen returns matrix without column names, but tibbles don't like that, so add unique names now
-        if ( is.null( colnames( eigenvec ) ) )
+        if ( is.null( colnames( eigenvec ) ) ) {
+            # for compatibility with original, plink1 uses indexes without PC prefixes
             colnames( eigenvec ) <- 1 : ncol(eigenvec)
+            # use plink2 standard notation here
+            if ( plink2 )
+                colnames( eigenvec ) <- paste0( 'PC', colnames( eigenvec ) )
+        }
         # convert now to tibble
         eigenvec <- tibble::as_tibble( eigenvec )
     } else if ( !is.data.frame( eigenvec ) ) {
@@ -118,6 +126,15 @@ write_eigenvec <- function( file, eigenvec, fam = NULL, ext = 'eigenvec', verbos
         }
     }
 
+    # modifications for plink2-style header
+    col_names <- FALSE # old format has no header
+    if ( plink2 ) {
+        col_names <- TRUE # print header
+        # modify first two columns to match standard notation in plink2
+        colnames( eigenvec )[ colnames( eigenvec ) == 'fam' ] <- '#FID'
+        colnames( eigenvec )[ colnames( eigenvec ) == 'id' ] <- 'IID'
+    }
+
     # add extension if it wasn't already there
     file <- add_ext(file, ext)
     
@@ -129,7 +146,7 @@ write_eigenvec <- function( file, eigenvec, fam = NULL, ext = 'eigenvec', verbos
     readr::write_tsv(
         eigenvec,
         file,
-        col_names = FALSE
+        col_names = col_names
     )
     # return invisible final eigenvec tibble, so we can test that directly (in internal package tests)
     return( invisible( eigenvec ) )

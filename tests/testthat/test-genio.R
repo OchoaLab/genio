@@ -1166,6 +1166,22 @@ test_that("read_eigenvec works", {
     expect_equal( nrow( data$fam ), n_rows )
     expect_equal( ncol( data$fam ), 2 )
     expect_equal( colnames( data$fam ), c('fam', 'id') )
+
+    # repeat without ignoring plink2 header
+    expect_silent(
+        data <- read_eigenvec( fi, verbose = FALSE, plink2 = TRUE )
+    )
+    expect_true( is.list(data) )
+    expect_equal( length( data ), 2 )
+    expect_equal( names( data ), c('eigenvec', 'fam') )
+    expect_true( is.matrix( data$eigenvec ) )
+    expect_true( is.numeric( data$eigenvec ) )
+    expect_equal( nrow( data$eigenvec ), n_rows )
+    expect_equal( ncol( data$eigenvec ), r )
+    expect_true( is_tibble( data$fam ) )
+    expect_equal( nrow( data$fam ), n_rows )
+    expect_equal( ncol( data$fam ), 2 )
+    expect_equal( colnames( data$fam ), c('fam', 'id') )
 })
 
 
@@ -1289,6 +1305,29 @@ test_that("write_eigenvec works", {
     expect_error(
         write_eigenvec( name, eigenvec[ -1, ], fam = fam, verbose = FALSE )
     )
+
+    # plink2 version
+    # *2 has plink2 names
+    eigenvec_with_names2 <- eigenvec_with_names
+    colnames( eigenvec_with_names2 ) <- paste0( 'PC', 1:r )
+    fam2 <- fam
+    colnames( fam2 ) <- c( '#FID', 'IID' )
+    eigenvec_final_expected2 <- bind_cols( fam2, as_tibble( eigenvec_with_names2 ) )
+    # write file, producing "final" table of interest
+    expect_silent(
+        eigenvec_final <- write_eigenvec( name, eigenvec, fam = fam, verbose = FALSE, plink2 = TRUE )
+    )
+    # compare
+    expect_equal( eigenvec_final, eigenvec_final_expected2 )
+    # now parse it with our read_eigenvec, this should also agree!
+    expect_silent(
+        data <- read_eigenvec( name, verbose = FALSE, plink2 = TRUE )
+    )
+    # note names are as original, not as plink2
+    expect_equal( data$eigenvec, eigenvec_with_names2 ) # names are preserved
+    expect_equal( data$fam, fam ) # names aren't preserved
+    # delete output when done
+    invisible( file.remove(fo) )
 })
 
 test_that("count_lines works", {

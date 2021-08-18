@@ -4,7 +4,13 @@
 \alias{read_eigenvec}
 \title{Read Plink eigenvec file}
 \usage{
-read_eigenvec(file, ext = "eigenvec", comment = "#", verbose = TRUE)
+read_eigenvec(
+  file,
+  ext = "eigenvec",
+  plink2 = FALSE,
+  comment = if (plink2) "" else "#",
+  verbose = TRUE
+)
 }
 \arguments{
 \item{file}{The input file path, potentially excluding extension.}
@@ -12,18 +18,24 @@ read_eigenvec(file, ext = "eigenvec", comment = "#", verbose = TRUE)
 \item{ext}{File extension (default "eigenvec") can be changed if desired.
 Set to \code{NA} to force \code{file} to exist as-is.}
 
+\item{plink2}{If \code{TRUE}, the header is parsed and preserved in the returned data.
+The first two columns must be FID and IID, which are mandatory.}
+
 \item{comment}{A string used to identify comments.
 Any text after the comment characters will be silently ignored.
 Passed to \code{\link[readr:read_table]{readr::read_table()}}.
-'#' (default) works for Plink 2 eigenvec files, which have a header lines that starts with this character (the header is therefore ignored).}
+'#' (default when \code{plink2 = FALSE}) works for Plink 2 eigenvec files, which have a header lines that starts with this character (the header is therefore ignored).
+However, \code{plink2 = TRUE} forces the header to be parsed instead.}
 
 \item{verbose}{If \code{TRUE} (default) function reports the path of the file being written (after autocompleting the extension).}
 }
 \value{
 A list with two elements:
 \itemize{
-\item \code{eigenvec}: A numeric R matrix containing the parsed eigenvectors
+\item \code{eigenvec}: A numeric R matrix containing the parsed eigenvectors.
+If \code{plink2 = TRUE}, the original column names will be preserved in this matrix.
 \item \code{fam}: A tibble with two columns, \code{fam} and \code{id}, which are the first two columns of the parsed file.
+These column names are always the same even if \code{plink2 = TRUE} (i.e. they won't be \code{FID} or \code{IID}).
 }
 }
 \description{
@@ -61,7 +73,15 @@ data$eigenvec
 
 # read an existing *.eigenvec file created by Plink 2
 file <- system.file("extdata", 'sample-plink2.eigenvec', package = "genio", mustWork = TRUE)
+# this version ignores header
 data <- read_eigenvec(file)
+# numeric eigenvector matrix
+data$eigenvec
+# fam/id tibble
+data$fam
+
+# this version uses header
+data <- read_eigenvec(file, plink2 = TRUE)
 # numeric eigenvector matrix
 data$eigenvec
 # fam/id tibble

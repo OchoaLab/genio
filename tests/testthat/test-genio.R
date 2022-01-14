@@ -52,10 +52,11 @@ test_that("add_ext_read works", {
     # now we omit the .gz extension, will still work
     fiNoGz <- sub('\\.gz$', '', fi)
     expect_equal(fi, add_ext_read(fiNoGz, 'fam'))
+    # a tricky case, if file already has extension, we don't want additional extensions but we want gz to be added
+    expect_equal(fi, add_ext_read(fiNoGz, ext = NA))
     # now we omit the .fam extension too, will still work
     fiNoGzNoExt <- sub('\\.fam$', '', fiNoGz)
     expect_equal(fi, add_ext_read(fiNoGzNoExt, 'fam'))
-    
 })
 
 test_that("read_fam works", {

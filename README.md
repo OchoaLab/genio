@@ -19,7 +19,12 @@ Install the latest development version from GitHub:
 ```R
 install.packages("devtools") # if needed
 library(devtools)
-install_github("OchoaLab/genio", build_opts = c())
+install_github("OchoaLab/genio", build_vignettes = TRUE)
+```
+
+You can see the package vignette, which has more detailed documentation, by typing this into your R session:
+```R
+vignette('genio')
 ```
 
 ## Example

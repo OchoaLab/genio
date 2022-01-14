@@ -201,3 +201,9 @@
 
 - Functions `read_eigenvec` and `write_eigenvec` have new option `plink2` for better handling files with headers in the default style of plink2.
 
+# genio 1.0.29.9000 (2022-01-14)
+
+- Bug fix in `count_lines` and all `read_*` functions, which use `add_ext_read` internally to sort out file paths:
+  - Now setting `ext = NA` finds files that end in a `.gz` extension that was not specified (before those files were incorrectly not found).
+  - Example: `read_matrix( 'my-file', ext = NA )` now finds and reads `my-file.gz` if it exists and `my-file` does not exist.
+- `README` fixed github installation instructions to build vignette, explained how to view it.

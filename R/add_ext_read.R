@@ -13,11 +13,9 @@ add_ext_read <- function(file, ext) {
     if (!is.character(file))
         return(file)
     # ditto if file already exists, we're set!
+    # (includes all ext cases, even if not matching!)
     if (file.exists(file))
         return(file)
-    # and if ext is NA
-    if ( is.na( ext ) )
-        return( file )
     # now assume file as specified is not found
 
     # if the file already ends in .gz, don't do anything!
@@ -25,12 +23,12 @@ add_ext_read <- function(file, ext) {
     if ( grepl('\\.gz$', file) )
         return(file)
     # now assume .gz is missing
-    
+
     # test presence of expected extension
     # in the absence of .gz, the expected extension must be the last one ("$" in regex below)
-    if ( grepl( paste0('\\.', ext, '$'), file) ) {
-        # here we already have the .fam extension but not .gz, so try adding it
-        # try adding extension if input file wasn't found
+    # this can also conveniently handle ext=NA and gz case
+    if ( is.na( ext ) || grepl( paste0('\\.', ext, '$'), file) ) {
+        # here we already have the expected extension but not .gz, and the file as-is didn't exist, try adding .gz
         fileGz <- paste0(file, '.gz')
         # if the second version exists, use that!
         if (file.exists(fileGz))
@@ -38,9 +36,10 @@ add_ext_read <- function(file, ext) {
         # return file, whatever that is here
         return(file)
     }
-    
+
+    # NOTE: here ext != NA
     # now assume both extensions are missing
-    # add .fam first
+    # add extension first
     fileExt <- paste0(file, '.', ext)
     if (file.exists(fileExt)) {
         # if the second version exists, use that!

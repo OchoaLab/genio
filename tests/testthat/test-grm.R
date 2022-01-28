@@ -298,104 +298,6 @@ test_that("read_grm works on small random sample", {
     expect_true( file.rename( file_sizes_tmp, file_sizes ) )
 })
 
-test_that("write_grm works on small random sample", {
-    # load the same case used for read tests
-    n_ind <- 7
-    m_loci <- 10
-    miss <- 0.1
-    name <- paste0('dummy-', n_ind, '-', m_loci, '-', miss)
-    # reads case (everything present)
-    expect_silent(
-        obj <- read_grm( name, verbose = FALSE )
-    )
-    
-    # now write to a new location
-    name_out <- tempfile('delete-me_test-write')
-    expect_silent(
-        write_grm(
-            name_out,
-            kinship = obj$kinship,
-            M = obj$M,
-            fam = obj$fam,
-            verbose = FALSE
-        )
-    )
-
-    # files should match!
-    # compare them
-    for (ext in exts_grm) {
-        # paths for both files that should be identical
-        f1 <- paste0( name, '.', ext )
-        f2 <- paste0( name_out, '.', ext )
-        # load all data brute force
-        data1 <- readLines(f1, warn = FALSE)
-        data2 <- readLines(f2, warn = FALSE)
-        # compare now
-        expect_equal(data1, data2)
-    }
-    
-    # delete new junk files when done
-    delete_files_grm( name_out )
-})
-
-test_that("write_grm and read_grm are inverses on randomly generated data", {
-    # the earlier case was one fixed file that doesn't change
-    # here we generate new random data everytime and test that it makes sense
-    n_ind <- 10
-    m_loci <- 1000
-    # the kinship and N matrices don't have to be particularly realistic, we just want to write and read back and confirm they're the same values
-    kinship <- matrix(
-        runif( n_ind * n_ind ),
-        nrow = n_ind
-    )
-    # here it's made symmetric, and positive definite for good measure
-    kinship <- crossprod( kinship )
-    # random sample sizes too
-    M <- matrix(
-        sample.int( m_loci / 2, n_ind * n_ind ),
-        nrow = n_ind
-    )
-    # make symmetric here too, but not positive definite (integers are more realistic)
-    M <- M + t(M)
-    # dummy individual data
-    # cast as character for easier, exact matching
-    fam <- tibble(
-        fam = as.character( 1 : n_ind ),
-        id = as.character( 1 : n_ind )
-    )
-    # add column and row names, as that's how they're read back (for easier, exact matching)
-    rownames( kinship ) <- fam$id
-    colnames( kinship ) <- fam$id
-    rownames( M ) <- fam$id
-    colnames( M ) <- fam$id
-    
-    # write all of this to a temporary file
-    name <- tempfile('delete-me_test-write')
-    expect_silent(
-        write_grm(
-            name,
-            kinship = kinship,
-            M = M,
-            fam = fam,
-            verbose = FALSE
-        )
-    )
-    # read it back
-    expect_silent(
-        obj <- read_grm( name, verbose = FALSE )
-    )
-    # compare each element, we expect things to be identical!
-    # there is expected loss of precision, this makes it all more lenient than usual
-    expect_equal( kinship, obj$kinship, tolerance = 1e-7, scale = 1 )
-    expect_equal( M, obj$M, tolerance = 1e-7, scale = 1 )
-    # the dumb subsetting fixes a weird class issue; don't understand the use of that, but meh
-    # https://www.tidyverse.org/blog/2018/12/readr-1-3-1/
-    expect_equal( fam, obj$fam[] )
-    
-    # delete new junk files when done
-    delete_files_grm( name )
-})
-
 test_that( "read_grm with shape='square' or shape='strict' and size_bytes=8 or 4 work on plink2 king sample data", {
     # the square matrix is trivial to parse, but binary parsers must match it!
     file_square <- system.file("extdata", 'sample-king-sq.king', package = "genio", mustWork = TRUE)
@@ -521,5 +423,231 @@ test_that( "read_grm with shape='square' or shape='strict' and size_bytes=8 or 4
     expect_error( read_grm( file_tr_bin4, ext = 'king', shape = 'square', size_bytes = 8, verbose = FALSE ) )
     expect_error( read_grm( file_tr_bin8, ext = 'king', shape = 'square', size_bytes = 4, verbose = FALSE ) )
     expect_error( read_grm( file_tr_bin8, ext = 'king', shape = 'square', size_bytes = 8, verbose = FALSE ) )
+})
+
+test_that("write_grm works on small random sample", {
+    # load the same case used for read tests
+    n_ind <- 7
+    m_loci <- 10
+    miss <- 0.1
+    name <- paste0('dummy-', n_ind, '-', m_loci, '-', miss)
+    # reads case (everything present)
+    expect_silent(
+        obj <- read_grm( name, verbose = FALSE )
+    )
+    
+    # now write to a new location
+    name_out <- tempfile('delete-me_test-write')
+    expect_silent(
+        write_grm(
+            name_out,
+            kinship = obj$kinship,
+            M = obj$M,
+            fam = obj$fam,
+            verbose = FALSE
+        )
+    )
+
+    # files should match!
+    # compare them
+    for (ext in exts_grm) {
+        # paths for both files that should be identical
+        f1 <- paste0( name, '.', ext )
+        f2 <- paste0( name_out, '.', ext )
+        # load all data brute force
+        data1 <- readLines(f1, warn = FALSE)
+        data2 <- readLines(f2, warn = FALSE)
+        # compare now
+        expect_equal(data1, data2)
+    }
+    
+    # delete new junk files when done
+    delete_files_grm( name_out )
+
+    # repeat with existing plink2 KING-robust files to test all subcases
+    # list them all first
+    file_sq_bin4 <- system.file("extdata", 'sample-king-sq-bin4.king.bin', package = "genio", mustWork = TRUE)
+    file_sq_bin8 <- system.file("extdata", 'sample-king-sq-bin.king.bin', package = "genio", mustWork = TRUE)
+    file_tr_bin4 <- system.file("extdata", 'sample-king-tr-bin4.king.bin', package = "genio", mustWork = TRUE)
+    file_tr_bin8 <- system.file("extdata", 'sample-king-tr-bin.king.bin', package = "genio", mustWork = TRUE)
+    
+    # do sq-bin4
+    # remove extension from this path on purpose
+    name <- sub('\\.king\\.bin$', '', file_sq_bin4)
+    # get data!
+    expect_silent(
+        obj <- read_grm( name, ext = 'king', shape = 'square', verbose = FALSE )
+    )
+    # now write to a new location (reuse earlier `name_out`)
+    expect_silent(
+        write_grm(
+            name_out,
+            kinship = obj$kinship,
+            fam = obj$fam,
+            ext = 'king',
+            shape = 'square',
+            verbose = FALSE
+        )
+    )
+    # BIN files should match!
+    # (no N.bin file here, but though there is .id the outputs will differ due to header so meh; here we're only interested in validating binary outputs)
+    f1 <- paste0( name, '.king.bin' )
+    f2 <- paste0( name_out, '.king.bin' )
+    # load all data brute force
+    data1 <- readLines(f1, warn = FALSE)
+    data2 <- readLines(f2, warn = FALSE)
+    # compare now
+    expect_equal(data1, data2)
+    # delete outputs now
+    delete_files_generic( name_out, c('king.bin', 'king.id') )
+
+    # do sq-bin8
+    # remove extension from this path on purpose
+    name <- sub('\\.king\\.bin$', '', file_sq_bin8)
+    # get data!
+    expect_silent(
+        obj <- read_grm( name, ext = 'king', shape = 'square', size_bytes = 8, verbose = FALSE )
+    )
+    # now write to a new location (reuse earlier `name_out`)
+    expect_silent(
+        write_grm(
+            name_out,
+            kinship = obj$kinship,
+            fam = obj$fam,
+            ext = 'king',
+            shape = 'square',
+            size_bytes = 8,
+            verbose = FALSE
+        )
+    )
+    # BIN files should match!
+    f1 <- paste0( name, '.king.bin' )
+    f2 <- paste0( name_out, '.king.bin' )
+    # load all data brute force
+    data1 <- readLines(f1, warn = FALSE)
+    data2 <- readLines(f2, warn = FALSE)
+    # compare now
+    expect_equal(data1, data2)
+    # delete outputs now
+    delete_files_generic( name_out, c('king.bin', 'king.id') )
+    
+    # do tr-bin4
+    # remove extension from this path on purpose
+    name <- sub('\\.king\\.bin$', '', file_tr_bin4)
+    # get data!
+    expect_silent(
+        obj <- read_grm( name, ext = 'king', shape = 'strict', verbose = FALSE )
+    )
+    # now write to a new location (reuse earlier `name_out`)
+    expect_silent(
+        write_grm(
+            name_out,
+            kinship = obj$kinship,
+            fam = obj$fam,
+            ext = 'king',
+            shape = 'strict',
+            verbose = FALSE
+        )
+    )
+    # BIN files should match!
+    f1 <- paste0( name, '.king.bin' )
+    f2 <- paste0( name_out, '.king.bin' )
+    # load all data brute force
+    data1 <- readLines(f1, warn = FALSE)
+    data2 <- readLines(f2, warn = FALSE)
+    # compare now
+    expect_equal(data1, data2)
+    # delete outputs now
+    delete_files_generic( name_out, c('king.bin', 'king.id') )
+
+    # do tr-bin8
+    # remove extension from this path on purpose
+    name <- sub('\\.king\\.bin$', '', file_tr_bin8)
+    # get data!
+    expect_silent(
+        obj <- read_grm( name, ext = 'king', shape = 'strict', size_bytes = 8, verbose = FALSE )
+    )
+    # now write to a new location (reuse earlier `name_out`)
+    expect_silent(
+        write_grm(
+            name_out,
+            kinship = obj$kinship,
+            fam = obj$fam,
+            ext = 'king',
+            shape = 'strict',
+            size_bytes = 8,
+            verbose = FALSE
+        )
+    )
+    # BIN files should match!
+    f1 <- paste0( name, '.king.bin' )
+    f2 <- paste0( name_out, '.king.bin' )
+    # load all data brute force
+    data1 <- readLines(f1, warn = FALSE)
+    data2 <- readLines(f2, warn = FALSE)
+    # compare now
+    expect_equal(data1, data2)
+    # delete outputs now
+    delete_files_generic( name_out, c('king.bin', 'king.id') )
+})
+
+test_that("write_grm and read_grm are inverses on randomly generated data", {
+    # the earlier case was one fixed file that doesn't change
+    # here we generate new random data everytime and test that it makes sense
+    n_ind <- 10
+    m_loci <- 1000
+    # the kinship and N matrices don't have to be particularly realistic, we just want to write and read back and confirm they're the same values
+    kinship <- matrix(
+        runif( n_ind * n_ind ),
+        nrow = n_ind
+    )
+    # here it's made symmetric, and positive definite for good measure
+    kinship <- crossprod( kinship )
+    # random sample sizes too
+    M <- matrix(
+        sample.int( m_loci / 2, n_ind * n_ind ),
+        nrow = n_ind
+    )
+    # make symmetric here too, but not positive definite (integers are more realistic)
+    M <- M + t(M)
+    # dummy individual data
+    # cast as character for easier, exact matching
+    fam <- tibble(
+        fam = as.character( 1 : n_ind ),
+        id = as.character( 1 : n_ind )
+    )
+    # add column and row names, as that's how they're read back (for easier, exact matching)
+    rownames( kinship ) <- fam$id
+    colnames( kinship ) <- fam$id
+    rownames( M ) <- fam$id
+    colnames( M ) <- fam$id
+    
+    # write all of this to a temporary file
+    name <- tempfile('delete-me_test-write')
+    expect_silent(
+        write_grm(
+            name,
+            kinship = kinship,
+            M = M,
+            fam = fam,
+            verbose = FALSE
+        )
+    )
+    # read it back
+    expect_silent(
+        obj <- read_grm( name, verbose = FALSE )
+    )
+    # compare each element, we expect things to be identical!
+    # there is expected loss of precision, this makes it all more lenient than usual
+    expect_equal( kinship, obj$kinship, tolerance = 1e-7, scale = 1 )
+    expect_equal( M, obj$M, tolerance = 1e-7, scale = 1 )
+    # the dumb subsetting fixes a weird class issue; don't understand the use of that, but meh
+    # https://www.tidyverse.org/blog/2018/12/readr-1-3-1/
+    expect_equal( fam, obj$fam[] )
+    
+    # delete new junk files when done
+    delete_files_grm( name )
+
+    # NOTE: could do plink2 KING-robust versions but they seem unnecessary given the earlier writing tests worked perfectly, so we're skipping them instead
 })
 

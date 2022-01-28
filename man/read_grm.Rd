@@ -26,19 +26,19 @@ If the file with the \verb{.<ext>.id} extension is present, then this \code{n_in
 
 \item{ext}{Shared extension for all three inputs (see \code{name} above; default "grm").
 Another useful value is "king" for KING-robust estimates produced by plink2.
-If \code{NA} no extension is added.
+If \code{NA}, no extension is added.
 If given \code{ext} is also present at the end of \code{name}, then it is not added again.}
 
-\item{shape}{The shape of the information to parse.
-Default "triangle" assumes there are \code{n*(n+1)/2} values to parse corresponding to the upper triangle including the diagonal (required for GCTA GRM).
-"strict_triangle" assumes there are \code{n*(n-1)/2} values to parse corresponding to the upper triangle \emph{excluding} the diagonal (best for plink2 KING-robust).
-Lastly, "square" assumes there are \code{n*n} values to parse corresponding to the entire square matrix, ignoring symmetry.}
+\item{shape}{The shape of the information to read (may be abbreviated).
+Default "triangle" assumes there are \code{n*(n+1)/2} values to read corresponding to the upper triangle including the diagonal (required for GCTA GRM).
+"strict_triangle" assumes there are \code{n*(n-1)/2} values to read corresponding to the upper triangle \emph{excluding} the diagonal (best for plink2 KING-robust).
+Lastly, "square" assumes there are \code{n*n} values to read corresponding to the entire square matrix, ignoring symmetry.}
 
 \item{size_bytes}{The number of bytes per number encoded.
 Default 4 corresponds to GCTA GRM and plink2 "bin4", whereas plink2 "bin" requires a value of 8.}
 
 \item{comment}{Character to start comments in \verb{<ext>.id} file only.
-Default "#" helps plink2 \code{.id} files (which have a header that starts with "#", which is therefore ignored) be parsed just like plink1 and GCTA files (which do not have a header).}
+Default "#" helps plink2 \code{.id} files (which have a header that starts with "#", which is therefore ignored) be read just like plink1 and GCTA files (which do not have a header).}
 }
 \value{
 A list with named elements:
@@ -50,7 +50,7 @@ A list with named elements:
 }
 \description{
 This function reads a GCTA Genetic Relatedness Matrix (GRM, i.e. kinship) set of files in their binary format, returning the kinship matrix and, if available, the corresponding matrix of pair sample sizes (non-trivial under missingness) and individuals table.
-With some option tweaks it can also parse several plink2 binary kinship formats, such as "king".
+Setting some options allows reading plink2 binary kinship formats such as "king" (see examples).
 }
 \examples{
 # to read "data.grm.bin" and etc, run like this:
@@ -69,6 +69,19 @@ obj <- read_grm(file)
 obj$kinship # the kinship matrix
 obj$M       # the pair sample sizes matrix
 obj$fam     # the fam and ID tibble
+
+# Read sample plink2 KING-robust files (several variants).
+# Read both base.king.bin and base.king.id files.
+# All generated with "plink2 <input> --make-king <options> --out base"
+# (replace "base" with actual base name) with these options:
+# #1) "triangle bin"
+# data <- read_grm( 'base', ext = 'king', shape = 'strict', size_bytes = 8 )
+# #2) "triangle bin4"
+# data <- read_grm( 'base', ext = 'king', shape = 'strict' )
+# #3) "square bin"
+# data <- read_grm( 'base', ext = 'king', shape = 'square', size_bytes = 8 )
+# #4) "square bin4"
+# data <- read_grm( 'base', ext = 'king', shape = 'square' )
 
 }
 \seealso{

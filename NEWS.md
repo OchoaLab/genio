@@ -217,3 +217,8 @@
   - `comment` to control comment characters in the `<ext>.id` file.
 - Internal functions `vec_to_mat_sym` and `mat_sym_to_vec` added option `strict` to exclude diagonal in their transformations.
 - Internal function `read_tab_generic` added option `comment` to set comment characters.
+
+# genio 1.0.31.9000 (2022-01-28)
+
+- Function `write_grm` added the same options added yesterday to `read_grm` (see there) to write GRM-like formats produced by `plink2`, particularly data produced by `--make-king` with `bin` or `bin4` options.
+- Function `read_grm` edited documentation only, particularly added parsing examples for various `plink2 --make-king` outputs.

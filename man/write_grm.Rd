@@ -2,24 +2,48 @@
 % Please edit documentation in R/write_grm.R
 \name{write_grm}
 \alias{write_grm}
-\title{Write GCTA GRM binary files}
+\title{Write GCTA GRM and related plink2 binary files}
 \usage{
-write_grm(name, kinship, M = NULL, fam = NULL, verbose = TRUE)
+write_grm(
+  name,
+  kinship,
+  M = NULL,
+  fam = NULL,
+  verbose = TRUE,
+  ext = "grm",
+  shape = c("triangle", "strict_triangle", "square"),
+  size_bytes = 4
+)
 }
 \arguments{
-\item{name}{The base name of the output files.  Files with that base and extensions \code{.grm.bin}, \code{.grm.N.bin}, and \code{.grm.id} may be created depending on the data provided.}
+\item{name}{The base name of the output files.
+Files with that base, plus shared extension (default "grm", see \code{ext} below), plus extensions \code{.bin}, \code{.N.bin}, and \code{.id} may be created depending on the data provided.}
 
-\item{kinship}{The symmetric \code{n}-times-\code{n} kinship matrix to write into file with extension \code{.grm.bin}.}
+\item{kinship}{The symmetric \code{n}-times-\code{n} kinship matrix to write into file with extension \verb{.<ext>.bin}.}
 
-\item{M}{The optional symmetric \code{n}-times-\code{n} matrix of pair sample sizes to write into file with extension \code{.grm.N.bin}.}
+\item{M}{The optional symmetric \code{n}-times-\code{n} matrix of pair sample sizes to write into file with extension \verb{.<ext>.N.bin}.}
 
-\item{fam}{The optional data.frame or tibble with individual annotations (columns with names \code{fam} and \code{id}, subset of columns of Plink FAM) to write into file with extension \code{.grm.id}.
+\item{fam}{The optional data.frame or tibble with individual annotations (columns with names \code{fam} and \code{id}, subset of columns of Plink FAM) to write into file with extension \verb{.<ext>.id}.
 If \code{fam} is \code{NULL} but \code{kinship} has non-\code{NULL} column or row names, these are used as the second (\code{id}) value in the output table (the first (\code{fam}) column is set to the missing value in this case).}
 
 \item{verbose}{If \code{TRUE} (default), function reports the path of the files being written.}
+
+\item{ext}{Shared extension for all three outputs (see \code{name} above; default "grm").
+Another useful value is "king", to match the KING-robust format produced by plink2.
+If \code{NA}, no extension is added.
+If given \code{ext} is also present at the end of \code{name}, then it is not added again.}
+
+\item{shape}{The shape of the information to write (may be abbreviated).
+Default "triangle" assumes there are \code{n*(n+1)/2} values to write corresponding to the upper triangle including the diagonal (required for GCTA GRM).
+"strict_triangle" assumes there are \code{n*(n-1)/2} values to write corresponding to the upper triangle \emph{excluding} the diagonal (best for plink2 KING-robust).
+Lastly, "square" assumes there are \code{n*n} values to write corresponding to the entire square matrix, ignoring symmetry.}
+
+\item{size_bytes}{The number of bytes per number encoded.
+Default 4 corresponds to GCTA GRM and plink2 "bin4", whereas plink2 "bin" requires a value of 8.}
 }
 \description{
 This function writes a GCTA Genetic Relatedness Matrix (GRM, i.e. kinship) set of files in their binary format, given a kinship matrix and, if available, the corresponding matrix of pair sample sizes (non-trivial under missingness) and individuals table.
+Setting some options allows writing plink2 binary kinship formats such as "king" (follow examples in \code{\link[=read_grm]{read_grm()}}).
 }
 \examples{
 # to write existing data `kinship`, `M`, and `fam` into files "data.grm.bin" etc, run like this:

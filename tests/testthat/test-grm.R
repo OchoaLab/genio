@@ -29,6 +29,29 @@ test_that("vec_to_mat_sym works on toy examples", {
             ncol = 3
         )
     )
+
+    # examples with missing diagonal (strict triangle)
+    expect_equal(
+        vec_to_mat_sym(x = 1:3, n = 3, strict = TRUE),
+        matrix(
+            c(NA, 1, 2,
+              1, NA, 3,
+              2, 3, NA),
+            nrow = 3,
+            ncol = 3
+        )
+    )
+    expect_equal(
+        vec_to_mat_sym(x = 1:6, n = 4, strict = TRUE),
+        matrix(
+            c(NA, 1, 2, 4,
+              1, NA, 3, 5,
+              2, 3, NA, 6,
+              4, 5, 6, NA),
+            nrow = 4,
+            ncol = 4
+        )
+    )
 })
 
 test_that("mat_sym_to_vec works on toy examples", {
@@ -49,6 +72,11 @@ test_that("mat_sym_to_vec works on toy examples", {
         mat_sym_to_vec(mat),
         1:3
     )
+    # strict case (diagonal ignored)
+    expect_equal(
+        mat_sym_to_vec(mat, strict = TRUE),
+        2
+    )
     # and a bigger example
     mat <- matrix(
         c(1, 2, 4,
@@ -61,6 +89,12 @@ test_that("mat_sym_to_vec works on toy examples", {
         mat_sym_to_vec(mat),
         1:6
     )
+    # strict case (diagonal ignored)
+    expect_equal(
+        mat_sym_to_vec(mat, strict = TRUE),
+        c(2, 4, 5)
+    )
+
 })
 
 test_that("mat_sym_to_vec and vec_to_mat_sym invert each other", {
@@ -79,6 +113,12 @@ test_that("mat_sym_to_vec and vec_to_mat_sym invert each other", {
         vec_to_mat_sym( mat_sym_to_vec(mat), n ),
         mat
     )
+    # strict triangle works with the additional constraint that the diagonal be NA
+    diag( mat ) <- NA
+    expect_equal(
+        vec_to_mat_sym( mat_sym_to_vec( mat, strict = TRUE ), n, strict = TRUE ),
+        mat
+    )
 
     # now the other way
     vec <- runif( n*(n+1)/2 )
@@ -86,6 +126,13 @@ test_that("mat_sym_to_vec and vec_to_mat_sym invert each other", {
         mat_sym_to_vec( vec_to_mat_sym( vec, n ) ),
         vec
     )
+    # for strict, diagonal just doesn't exist, but size has to be different
+    vec <- runif( n*(n-1)/2 )
+    expect_equal(
+        mat_sym_to_vec( vec_to_mat_sym( vec, n, strict = TRUE ), strict = TRUE ),
+        vec
+    )
+    
 })
 
 test_that("require_files_grm works", {
@@ -348,3 +395,131 @@ test_that("write_grm and read_grm are inverses on randomly generated data", {
     # delete new junk files when done
     delete_files_grm( name )
 })
+
+test_that( "read_grm with shape='square' or shape='strict' and size_bytes=8 or 4 work on plink2 king sample data", {
+    # the square matrix is trivial to parse, but binary parsers must match it!
+    file_square <- system.file("extdata", 'sample-king-sq.king', package = "genio", mustWork = TRUE)
+    # this toy example has some -inf values that readr doesn't parse correctly, sadly
+    # (not a serious problem expected on any real dataset with sufficient SNPs)
+    # so it generates warnings (suppressed here) and sets those two values to NAs
+    # (read_matrix works as-is because file exists, so default txt extension isn't added)
+    kinship_square <- suppressWarnings( read_matrix( file_square ) )
+    # turn both NAs into -Inf as needed
+    kinship_square[ is.na( kinship_square ) ] <- -Inf
+    # make sure this matrix is symmetric as it should be
+    expect_true( isSymmetric( kinship_square ) )
+    # get true dimension of example
+    n_ind <- nrow( kinship_square )
+
+    # get and add IDs to expected kinship
+    file_square_ids <- system.file("extdata", 'sample-king-sq.king.id', package = "genio", mustWork = TRUE)
+    expect_silent(
+        fam <- readr::read_tsv(
+            file_square_ids,
+            col_names = c('fam', 'id'),
+            col_types = 'cc',
+            comment = '#'
+        )
+    )
+    colnames( kinship_square ) <- fam$id
+    rownames( kinship_square ) <- fam$id
+    
+    # for strict triangle data there's no diagonal (its trivial as verified here too)
+    expect_true( all( diag( kinship_square ) == 0.5 ) )
+    kinship_square_strict <- kinship_square
+    diag( kinship_square_strict ) <- NA
+
+    # due to greater roundoff errors here, need greater tolerance
+    tol4 <- 1e-6 # 2^(-2^4)
+    tol8 <- 1e-6 # unclear why this also has to be so large!
+    
+    # test square bin4 reader function
+    file_sq_bin4 <- system.file("extdata", 'sample-king-sq-bin4.king.bin', package = "genio", mustWork = TRUE)
+    # remove extension from this path on purpose
+    file_sq_bin4 <- sub('\\.king\\.bin$', '', file_sq_bin4)
+    # get data!
+    expect_silent(
+        data_sq_bin4 <- read_grm( file_sq_bin4, ext = 'king', shape = 'square', verbose = FALSE )
+    )
+    # validate list
+    expect_true( is.list( data_sq_bin4 ) )
+    expect_equal( names( data_sq_bin4 ), c('kinship', 'fam') )
+    # validate fam
+    expect_equal( data_sq_bin4$fam, fam )
+    # validate kinship
+    # since output has limited precision, we need to increase our tolerance!
+    expect_equal( data_sq_bin4$kinship, kinship_square, tolerance = tol4 )
+
+    # test square bin(8) reader
+    file_sq_bin8 <- system.file("extdata", 'sample-king-sq-bin.king.bin', package = "genio", mustWork = TRUE)
+    # remove extension from this path on purpose
+    file_sq_bin8 <- sub('\\.king\\.bin$', '', file_sq_bin8)
+    # get data!
+    expect_silent(
+        data_sq_bin8 <- read_grm( file_sq_bin8, ext = 'king', shape = 'square', size_bytes = 8, verbose = FALSE )
+    )
+    # validate list
+    expect_true( is.list( data_sq_bin8 ) )
+    expect_equal( names( data_sq_bin8 ), c('kinship', 'fam') )
+    # validate fam
+    expect_equal( data_sq_bin8$fam, fam )
+    # validate kinship
+    expect_equal( data_sq_bin8$kinship, kinship_square, tolerance = tol8 )
+    
+    # test strict triangle bin4 reader function
+    file_tr_bin4 <- system.file("extdata", 'sample-king-tr-bin4.king.bin', package = "genio", mustWork = TRUE)
+    # remove extension from this path on purpose
+    file_tr_bin4 <- sub('\\.king\\.bin$', '', file_tr_bin4)
+    # get data!
+    expect_silent(
+        data_tr_bin4 <- read_grm( file_tr_bin4, ext = 'king', shape = 'strict', verbose = FALSE )
+    )
+    # validate list
+    expect_true( is.list( data_tr_bin4 ) )
+    expect_equal( names( data_tr_bin4 ), c('kinship', 'fam') )
+    # validate fam
+    expect_equal( data_tr_bin4$fam, fam )
+    # validate kinship
+    expect_equal( data_tr_bin4$kinship, kinship_square_strict, tolerance = tol4 )
+
+    # test strict triangle bin8 reader function
+    file_tr_bin8 <- system.file("extdata", 'sample-king-tr-bin.king.bin', package = "genio", mustWork = TRUE)
+    # remove extension from this path on purpose
+    file_tr_bin8 <- sub('\\.king\\.bin$', '', file_tr_bin8)
+    # get data!
+    expect_silent(
+        data_tr_bin8 <- read_grm( file_tr_bin8, ext = 'king', shape = 'strict', size_bytes = 8, verbose = FALSE )
+    )
+    # validate list
+    expect_true( is.list( data_tr_bin8 ) )
+    expect_equal( names( data_tr_bin8 ), c('kinship', 'fam') )
+    # validate fam
+    expect_equal( data_tr_bin8$fam, fam )
+    # validate kinship
+    expect_equal( data_tr_bin8$kinship, kinship_square_strict, tolerance = tol8 )
+
+    # make sure parsing fails when sizes are misspecified
+    # (file sizes are checked for agreement)
+    expect_error( read_grm( file_sq_bin4, ext = 'king', shape = 'square', size_bytes = 8, verbose = FALSE ) )
+    expect_error( read_grm( file_sq_bin8, ext = 'king', shape = 'square', size_bytes = 4, verbose = FALSE ) )
+    expect_error( read_grm( file_tr_bin4, ext = 'king', shape = 'strict', size_bytes = 8, verbose = FALSE ) )
+    expect_error( read_grm( file_tr_bin8, ext = 'king', shape = 'strict', size_bytes = 4, verbose = FALSE ) )
+    # and even more so for misspecified shapes
+    expect_error( read_grm( file_sq_bin4, ext = 'king', shape = 'triangle', size_bytes = 4, verbose = FALSE ) )
+    expect_error( read_grm( file_sq_bin4, ext = 'king', shape = 'triangle', size_bytes = 8, verbose = FALSE ) )
+    expect_error( read_grm( file_sq_bin8, ext = 'king', shape = 'triangle', size_bytes = 4, verbose = FALSE ) )
+    expect_error( read_grm( file_sq_bin8, ext = 'king', shape = 'triangle', size_bytes = 8, verbose = FALSE ) )
+    expect_error( read_grm( file_sq_bin4, ext = 'king', shape = 'strict', size_bytes = 4, verbose = FALSE ) )
+    expect_error( read_grm( file_sq_bin4, ext = 'king', shape = 'strict', size_bytes = 8, verbose = FALSE ) )
+    expect_error( read_grm( file_sq_bin8, ext = 'king', shape = 'strict', size_bytes = 4, verbose = FALSE ) )
+    expect_error( read_grm( file_sq_bin8, ext = 'king', shape = 'strict', size_bytes = 8, verbose = FALSE ) )
+    expect_error( read_grm( file_tr_bin4, ext = 'king', shape = 'triangle', size_bytes = 4, verbose = FALSE ) )
+    expect_error( read_grm( file_tr_bin4, ext = 'king', shape = 'triangle', size_bytes = 8, verbose = FALSE ) )
+    expect_error( read_grm( file_tr_bin8, ext = 'king', shape = 'triangle', size_bytes = 4, verbose = FALSE ) )
+    expect_error( read_grm( file_tr_bin8, ext = 'king', shape = 'triangle', size_bytes = 8, verbose = FALSE ) )
+    expect_error( read_grm( file_tr_bin4, ext = 'king', shape = 'square', size_bytes = 4, verbose = FALSE ) )
+    expect_error( read_grm( file_tr_bin4, ext = 'king', shape = 'square', size_bytes = 8, verbose = FALSE ) )
+    expect_error( read_grm( file_tr_bin8, ext = 'king', shape = 'square', size_bytes = 4, verbose = FALSE ) )
+    expect_error( read_grm( file_tr_bin8, ext = 'king', shape = 'square', size_bytes = 8, verbose = FALSE ) )
+})
+

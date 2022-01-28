@@ -207,3 +207,13 @@
   - Now setting `ext = NA` finds files that end in a `.gz` extension that was not specified (before those files were incorrectly not found).
   - Example: `read_matrix( 'my-file', ext = NA )` now finds and reads `my-file.gz` if it exists and `my-file` does not exist.
 - `README` fixed github installation instructions to build vignette, explained how to view it.
+
+# genio 1.0.30.9000 (2022-01-27)
+
+- Function `read_grm` added several options to facilitate reading GRM-like formats produced by `plink2`, particularly data produced by `--make-king` with `bin` or `bin4` options.  Added options:
+  - `ext` to specify alternate shared extensions (like "grm" or "king").
+  - `shape` to specify whether the input is a full "square" matrix, a "triangle" with diagonal (default for GRM) or a "strict" triangle without diagonal (for KING-robust).
+  - `size_bytes` to parse `bin4`/GRM (4) or `bin` (8) plink2 data.
+  - `comment` to control comment characters in the `<ext>.id` file.
+- Internal functions `vec_to_mat_sym` and `mat_sym_to_vec` added option `strict` to exclude diagonal in their transformations.
+- Internal function `read_tab_generic` added option `comment` to set comment characters.

@@ -1,5 +1,5 @@
 # internal function, used by write_grm only
-mat_sym_to_vec <- function(mat) {
+mat_sym_to_vec <- function( mat, strict = FALSE ) {
     if ( missing(mat) )
         stop('Input symmetric matrix `mat` is required!')
     # must be a matrix
@@ -11,7 +11,7 @@ mat_sym_to_vec <- function(mat) {
         stop('Input matrix `mat` is not symmetric!')
     
     # this obvious reversal of the code in vec_to_mat_sym does it!
-    x <- mat[ upper.tri(mat, diag = TRUE) ]
+    x <- mat[ upper.tri( mat, diag = !strict ) ]
     
     # return vector
     return( x )

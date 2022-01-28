@@ -1,5 +1,12 @@
 # this abstracts general tab reading regardless of specifics of some of the various formats supported
-read_tab_generic <- function(file, ext, tib_names, col_types, verbose = TRUE) {
+read_tab_generic <- function(
+                             file,
+                             ext,
+                             tib_names,
+                             col_types,
+                             verbose = TRUE, 
+                             comment = '#'
+                             ) {
     # check that mandatory arguments aren't missing
     if (missing(file))
         stop('Input file path (file) is required!')
@@ -21,6 +28,7 @@ read_tab_generic <- function(file, ext, tib_names, col_types, verbose = TRUE) {
     ind <- readr::read_table(
                       file,
                       col_names = tib_names,
-                      col_types = col_types
+                      col_types = col_types,
+                      comment = comment
                   )
 }

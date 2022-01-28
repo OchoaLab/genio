@@ -23,9 +23,9 @@
 #' Default "#" helps plink2 `.id` files (which have a header that starts with "#", which is therefore ignored) be read just like plink1 and GCTA files (which do not have a header).
 #'
 #' @return A list with named elements:
-#' - `kinship`: The symmetric `n`-times-`n` kinship matrix (GRM).  Has IDs as row and column names if the file with extension `.<ext>.id` was available.
-#' - `M`: The symmetric `n`-times-`n` matrix of pair sample sizes (number of non-missing loci pairs), if the file with extension `.<ext>.N.bin` was available.  Has IDs as row and column names if the file with extension `.<ext>.id` was available.
-#' - `fam`: A tibble with two columns: `fam` and `id`, same as in Plink FAM files.  Returned if the file with extension `.<ext>.id` was available.
+#' - `kinship`: The symmetric `n`-times-`n` kinship matrix (GRM).  Has IDs as row and column names if the file with extension `.<ext>.id` exists.  If `shape='strict_triangle'`, diagonal will have missing values.
+#' - `M`: The symmetric `n`-times-`n` matrix of pair sample sizes (number of non-missing loci pairs), if the file with extension `.<ext>.N.bin` exists.  Has IDs as row and column names if the file with extension `.<ext>.id` was available.  If `shape='strict_triangle'`, diagonal will have missing values.
+#' - `fam`: A tibble with two columns: `fam` and `id`, same as in Plink FAM files.  Returned if the file with extension `.<ext>.id` exists.
 #'
 #' @examples
 #' # to read "data.grm.bin" and etc, run like this:
@@ -59,6 +59,8 @@
 #' # data <- read_grm( 'base', ext = 'king', shape = 'square' )
 #' 
 #' @seealso
+#' [write_grm()]
+#'
 #' Greatly adapted from sample code from GCTA:
 #' <https://cnsgenomics.com/software/gcta/#MakingaGRM>
 #' 

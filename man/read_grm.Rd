@@ -43,9 +43,9 @@ Default "#" helps plink2 \code{.id} files (which have a header that starts with 
 \value{
 A list with named elements:
 \itemize{
-\item \code{kinship}: The symmetric \code{n}-times-\code{n} kinship matrix (GRM).  Has IDs as row and column names if the file with extension \verb{.<ext>.id} was available.
-\item \code{M}: The symmetric \code{n}-times-\code{n} matrix of pair sample sizes (number of non-missing loci pairs), if the file with extension \verb{.<ext>.N.bin} was available.  Has IDs as row and column names if the file with extension \verb{.<ext>.id} was available.
-\item \code{fam}: A tibble with two columns: \code{fam} and \code{id}, same as in Plink FAM files.  Returned if the file with extension \verb{.<ext>.id} was available.
+\item \code{kinship}: The symmetric \code{n}-times-\code{n} kinship matrix (GRM).  Has IDs as row and column names if the file with extension \verb{.<ext>.id} exists.  If \code{shape='strict_triangle'}, diagonal will have missing values.
+\item \code{M}: The symmetric \code{n}-times-\code{n} matrix of pair sample sizes (number of non-missing loci pairs), if the file with extension \verb{.<ext>.N.bin} exists.  Has IDs as row and column names if the file with extension \verb{.<ext>.id} was available.  If \code{shape='strict_triangle'}, diagonal will have missing values.
+\item \code{fam}: A tibble with two columns: \code{fam} and \code{id}, same as in Plink FAM files.  Returned if the file with extension \verb{.<ext>.id} exists.
 }
 }
 \description{
@@ -85,6 +85,8 @@ obj$fam     # the fam and ID tibble
 
 }
 \seealso{
+\code{\link[=write_grm]{write_grm()}}
+
 Greatly adapted from sample code from GCTA:
 \url{https://cnsgenomics.com/software/gcta/#MakingaGRM}
 }

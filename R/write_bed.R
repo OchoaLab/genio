@@ -87,6 +87,12 @@ write_bed <- function(file, X, verbose = TRUE, append = FALSE) {
     
     # C++ doesn't work with tildes in names, so let's expand path before we pass to C++
     file <- path.expand( file )
+
+    # one issue that C++ code handles poorly is when file is in a directory that doesn't exist
+    # check for that here and die gracefully in R if it's the trouble case
+    dir_out <- dirname( file )
+    if ( !dir.exists( dir_out ) )
+        stop( 'Output directory does not exist: ', dir_out )
     
     # process and write in Rcpp!
     # at least an order of magnitude faster than my best pure R solution

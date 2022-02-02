@@ -464,3 +464,10 @@ test_that( "geno_to_char works", {
     expect_equal( Y_obs, Y_exp )
 })
 
+# this is a case reported by richelbilderbeek
+# sadly, on my machine the "ruthless crash" was treated as a normal error (same as it is after the fix), but might as well include that here too
+test_that( 'write_bed does not crash ruthlessly when output directory does not exist', {
+    expect_error(
+        write_bed( 'dir-does-not-exist/test', X, verbose = FALSE )
+    )
+})

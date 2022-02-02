@@ -222,3 +222,14 @@
 
 - Function `write_grm` added the same options added yesterday to `read_grm` (see there) to write GRM-like formats produced by `plink2`, particularly data produced by `--make-king` with `bin` or `bin4` options.
 - Function `read_grm` edited documentation only, particularly added parsing examples for various `plink2 --make-king` outputs.
+
+# genio 1.0.32.9000 (2022-02-02)
+
+- Function `write_bed` now checks if output directory exists prior to attempting to open the file for writing in the C++ part of the code.
+  - The original code crashed "ruthlessly" in RStudio if the path contains a directory that does not exist, triggering an error such as this one on a terminal:
+	```
+	*** buffer overflow detected ***: terminated
+	Aborted (core dumped)
+	```
+  - The new code produces an ordinary (fatal) error message in R without the buffer overflow.
+  - Bug reported by Richel Bilderbeek (thanks!)

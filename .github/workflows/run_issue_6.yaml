@@ -2,10 +2,10 @@ on:
   push:
   pull_request:
 
-name: R-CMD-check
+name: run_issue_6
 
 jobs:
-  R-CMD-check:
+  run_issue_6:
 
     runs-on: ubuntu-latest
     env:
@@ -16,8 +16,6 @@ jobs:
 
       - uses: r-lib/actions/setup-r@v1
 
-      - uses: r-lib/actions/setup-pandoc@v1
-
       - name: Install libcurl4-openssl-dev
         run: sudo apt install -qq libcurl4-openssl-dev
 
@@ -25,6 +23,7 @@ jobs:
         run: |
           install.packages(c("remotes", "rcmdcheck"))
           remotes::install_deps(dependencies = TRUE)
+          remotes::install_bioc("snpStats")
           remotes::install_github("OchoaLab/genio")
         shell: Rscript {0}
 

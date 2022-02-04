@@ -52,7 +52,16 @@ file_out <- normalizePath(file_out, mustWork = FALSE)
 X <- rbinom(10, 2, 0.5)
 X[sample(10, 3)] <- NA
 X <- matrix(X, nrow = 5, ncol = 2)
-genio::write_bed(file_out, X) # CAUSES ABORT
+
+# The original problem:
+#
+# genio::write_bed(file_out, X) # CAUSES ABORT
+#
+# This is fixed now: it is handled with an R error message 
+# (i.e. no system crash)
+testthat::expect_error(
+  genio::write_bed(file_out, X)
+)
 
 ################################################################################
 #

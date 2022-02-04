@@ -21,7 +21,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          install.packages(c("remotes", "rcmdcheck"))
+          install.packages(c("remotes", "rcmdcheck", "rappdirs"))
           remotes::install_deps(dependencies = TRUE)
           remotes::install_github("OchoaLab/genio")
         shell: Rscript {0}

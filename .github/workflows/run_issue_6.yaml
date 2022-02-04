@@ -23,7 +23,6 @@ jobs:
         run: |
           install.packages(c("remotes", "rcmdcheck"))
           remotes::install_deps(dependencies = TRUE)
-          remotes::install_bioc("snpStats")
           remotes::install_github("OchoaLab/genio")
         shell: Rscript {0}
 

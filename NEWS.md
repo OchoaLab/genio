@@ -233,3 +233,13 @@
 	```
   - The new code produces an ordinary (fatal) error message in R without the buffer overflow.
   - Bug reported by Richel Bilderbeek (thanks!)
+
+# genio 1.1.0.9000 (2022-04-20)
+
+- Functions `read_bim`, `write_bim`, and `geno_to_char`: reversed columns "ref" and "alt" in BIM table
+  - Previous versions treated the first allele column from the (headerless) BIM file as "ref", second as "alt", in part because the plink 1.9 documentation was unclear about their identities (they were simply called alleles "1/clear bits/usually minor" and "2/set bits/usually major").
+  - New version has first allele column as "alt", second as "ref", after seeing plink 2.0 documentation define them explicitly this way, and after noticing reverse correspondence with ref/alt values in VCF files (thanks Ochoa Lab members Amika Sood and Tiffany Tu for reporting these issues!).
+  - `read_bim` now returns a tibble with allele names "alt" and "ref" in that order (columns still ordered as they appear in input file)
+  - `write_bim` writes tables with column "alt" before "ref"
+  - `geno_to_char` reverses the role of "alt" and "ref" correspondingly so that the output remains the same as before these changes (the original outputs were correct as validated against the plink1 "ped" text genotypes).
+  - All documentation was updated to reflect these changes.

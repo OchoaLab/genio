@@ -11,13 +11,13 @@ geno_to_char(X, bim)
 It must have values only in 0, 1, 2, and \code{NA}.}
 
 \item{bim}{The variant table.
-It is required to have the same number of rows as \code{X}, and to have at least two named columns \code{ref} and \code{alt} (alleles 1 and 2 in a plink BIM table).
+It is required to have the same number of rows as \code{X}, and to have at least two named columns \code{alt} and \code{ref} (alleles 1 and 2 in a plink BIM table).
 These alleles can be arbitrary strings (i.e. not just SNPs but also indels, any single or multicharacter code, or even blank strings) except the forward slash character ("/") is not allowed anywhere in these strings (function stops if a slash is present), since in the output it is the delimiter string.
 \code{ref} and \code{alt} alleles must be different at each locus.}
 }
 \value{
 The genotype matrix reencoded as strings.
-At one locus, if the two alleles (ref and alt) are 'A' and 'B', then the genotypes in the input are encoded as characters as: 0 -> 'B/B', 1 -> 'B/A', and 2 -> 'A/A'.
+At one locus, if the two alleles (alt and ref) are 'A' and 'B', then the genotypes in the input are encoded as characters as: 0 -> 'A/A', 1 -> 'B/A', and 2 -> 'B/B'.
 Thus, the numeric encoding counts the reference allele dosage.
 \code{NA} values in input \code{X} remain \code{NA} in the output.
 If the input genotype matrix had row and column names, these are inherited by the output matrix.
@@ -31,7 +31,7 @@ Given the genotype matrix \code{X} and \code{bim} table (as they are parsed by \
 X <- rbind( 0:2, c(0, NA, 2) )
 # corresponding variant table (minimal case with just two required columns)
 library(tibble)
-bim <- tibble( ref = c('A', 'G'), alt = c('C', 'GT') )
+bim <- tibble( alt = c('C', 'GT'), ref = c('A', 'G') )
 
 # genotype matrix translated as characters
 X_char <- geno_to_char( X, bim )

@@ -5,12 +5,12 @@
 #' @param X The genotype matrix.
 #' It must have values only in 0, 1, 2, and `NA`.
 #' @param bim The variant table.
-#' It is required to have the same number of rows as `X`, and to have at least two named columns `ref` and `alt` (alleles 1 and 2 in a plink BIM table).
+#' It is required to have the same number of rows as `X`, and to have at least two named columns `alt` and `ref` (alleles 1 and 2 in a plink BIM table).
 #' These alleles can be arbitrary strings (i.e. not just SNPs but also indels, any single or multicharacter code, or even blank strings) except the forward slash character ("/") is not allowed anywhere in these strings (function stops if a slash is present), since in the output it is the delimiter string.
 #' `ref` and `alt` alleles must be different at each locus.
 #' 
 #' @return The genotype matrix reencoded as strings.
-#' At one locus, if the two alleles (ref and alt) are 'A' and 'B', then the genotypes in the input are encoded as characters as: 0 -> 'B/B', 1 -> 'B/A', and 2 -> 'A/A'.
+#' At one locus, if the two alleles (alt and ref) are 'A' and 'B', then the genotypes in the input are encoded as characters as: 0 -> 'A/A', 1 -> 'B/A', and 2 -> 'B/B'.
 #' Thus, the numeric encoding counts the reference allele dosage.
 #' `NA` values in input `X` remain `NA` in the output.
 #' If the input genotype matrix had row and column names, these are inherited by the output matrix.
@@ -21,7 +21,7 @@
 #' X <- rbind( 0:2, c(0, NA, 2) )
 #' # corresponding variant table (minimal case with just two required columns)
 #' library(tibble)
-#' bim <- tibble( ref = c('A', 'G'), alt = c('C', 'GT') )
+#' bim <- tibble( alt = c('C', 'GT'), ref = c('A', 'G') )
 #'
 #' # genotype matrix translated as characters
 #' X_char <- geno_to_char( X, bim )
@@ -98,8 +98,8 @@ geno_to_char <- function( X, bim ) {
     for ( i in 1 : m ) {
         # get data from that row only
         x <- X[ i, ]
-        r <- bim$ref[i] # REF is first allele
-        a <- bim$alt[i] # ALT is second allele
+        a <- bim$alt[i] # ALT is first allele
+        r <- bim$ref[i] # REF is second allele
         if ( a == r )
             stop( 'Alleles at locus number ', i, ' are equal (both are ', a, ')!' )
         # which case is which is so confusing!
@@ -110,9 +110,9 @@ geno_to_char <- function( X, bim ) {
         # 10=2 1  Heterozygous
         # 11=3 0  Homozygous for second allele in .bim file
         y_valid <- c(
-            paste0(a, '/', a), # 0
-            paste0(a, '/', r), # 1
-            paste0(r, '/', r), # 2
+            paste0(r, '/', r), # 0
+            paste0(r, '/', a), # 1
+            paste0(a, '/', a), # 2
             NA
         )
         # perform map

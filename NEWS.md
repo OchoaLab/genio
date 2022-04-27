@@ -243,3 +243,9 @@
   - `write_bim` writes tables with column "alt" before "ref"
   - `geno_to_char` reverses the role of "alt" and "ref" correspondingly so that the output remains the same as before these changes (the original outputs were correct as validated against the plink1 "ped" text genotypes).
   - All documentation was updated to reflect these changes.
+
+# genio 1.1.1 (2022-04-27)
+
+- 5th CRAN submission
+- Ran spellcheck (no changes)
+- Updated `cran-comments.md`

@@ -6,7 +6,7 @@
 #' @param file Output file (whatever is accepted by [readr::write_tsv()]).
 #' If file is missing the expected *.bim extension, the function adds it.
 #' @param tib The tibble or data.frame to write.
-#' It must contain these columns: `chr`, `id`, `posg`, `pos`, `ref`, `alt`.
+#' It must contain these columns: `chr`, `id`, `posg`, `pos`, `alt`, `ref`.
 #' Throws an error if any of these columns are missing.
 #' Additional columns are ignored.
 #' Columns are automatically reordered in output as expected in format.
@@ -31,21 +31,23 @@
 #'     id = 1:3,
 #'     posg = 0,
 #'     pos = 1:3,
-#'     ref = 'A',
-#'     alt = 'B'
+#'     alt = 'B',
+#'     ref = 'A'
 #' )
 #' # a dummy file
 #' file_out <- tempfile('delete-me-example', fileext = '.bim') # will also work without extension
 #' # write the table out in *.bim format (no header, columns in right order)
 #' write_bim(file_out, tib)
-#' # delete output when done
+#' 
+#' # example cleanup
 #' file.remove(file_out)
 #' 
 #' @seealso
 #' [write_plink()] for writing a set of BED/BIM/FAM files.
 #' 
-#' Plink BIM format reference:
+#' Plink BIM format references:
 #' <https://www.cog-genomics.org/plink/1.9/formats#bim>
+#' <https://www.cog-genomics.org/plink/2.0/formats#bim>
 #'
 #' @export
 write_bim <- function(file, tib, verbose = TRUE, append = FALSE) {

@@ -14,7 +14,7 @@ Additionally, the .gz extension is added automatically if the file (after *.bim 
 \item{verbose}{If \code{TRUE} (default) function reports the path of the file being loaded (after autocompleting the extensions).}
 }
 \value{
-A tibble with columns: \code{chr}, \code{id}, \code{posg}, \code{pos}, \code{ref}, \code{alt}
+A tibble with columns: \code{chr}, \code{id}, \code{posg}, \code{pos}, \code{alt}, \code{ref}.
 }
 \description{
 This function reads a standard Plink *.bim file into a tibble with named columns.
@@ -44,6 +44,7 @@ bim
 \seealso{
 \code{\link[=read_plink]{read_plink()}} for reading a set of BED/BIM/FAM files.
 
-Plink BIM format reference:
+Plink BIM format references:
 \url{https://www.cog-genomics.org/plink/1.9/formats#bim}
+\url{https://www.cog-genomics.org/plink/2.0/formats#bim}
 }

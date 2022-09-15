@@ -288,6 +288,22 @@ test_that("write_plink works", {
     # this also tests that all three files existed!
     expect_silent( delete_files_plink(fo) )
 
+    # test with `write_phen = TRUE`
+    expect_silent(
+        write_plink(fo, X, pheno = pheno, verbose = FALSE, write_phen = TRUE)
+    )
+    # in this case parse phen and make sure we recover pheno!
+    expect_silent(
+        phen <- read_phen(fo, verbose = FALSE)
+    )
+    # compare!
+    expect_equal(phen$pheno, pheno)
+    # (do not re-test genotype parts)
+    # delete all outputs when done
+    # this also tests that all files existed!
+    expect_silent( delete_files_plink(fo) )
+    expect_silent( delete_files_phen(fo) )
+
     # change again
     fo <- tempfile('test-write-plink-3')
 

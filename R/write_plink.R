@@ -29,6 +29,9 @@
 #' @param append If `TRUE`, appends loci onto the BED and BIM files (default `FALSE`).
 #' In this mode, all individuals must be present in each write (only loci are appended); the FAM file is not overwritten if present, but is required at every write for internal validations.
 #' If the FAM file already exists, it is not checked to agree with the FAM table provided.
+#' PHEN file is always unchaged and ignored if `append = TRUE`.
+#' @param write_phen If `TRUE` and `append = FALSE`, writes a .phen file too from the `fam` data provided or auto-generated (using [write_phen()]).
+#' Default `FALSE`.
 #'
 #' @return Invisibly, a named list with items in this order: `X` (genotype matrix), `bim` (tibble), `fam` (tibble).
 #' This is most useful when either BIM or FAM tables were auto-generated.
@@ -73,13 +76,24 @@
 #' <https://www.cog-genomics.org/plink/1.9/formats>
 #'
 #' @export
-write_plink <- function(file, X, bim = NULL, fam = NULL, pheno = NULL, verbose = TRUE, append = FALSE) {
+write_plink <- function(
+                        file,
+                        X,
+                        bim = NULL,
+                        fam = NULL,
+                        pheno = NULL,
+                        verbose = TRUE,
+                        append = FALSE,
+                        write_phen = FALSE
+                        ) {
     # die if things are missing
     if (missing(file))
         stop('Output file path is required!')
     if (missing(X))
         stop('Genotype matrix (X) is required!')
-
+    if ( append && write_phen )
+        warning( 'Will not write PHEN file with `append = TRUE`!' )
+    
     # check dimensions or create autocomplete data, as needed
 
     # get X dimensions (tested over and over)
@@ -136,6 +150,8 @@ write_plink <- function(file, X, bim = NULL, fam = NULL, pheno = NULL, verbose =
     write_bim(file, bim, verbose = verbose, append = append)
     if ( !append || !file.exists( add_ext( file, 'fam') ) ) 
         write_fam(file, fam, verbose = verbose)
+    if ( !append && write_phen )
+        write_phen( file, fam, verbose = verbose )
     
     # invisibly return the data passed and/or created
     return(

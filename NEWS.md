@@ -249,3 +249,7 @@
 - 5th CRAN submission
 - Ran spellcheck (no changes)
 - Updated `cran-comments.md`
+
+# genio 1.1.1.9000 (2022-09-15)
+
+- Function `write_plink` added option `write_phen` to streamline writing simulation outputs more (as phen files are often required).

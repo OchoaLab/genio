@@ -11,7 +11,8 @@ write_plink(
   fam = NULL,
   pheno = NULL,
   verbose = TRUE,
-  append = FALSE
+  append = FALSE,
+  write_phen = FALSE
 )
 }
 \arguments{
@@ -35,7 +36,11 @@ This will be ignored (with a warning) if \code{fam} is provided.}
 
 \item{append}{If \code{TRUE}, appends loci onto the BED and BIM files (default \code{FALSE}).
 In this mode, all individuals must be present in each write (only loci are appended); the FAM file is not overwritten if present, but is required at every write for internal validations.
-If the FAM file already exists, it is not checked to agree with the FAM table provided.}
+If the FAM file already exists, it is not checked to agree with the FAM table provided.
+PHEN file is always unchaged and ignored if \code{append = TRUE}.}
+
+\item{write_phen}{If \code{TRUE} and \code{append = FALSE}, writes a .phen file too from the \code{fam} data provided or auto-generated (using \code{\link[=write_phen]{write_phen()}}).
+Default \code{FALSE}.}
 }
 \value{
 Invisibly, a named list with items in this order: \code{X} (genotype matrix), \code{bim} (tibble), \code{fam} (tibble).

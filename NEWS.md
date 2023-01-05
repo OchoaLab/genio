@@ -253,3 +253,20 @@
 # genio 1.1.1.9000 (2022-09-15)
 
 - Function `write_plink` added option `write_phen` to streamline writing simulation outputs more (as phen files are often required).
+
+# genio 1.1.2 (2023-01-04)
+
+- 6th CRAN submission
+- Fixed an R-devel warning about `sprintf` usage (see below).
+  - Solution was to replace calls to `sprintf`, all of which then went to `stop`, with direct calls to `stop`.
+    ```
+	* checking compiled code ... WARNING
+	File ‘genio/libs/genio.so’:
+	  Found ‘sprintf’, possibly from ‘sprintf’ (C)
+        Objects: ‘read_bed_cpp.o’, ‘write_bed_cpp.o’
+    Compiled code should not call entry points which might terminate R nor
+    write to stdout/stderr instead of to the console, nor use Fortran I/O
+    nor system RNGs nor [v]sprintf.
+    ```
+- Ran spellcheck, made one correction.
+- Updated `cran-comments.md`

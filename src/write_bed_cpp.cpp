@@ -21,9 +21,7 @@ void write_bed_cpp(const char* file, IntegerMatrix X, bool append) {
   FILE *file_stream = fopen( file, mode );
   if ( file_stream == NULL ) {
     // send error message to R
-    char msg[100];
-    sprintf(msg, "Could not open BED file `%s` for writing: %s", file, strerror( errno ));
-    stop(msg);
+    stop( "Could not open BED file `%s` for writing: %s", file, strerror( errno ) );
   }
 
   if ( !append ) {
@@ -59,9 +57,7 @@ void write_bed_cpp(const char* file, IntegerMatrix X, bool append) {
 	fclose( file_stream ); // close file
 	remove( file ); // delete partial output (will be useless binary data anyway)
 	// now send error message to R
-	char msg[100];
-	sprintf(msg, "Invalid genotype '%d' at row %d, col %d.", X(i,j), i+1, j+1); // convert to 1-based coordinates
-	stop(msg);
+	stop( "Invalid genotype '%d' at row %d, col %d.", X(i,j), i+1, j+1 ); // convert to 1-based coordinates
       }
 
       // update these variables for next round

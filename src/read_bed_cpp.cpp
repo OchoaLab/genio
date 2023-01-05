@@ -17,9 +17,7 @@ IntegerMatrix read_bed_cpp(const char* file, int m_loci, int n_ind) {
   // die right away if needed, before initializing buffers etc
   if ( file_stream == NULL ) {
     // send error message to R
-    char msg[100];
-    sprintf(msg, "Could not open BED file `%s` for reading: %s", file, strerror( errno ));
-    stop(msg);
+    stop( "Could not open BED file `%s` for reading: %s", file, strerror( errno ) );
   }
 
   /////////////////////////
@@ -91,9 +89,7 @@ IntegerMatrix read_bed_cpp(const char* file, int m_loci, int n_ind) {
       free( buffer ); // free buffer memory
       fclose( file_stream ); // close file
       // now send error message to R
-      char msg[100];
-      sprintf(msg, "Truncated file: row %d terminated at %d bytes, expected %d.", i+1, (int) n_buf_read, (int) n_buf); // convert to 1-based coordinates
-      stop(msg);
+      stop( "Truncated file: row %d terminated at %d bytes, expected %d.", i+1, (int) n_buf_read, (int) n_buf); // convert to 1-based coordinates
     }
 
     // process buffer now!
@@ -146,9 +142,7 @@ IntegerMatrix read_bed_cpp(const char* file, int m_loci, int n_ind) {
 	//     free( buffer ); // free buffer memory
 	//     fclose( file_stream ); // close file
 	//     // now send error message to R
-	//     char msg[200];
-	//     sprintf(msg, "Row %d padding was non-zero.  Either the specified number of individuals is incorrect or the input file is corrupt!", i+1); // convert to 1-based coordinates
-	//     stop(msg);
+	//     stop( "Row %d padding was non-zero.  Either the specified number of individuals is incorrect or the input file is corrupt!", i+1); // convert to 1-based coordinates
 	//   }
 	// }
       }

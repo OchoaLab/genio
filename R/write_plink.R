@@ -29,7 +29,7 @@
 #' @param append If `TRUE`, appends loci onto the BED and BIM files (default `FALSE`).
 #' In this mode, all individuals must be present in each write (only loci are appended); the FAM file is not overwritten if present, but is required at every write for internal validations.
 #' If the FAM file already exists, it is not checked to agree with the FAM table provided.
-#' PHEN file is always unchaged and ignored if `append = TRUE`.
+#' PHEN file is always unchanged and ignored if `append = TRUE`.
 #' @param write_phen If `TRUE` and `append = FALSE`, writes a .phen file too from the `fam` data provided or auto-generated (using [write_phen()]).
 #' Default `FALSE`.
 #'

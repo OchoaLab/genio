@@ -270,3 +270,7 @@
     ```
 - Ran spellcheck, made one correction.
 - Updated `cran-comments.md`
+
+# genio 1.1.2.9000 (2024-02-27)
+
+- Added function `sim_and_write_plink` that facilitates simulating and writing data in small chunks to save memory

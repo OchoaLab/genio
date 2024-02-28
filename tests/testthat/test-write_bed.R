@@ -487,3 +487,80 @@ test_that( 'write_bed does not crash ruthlessly when output directory does not e
         write_bed( 'dir-does-not-exist/test', X, verbose = FALSE )
     )
 })
+
+test_that( "sim_and_write_plink works", {
+    # start by loading an existing file with known values
+    # this first test won't have p_anc
+    out <- read_plink( 'dummy-33-101-0.1', verbose = FALSE )
+    X <- out$X
+    bim <- out$bim
+    fam <- out$fam
+    m_loci <- nrow( bim )
+    # this ought to omit it from the return value?
+    p_anc <- NULL
+
+    # a global variable updated as we go
+    m_last <- 0
+    
+    # define a trivial but complete genotype simulator function
+    sim_chunk <- function( m_chunk ) {
+        # get subset of interest
+        indexes <- m_last + ( 1 : m_chunk )
+        # update global value (use <<-) for next round
+        m_last <<- m_last + m_chunk
+        # return all of these elements in a named list!
+        obj <- list(
+            X = X[ indexes, , drop = FALSE ],
+            bim = bim[ indexes, ]
+        )
+        if ( !is.null( p_anc ) )
+            obj$p_anc <- p_anc[ indexes ]
+        # add p_anc if not NULL
+        return( obj )
+    }
+
+    # write to the temp output
+    expect_silent(
+        sim_and_write_plink( sim_chunk, m_loci, fam, fo )
+    )
+
+    # read it back, make sure it matches
+    out2 <- read_plink( fo, verbose = FALSE )
+    expect_equal( out2, out )
+
+    # cleanup
+    expect_silent( delete_files_plink(fo) )
+
+    # repeat with a small chunk size, to make sure we write in several parts
+    m_last <- 0 # always reset!
+    expect_silent(
+        sim_and_write_plink( sim_chunk, m_loci, fam, fo, n_data_cut = 197 )
+    )
+    out2 <- read_plink( fo, verbose = FALSE )
+    expect_equal( out2, out )
+    expect_silent( delete_files_plink(fo) )
+
+    # test singleton edge case
+    m_last <- 0 # always reset!
+    expect_silent(
+        sim_and_write_plink( sim_chunk, m_loci, fam, fo, n_data_cut = 1 )
+    )
+    out2 <- read_plink( fo, verbose = FALSE )
+    expect_equal( out2, out )
+    expect_silent( delete_files_plink(fo) )
+
+    # version with mid-size chunk and p_anc
+    fp <- tempfile('delete-me-random-test-p-anc.txt.gz') # this one has an extension
+    p_anc <- runif( m_loci )
+    m_last <- 0 # always reset!
+    expect_silent(
+        sim_and_write_plink( sim_chunk, m_loci, fam, fo, fp, n_data_cut = 197 )
+    )
+    out2 <- read_plink( fo, verbose = FALSE )
+    expect_equal( out2, out )
+    # load and check p-anc too
+    p_anc2 <- as.numeric( readr::read_lines( fp ) )
+    expect_equal( p_anc2, p_anc )
+    expect_silent( delete_files_plink(fo) )
+    file.remove( fp )
+})

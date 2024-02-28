@@ -2,8 +2,8 @@
 % Please edit documentation in R/genio.R
 \docType{package}
 \name{genio}
-\alias{genio}
 \alias{genio-package}
+\alias{genio}
 \title{genio (GENetics I/O): A package for reading and writing genetics data}
 \description{
 This package fully supports reading and writing Plink BED/BIM/FAM and GCTA GRM files, as illustrated below.

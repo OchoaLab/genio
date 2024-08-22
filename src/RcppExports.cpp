@@ -21,6 +21,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// het_reencode_bed_cpp
+void het_reencode_bed_cpp(const char* file_in, const char* file_out, int m_loci, int n_ind);
+RcppExport SEXP _genio_het_reencode_bed_cpp(SEXP file_inSEXP, SEXP file_outSEXP, SEXP m_lociSEXP, SEXP n_indSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const char* >::type file_in(file_inSEXP);
+    Rcpp::traits::input_parameter< const char* >::type file_out(file_outSEXP);
+    Rcpp::traits::input_parameter< int >::type m_loci(m_lociSEXP);
+    Rcpp::traits::input_parameter< int >::type n_ind(n_indSEXP);
+    het_reencode_bed_cpp(file_in, file_out, m_loci, n_ind);
+    return R_NilValue;
+END_RCPP
+}
 // read_bed_cpp
 IntegerMatrix read_bed_cpp(const char* file, int m_loci, int n_ind);
 RcppExport SEXP _genio_read_bed_cpp(SEXP fileSEXP, SEXP m_lociSEXP, SEXP n_indSEXP) {
@@ -49,6 +62,7 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_genio_count_lines_cpp", (DL_FUNC) &_genio_count_lines_cpp, 1},
+    {"_genio_het_reencode_bed_cpp", (DL_FUNC) &_genio_het_reencode_bed_cpp, 4},
     {"_genio_read_bed_cpp", (DL_FUNC) &_genio_read_bed_cpp, 3},
     {"_genio_write_bed_cpp", (DL_FUNC) &_genio_write_bed_cpp, 3},
     {NULL, NULL, 0}

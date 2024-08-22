@@ -565,3 +565,29 @@ test_that( "sim_and_write_plink works", {
     expect_silent( delete_files_plink(fo) )
     file.remove( fp )
 })
+
+test_that( "het_reencode_bed works", {
+    # apply reencoding to this existing file
+    fi <- 'dummy-33-101-0.1'
+    expect_silent(
+        het_reencode_bed( fi, fo, verbose = FALSE )
+    )
+
+    # to validate, read both and apply the explicit mapping in R, which is simpler code
+    data <- read_plink( fi, verbose = FALSE )
+    X <- data$X
+    # this is desired transformation
+    X[ X == 2 ] <- 0
+    X[ X == 1 ] <- 2
+    # load with same names to simplify matching
+    H <- read_bed(
+        fo,
+        names_loci = rownames( X ),
+        names_ind = colnames( X ),
+        verbose = FALSE
+    )
+    expect_equal( H, X )
+    
+    # only the bed file was created in this case, only that needs to be deleted!
+    file.remove( fo_bed )
+})

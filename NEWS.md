@@ -277,6 +277,7 @@
 
 # genio 1.1.3.9000 (2024-08-21)
 
+- Added function `het_reencode_bed` that reencodes a BED file to have heterozygote indicators, which is useful to scan for dominance effects.
 - Internal changes with no user-facing effects
   - C++ function `write_bed_cpp` corrected variable names (had `n_ind` and `m_loci` reversed; no bug resulted from previous mixup) and one word in an error message.
   - Added wide genotype matrix (`n_ind > m_loci`) to unit tests, confirmed that existing code works in that case too.

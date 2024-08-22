@@ -69,7 +69,7 @@
 read_bed <- function(file, names_loci = NULL, names_ind = NULL, m_loci = NA, n_ind = NA, ext = 'bed', verbose = TRUE) {
     # die if things are missing
     if (missing(file))
-        stop('Output file path is required!')
+        stop('Input file path is required!')
 
     # set dimensions via names if provided
     if ( !is.null(names_loci) ) {

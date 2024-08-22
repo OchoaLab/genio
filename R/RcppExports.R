@@ -5,6 +5,10 @@ count_lines_cpp <- function(filepath) {
     .Call('_genio_count_lines_cpp', PACKAGE = 'genio', filepath)
 }
 
+het_reencode_bed_cpp <- function(file_in, file_out, m_loci, n_ind) {
+    invisible(.Call('_genio_het_reencode_bed_cpp', PACKAGE = 'genio', file_in, file_out, m_loci, n_ind))
+}
+
 read_bed_cpp <- function(file, m_loci, n_ind) {
     .Call('_genio_read_bed_cpp', PACKAGE = 'genio', file, m_loci, n_ind)
 }

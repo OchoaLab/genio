@@ -11,6 +11,11 @@ plink2 --dummy $n $m $miss --make-bed --out dummy-$n-$m-$miss
 # remove log when things are ok
 rm dummy-$n-$m-$miss.log
 
+# make a wide example too
+m=2
+plink2 --dummy $n $m $miss --make-bed --out dummy-$n-$m-$miss
+rm dummy-$n-$m-$miss.log
+
 # tiny examples to be extra sure every n %% 4 case is well handled
 m=10
 for n in {4..7}; do

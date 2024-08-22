@@ -229,6 +229,7 @@ testOneInput <- function(nameIn, m_loci, n_ind) {
 test_that("write_bed and read_bed agree with each other and BEDMatrix", {
     # repeat on several files
     testOneInput('dummy-33-101-0.1', 101, 33)
+    testOneInput('dummy-33-2-0.1', 2, 33)
     testOneInput('dummy-4-10-0.1', 10, 4)
     testOneInput('dummy-5-10-0.1', 10, 5)
     testOneInput('dummy-6-10-0.1', 10, 6)

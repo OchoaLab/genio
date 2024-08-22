@@ -274,3 +274,10 @@
 # genio 1.1.2.9000 (2024-02-27)
 
 - Added function `sim_and_write_plink` that facilitates simulating and writing data in small chunks to save memory
+
+# genio 1.1.3.9000 (2024-08-21)
+
+- Internal changes with no user-facing effects
+  - C++ function `write_bed_cpp` corrected variable names (had `n_ind` and `m_loci` reversed; no bug resulted from previous mixup) and one word in an error message.
+  - Added wide genotype matrix (`n_ind > m_loci`) to unit tests, confirmed that existing code works in that case too.
+

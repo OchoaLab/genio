@@ -8,10 +8,10 @@ void write_bed_cpp(const char* file, IntegerMatrix X, bool append) {
   // - file assumed to be full path (no missing extensions)
   // - append = TRUE changes mode and prevents writing of header
   
-  int n_ind = X.nrow();
-  int m_loci = X.ncol();
+  int m_loci = X.nrow();
+  int n_ind = X.ncol();
   // number of columns (bytes) in output (for buffer), after byte compression
-  int n_buf = ( m_loci + 3 ) / 4;
+  int n_buf = ( n_ind + 3 ) / 4;
   // initialize row buffer
   unsigned char *buffer = (unsigned char *) malloc( n_buf );
 
@@ -34,13 +34,13 @@ void write_bed_cpp(const char* file, IntegerMatrix X, bool append) {
 
   // navigate data and process
   int i, j, k, rem;
-  for (i = 0; i < n_ind; i++) {
+  for (i = 0; i < m_loci; i++) {
     // zero out buffer for new row
     memset( buffer, 0, n_buf );
     // always reset these at start of row
     k = 0; // to map input to buffer indeces
     rem = 0; // to map bit position within byte
-    for (j = 0; j < m_loci; j++) {
+    for (j = 0; j < n_ind; j++) {
       // this does some efficient bit operations:
       // - "|=" adds things in the empty bit positions
       // - "<<" puts the new number in the right bit position
@@ -74,7 +74,7 @@ void write_bed_cpp(const char* file, IntegerMatrix X, bool append) {
   }
 
   if ( fclose( file_stream ) != 0 )
-    stop("Input BED file stream close failed!");
+    stop("Output BED file stream close failed!");
 
   // done with buffer
   free( buffer );

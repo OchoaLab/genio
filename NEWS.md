@@ -282,3 +282,8 @@
   - C++ function `write_bed_cpp` corrected variable names (had `n_ind` and `m_loci` reversed; no bug resulted from previous mixup) and one word in an error message.
   - Added wide genotype matrix (`n_ind > m_loci`) to unit tests, confirmed that existing code works in that case too.
 
+# genio 1.1.4.9000 (2024-08-23)
+
+- Added function `symlink` to create symbolic links (ought to work across operating systems).
+  - Added package dependency `R.utils` for functions required by `symlink`.
+- Function `het_reencode_bed` added option `make_bim_fam` to create symbolic links to bim and fam files automatically.

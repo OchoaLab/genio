@@ -1,6 +1,6 @@
 Package: genio
 Title: Genetics Input/Output Functions
-Version: 1.1.3.9000
+Version: 1.1.4.9000
 Authors@R: 
     person(given = "Alejandro",
 	   family = "Ochoa",
@@ -16,7 +16,8 @@ Imports:
     readr (>= 2.0.0),
     tibble,
     dplyr,
-    Rcpp
+    Rcpp,
+    R.utils
 LinkingTo:
     Rcpp
 Suggests: 

@@ -4,7 +4,14 @@
 \alias{het_reencode_bed}
 \title{Reencode a Plink BED file to (twice) heterozygote indicators}
 \usage{
-het_reencode_bed(file_in, file_out, m_loci = NA, n_ind = NA, verbose = TRUE)
+het_reencode_bed(
+  file_in,
+  file_out,
+  m_loci = NA,
+  n_ind = NA,
+  make_bim_fam = TRUE,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{file_in}{Input file path.
@@ -19,26 +26,29 @@ If \code{NA}, it is deduced from the paired *.bim file}
 \item{n_ind}{Number of individuals in the input genotype table.
 If \code{NA}, it is deduced from the paired *.fam file}
 
+\item{make_bim_fam}{If \code{TRUE}, create symbolic links (using \code{\link[=symlink]{symlink()}}) for the output file's *.bim and *.fam that link to the corresponding input files.
+Otherwise only the *.bed file is created.}
+
 \item{verbose}{If \code{TRUE} (default) function reports the path of the files being read and written to (after autocompleting the extension).}
 }
 \description{
 Given an existing plink-formatted BED (binary) file, this function reads it, transforms genotypes on the go, and writes a new BED file such that heterozygotes are encoded as 2 and homozygotes as 0.
 In other words, it transforms the numerical genotype values \code{c( 0, 1, 2, NA )} into \code{c( 0, 2, 0, NA )}.
-Only the new BED file is created (the input BIM and FAM tables also work for the output).
-Intended to transform large files that should not be loaded entirely into memory at once.
+Heterozygotes are encoded as 2, rather than 1, so existing code for calculating allele frequencies and related quantities, such as kinship estimates, works on this data as intended.
+Intended to transform extremely large files that should not be loaded entirely into memory at once.
 }
 \examples{
 # define input and output, both of which will also work without extension
-# read an existing Plink *.bim file
+# read an existing Plink *.bed file
 file_in <- system.file("extdata", 'sample.bed', package = "genio", mustWork = TRUE)
 # write to a *temporary* location for this example
-file_out <- tempfile('delete-me-example', fileext = '.bed')
+file_out <- tempfile('delete-me-example')
 
 # in default mode, deduces dimensions from paired *.bim and *.fam tables
 het_reencode_bed( file_in, file_out )
 
 # delete output when done
-file.remove( file_out )
+delete_files_plink( file_out )
 
 }
 \seealso{

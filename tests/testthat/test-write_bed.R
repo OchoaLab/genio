@@ -566,6 +566,38 @@ test_that( "sim_and_write_plink works", {
     file.remove( fp )
 })
 
+test_that( 'symlink works', {
+    # a local file that exists
+    file <- 'dummy-33-101-0.1.fam'
+    # a file that doesn't exist already, setup to be in a temporary path
+    # NOTE: out of necessity, this is a path not in current directory, so that's already testing that complicated case!
+    link <- fo
+    # this ought to succeed!
+    expect_silent(
+        symlink( file, link, verbose = FALSE )
+    )
+
+    # confirm that file contents are the same?
+    fam1 <- read_fam( file, verbose = FALSE )
+    fam2 <- read_fam( link, verbose = FALSE )
+    expect_equal( fam2, fam1 )
+    
+    # delete when done!
+    expect_true( file.remove( link ) )
+
+    # repeat when input file has absolute path
+    file <- R.utils::getAbsolutePath( file )
+    expect_silent(
+        symlink( file, link, verbose = FALSE )
+    )
+    fam1 <- read_fam( file, verbose = FALSE )
+    fam2 <- read_fam( link, verbose = FALSE )
+    expect_equal( fam2, fam1 )
+    expect_true( file.remove( link ) )
+
+    # so only case not directly tested is two files in same local path, but that's sort of the easiest case and tested in my own runs, so I'm not worried that would somehow fail!
+})
+
 test_that( "het_reencode_bed works", {
     # apply reencoding to this existing file
     fi <- 'dummy-33-101-0.1'
@@ -579,15 +611,13 @@ test_that( "het_reencode_bed works", {
     # this is desired transformation
     X[ X == 2 ] <- 0
     X[ X == 1 ] <- 2
-    # load with same names to simplify matching
-    H <- read_bed(
-        fo,
-        names_loci = rownames( X ),
-        names_ind = colnames( X ),
-        verbose = FALSE
-    )
-    expect_equal( H, X )
+    data2 <- read_plink( fo, verbose = FALSE )
+    # confirm transformation matched
+    expect_equal( data2$X, X )
+    # these should be symlinks, so they should be identical!
+    expect_equal( data2$bim, data$bim )
+    expect_equal( data2$fam, data$fam )
     
-    # only the bed file was created in this case, only that needs to be deleted!
-    file.remove( fo_bed )
+    # all bed/bim/fam files were created (the other two are symlinks), delete all now
+    expect_silent( delete_files_plink( fo ) )
 })

@@ -1,14 +1,12 @@
+#include <iostream>
+#include <fstream>
+#include <vector>
 #include <Rcpp.h>
-#include <cerrno>
+#include "constants.h"
 using namespace Rcpp;
 
-// NOTE: redundant (copied in all BED CPP functions), should define it once and share it!!!
-// expected header (magic numbers)
-// assume standard locus-major order and latest format
-const unsigned char plink_bed_byte_header[3] = {0x6c, 0x1b, 1};
-
 // [[Rcpp::export]]
-void het_reencode_bed_cpp(const char* file_in, const char* file_out, int m_loci, int n_ind) {
+void het_reencode_bed_cpp(const char* file_in, const char* file_out, size_t m_loci, size_t n_ind) {
   // - files assumed to be full path (no missing extensions)
   // unfortunately BED format requires dimensions to be known
   // (so outside this function, the BIM and FAM files must be parsed first)
@@ -17,101 +15,64 @@ void het_reencode_bed_cpp(const char* file_in, const char* file_out, int m_loci,
   // OPEN INPUT //
   ////////////////
 
-  // open file_in in "binary" mode
-  FILE *file_in_stream = fopen( file_in, "rb" );
-  // die right away if needed, before initializing buffers etc
-  if ( file_in_stream == NULL ) {
-    // send error message to R
-    stop( "Could not open BED file `%s` for reading: %s", file_in, strerror( errno ) );
-  }
+  // open input file in "binary" mode
+  std::ifstream file_in_stream( file_in, std::ios::binary );
+  if ( !file_in_stream.is_open() )
+    stop( "Could not open BED file `%s` for reading!", file_in );
 
   /////////////////////////////////////
   // OPEN INPUT: check magic numbers //
   /////////////////////////////////////
 
-  // for header only
-  unsigned char *buffer_header = (unsigned char *) malloc( 3 );
-  // for extra sanity checks, keep track of bytes actually read (to recognize truncated files)
-  // reuse this one for genotypes below
-  size_t n_buf_read;
-  
+  // number of columns (bytes) in input (for buffer), after byte compression
+  // size set for full row, but overloaded used first for this header comparison
+  // chose size_t to have it match n_buf_read value returned by fread
+  size_t n_buf = ( n_ind + 3 ) / 4;
+  // initialize row buffer
+  // NOTE: if n_buf is less than 3, as it does in a toy unit test, insist on at least 3 for input, because that's how big the header is!
+  std::vector<char> buffer_in( n_buf > 3 ? n_buf : 3 );
+  std::vector<char> buffer_out( n_buf );
+
   // read header bytes (magic numbers)
-  n_buf_read = fread( buffer_header, sizeof(unsigned char), 3, file_in_stream );
-  // this might just indicate an empty file
-  if ( n_buf_read != 3 ) {
-    // wrap up everything properly
-    free( buffer_header ); // free buffer memory
-    fclose( file_in_stream ); // close file
-    // now send error message to R
+  if ( ! file_in_stream.read( buffer_in.data(), 3 ) )
     stop("Input BED file did not have a complete header (3-byte magic numbers)!");
-  }
   
   // require that they match our only supported specification of locus-major order and latest format
-  // was using strcmp but there are funky issues (wants signed, but we don't really want order anyway, just test for equality)
-  // use explicit loop instead
-  int pos;
+  size_t pos;
   for (pos = 0; pos < 3; pos++) {
-    if ( plink_bed_byte_header[pos] != buffer_header[pos] ) {
-      // wrap up everything properly
-      free( buffer_header ); // free buffer memory
-      fclose( file_in_stream ); // close file
-      // now send error message to R
+    if ( plink_bed_byte_header[pos] != buffer_in[pos] )
       stop("Input BED file is not in supported format.  Either magic numbers do not match, or requested sample-major format is not supported.  Only latest locus-major format is supported!");
-    }
   }
-
-  // free header buffer, completely done with it
-  free( buffer_header );
 
   /////////////////
   // OPEN OUTPUT //
   /////////////////
 
   // open output file
-  FILE *file_out_stream = fopen( file_out, "wb" );
-  if ( file_out_stream == NULL ) {
-    // send error message to R
-    stop( "Could not open BED file `%s` for writing: %s", file_out, strerror( errno ) );
-  }
-
+  std::ofstream file_out_stream( file_out, std::ios::binary );
+  if ( !file_out_stream.is_open() )
+    stop( "Could not open BED file `%s` for writing!", file_out );
+  
   // write header
   // assume standard locus-major order and latest format
-  fwrite( plink_bed_byte_header, sizeof(unsigned char), 3, file_out_stream );
+  file_out_stream.write( (char *)plink_bed_byte_header, 3 );
 
   //////////////////////////////
   // read and write genotypes //
   //////////////////////////////
   
-  // number of columns (bytes) in input (for buffer), after byte compression
-  // size set for full row, but overloaded used first for this header comparison
-  // chose size_t to have it match n_buf_read value returned by fread
-  // NOTE: though here it might seem odd to process rows (rather than individual values), the fact that there's padding means this sort of makes more sense
-  size_t n_buf = ( n_ind + 3 ) / 4;
-  // initialize input and output row buffers
-  unsigned char *buffer_in = (unsigned char *) malloc( n_buf );
-  unsigned char *buffer_out = (unsigned char *) malloc( n_buf );
-
   // navigate data and process
-  int i, j, rem;
-  size_t k; // to match n_buf type
+  size_t i, j, k, rem;
   unsigned char buf_in_k; // working of buffer at k'th position
   unsigned char xij; // copy of extracted genotype
   for (i = 0; i < m_loci; i++) {
     
     // read whole row into buffer
-    n_buf_read = fread( buffer_in, sizeof(unsigned char), n_buf, file_in_stream );
+    if ( ! file_in_stream.read( buffer_in.data(), n_buf ) )
+      stop( "Truncated file: row %d terminated at %u bytes, expected %u.", i+1, file_in_stream.gcount(), n_buf); // convert to 1-based coordinates
     
-    // always check that file was not done too early
-    if ( n_buf_read != n_buf ) {
-      // wrap up everything properly
-      free( buffer_in ); // free buffer memory
-      fclose( file_in_stream ); // close file
-      // now send error message to R
-      stop( "Truncated file: row %d terminated at %d bytes, expected %d.", i+1, (int) n_buf_read, (int) n_buf); // convert to 1-based coordinates
-    }
-
     // zero out output buffer for new row
-    memset( buffer_out, 0, n_buf );
+    std::fill( buffer_out.begin(), buffer_out.end(), 0 );
 
     // process buffer now!
 
@@ -162,33 +123,19 @@ void het_reencode_bed_cpp(const char* file_in, const char* file_out, int m_loci,
     // finished row
 
     // write buffer (row) out 
-    fwrite( buffer_out, 1, n_buf, file_out_stream );
+    file_out_stream.write( buffer_out.data(), n_buf );
   }
   // finished matrix/file!
 
   /////////////////
-  // CLOSE INPUT //
+  // CLOSE FILES //
   /////////////////
 
   // let's check that file was indeed done
-  n_buf_read = fread( buffer_in, sizeof(unsigned char), n_buf, file_in_stream );
-  // wrap up regardless
-  // and more troubleshooting messages (for windows)
-  if ( fclose( file_in_stream ) != 0 )
-    stop("Input BED file stream close failed!");
-  free( buffer_in );
-  if ( n_buf_read != 0 ) {
-    // now send error message to R
-    stop("Input BED file continued after all requested rows were read!  Either the specified the number of loci was too low or the input file is corrupt!");
-  }
-
-  //////////////////
-  // CLOSE OUTPUT //
-  //////////////////
-
-  if ( fclose( file_out_stream ) != 0 )
-    stop("Output BED file stream close failed!");
-
-  // done with buffer
-  free( buffer_out );
+  // apparently we just have to try to read more, and test that it didn't
+  if ( file_in_stream.read( buffer_in.data(), 1 ) )
+    stop("Input BED file continued unexpectedly!  Either the specified dimensions are incorrect or the input file is corrupt!");
+  file_in_stream.close();
+  
+  file_out_stream.close();
 }

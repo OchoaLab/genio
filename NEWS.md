@@ -287,3 +287,8 @@
 - Added function `symlink` to create symbolic links (ought to work across operating systems).
   - Added package dependency `R.utils` for functions required by `symlink`.
 - Function `het_reencode_bed` added option `make_bim_fam` to create symbolic links to bim and fam files automatically.
+
+# genio 1.1.5.9000 (2025-02-07)
+
+- Modernized `Rcpp` code to use standard C++ library, avoiding various pitfalls and making code shorter and more readable!
+

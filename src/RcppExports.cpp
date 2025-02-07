@@ -22,27 +22,27 @@ BEGIN_RCPP
 END_RCPP
 }
 // het_reencode_bed_cpp
-void het_reencode_bed_cpp(const char* file_in, const char* file_out, int m_loci, int n_ind);
+void het_reencode_bed_cpp(const char* file_in, const char* file_out, size_t m_loci, size_t n_ind);
 RcppExport SEXP _genio_het_reencode_bed_cpp(SEXP file_inSEXP, SEXP file_outSEXP, SEXP m_lociSEXP, SEXP n_indSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const char* >::type file_in(file_inSEXP);
     Rcpp::traits::input_parameter< const char* >::type file_out(file_outSEXP);
-    Rcpp::traits::input_parameter< int >::type m_loci(m_lociSEXP);
-    Rcpp::traits::input_parameter< int >::type n_ind(n_indSEXP);
+    Rcpp::traits::input_parameter< size_t >::type m_loci(m_lociSEXP);
+    Rcpp::traits::input_parameter< size_t >::type n_ind(n_indSEXP);
     het_reencode_bed_cpp(file_in, file_out, m_loci, n_ind);
     return R_NilValue;
 END_RCPP
 }
 // read_bed_cpp
-IntegerMatrix read_bed_cpp(const char* file, int m_loci, int n_ind);
+IntegerMatrix read_bed_cpp(const char* file, size_t m_loci, size_t n_ind);
 RcppExport SEXP _genio_read_bed_cpp(SEXP fileSEXP, SEXP m_lociSEXP, SEXP n_indSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const char* >::type file(fileSEXP);
-    Rcpp::traits::input_parameter< int >::type m_loci(m_lociSEXP);
-    Rcpp::traits::input_parameter< int >::type n_ind(n_indSEXP);
+    Rcpp::traits::input_parameter< size_t >::type m_loci(m_lociSEXP);
+    Rcpp::traits::input_parameter< size_t >::type n_ind(n_indSEXP);
     rcpp_result_gen = Rcpp::wrap(read_bed_cpp(file, m_loci, n_ind));
     return rcpp_result_gen;
 END_RCPP

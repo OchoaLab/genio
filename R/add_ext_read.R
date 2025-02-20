@@ -14,7 +14,8 @@ add_ext_read <- function(file, ext) {
         return(file)
     # ditto if file already exists, we're set!
     # (includes all ext cases, even if not matching!)
-    if (file.exists(file))
+    # make sure it's not a directory too, which has happened to me!  (in this case we ignore the directory, and we add extension as desired.  Note later tests add extensions already so we don't keep asking if those are directories; it would be exceedingly weird for a directory to have a file extension though it's legal!)
+    if ( file.exists(file) && !dir.exists( file ) )
         return(file)
     # now assume file as specified is not found
 

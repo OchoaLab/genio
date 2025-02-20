@@ -43,7 +43,7 @@ test_that("add_ext_read works", {
     # now we omit the extension, will still work
     fiNoExt <- sub('\\.fam$', '', fi)
     expect_equal(fi, add_ext_read(fiNoExt, 'fam'))
-    
+
     # repeat with a compressed file
     # file path of interest
     fi <- system.file("extdata", 'sample2.fam.gz', package = "genio", mustWork = TRUE)
@@ -57,6 +57,20 @@ test_that("add_ext_read works", {
     # now we omit the .fam extension too, will still work
     fiNoGzNoExt <- sub('\\.fam$', '', fiNoGz)
     expect_equal(fi, add_ext_read(fiNoGzNoExt, 'fam'))
+
+    # test weird edge cases in which a directory with the same name as the file without extension exists, we want this directory to be ignored and the extension added!  (previous version returned dir name without extension, though we never want to "read" a directory in any of our downstream applications)
+    # create this file with this extension
+    fi <- tempfile('file-with-dir-name', fileext = '.fam')
+    # and directory with same name but no extension
+    dirNoExt <- sub('\\.fam$', '', fi)
+    # a dummy file with whatever content is totally fine...
+    writeLines( 'whatever', fi )
+    # there's no way this exists already, create it
+    dir.create( dirNoExt )
+    # perform test!  In original code this matched the directory and didn't add extension!  Corrected version adds extension as desired, ignoring directory because we're not going to read it!
+    expect_equal( fi, add_ext_read( dirNoExt, 'fam' ) )
+    # cleanup, will work on files and empty directories
+    unlink( c( fi, dirNoExt ) )
 })
 
 test_that("read_fam works", {

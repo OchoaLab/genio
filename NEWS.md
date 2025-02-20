@@ -292,3 +292,6 @@
 
 - Modernized `Rcpp` code to use standard C++ library, avoiding various pitfalls and making code shorter and more readable!
 
+# genio 1.1.6.9000 (2025-02-20)
+
+- For various file reading functions that assume or can have a file extension specified to be automatically added (`count_lines`, `het_reencode_bed`, and probably all or most `read_*` functions), the shared internal code now works as intended when the file without extension matches a directory name, so that the directory is ignored and the extension is added as expected.  Before, in this scenario the file was treated as if it existed as-is, even though it is a directory, so no extension was added, and then there would be a fatal attempt to read the directory.  For `count_lines`, for example, the error is `Error: basic_filebuf::underflow error reading the file: Is a directory` since it involves C++ code, but pure-R functions may have different but related error messages.

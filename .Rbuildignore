@@ -6,4 +6,8 @@ unpub
 ^Meta$
 ^cran-comments\.md$
 ^CRAN-RELEASE$
+<<<<<<< HEAD
+^\.github$
+=======
 ^CRAN-SUBMISSION$
+>>>>>>> 9bd8e8b6b425851ab94e90ad9e345eaa2d6e7c25
